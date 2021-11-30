@@ -11,6 +11,4 @@ export function initializeStore(preloadedState = undefined) {
   });
 }
 
-const store = initializeStore();
-
-export { store };
+export const store = initializeStore();

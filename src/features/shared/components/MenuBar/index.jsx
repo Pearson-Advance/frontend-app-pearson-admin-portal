@@ -12,29 +12,24 @@ const MenuBar = () => {
   };
 
   return (
-    <Nav variant="pills" activeKey="2" className="justify-content-center menu-bar">
+    <Nav variant="pills" activeKey="1" className="justify-content-center menu-bar">
       <Nav.Item>
         <Nav.Link onClick={onLinkClick} eventKey="1" href="/">
-          Home
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="2" href="/institution">
           Institutions
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="3" href="/institution-admin">
+        <Nav.Link onClick={onLinkClick} eventKey="2" href="/institution-admin">
           Institution Administrators
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="4" href="/license">
+        <Nav.Link onClick={onLinkClick} eventKey="3" href="/license">
           Licenses
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="5" href="/data-report">
+        <Nav.Link onClick={onLinkClick} eventKey="4" href="/data-report">
           Data Report
         </Nav.Link>
       </Nav.Item>

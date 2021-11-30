@@ -19,9 +19,6 @@ const institutionSlice = createSlice({
     fetchInstitutionsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    fetchInstitutionsDenied: (state) => {
-      state.status = RequestStatus.DENIED;
-    },
   },
 });
 
@@ -29,7 +26,6 @@ export const {
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
   fetchInstitutionsFailed,
-  fetchInstitutionsDenied,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;

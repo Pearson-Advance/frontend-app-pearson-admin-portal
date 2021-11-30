@@ -19,7 +19,7 @@ const InstitutionsTable = ({ data }) => (
         columns={COLUMNS}
       >
         <DataTable.Table />
-        <DataTable.EmptyTable content="No results found" />
+        <DataTable.EmptyTable content="No results found." />
         <DataTable.TableFooter />
       </DataTable>
     </Col>

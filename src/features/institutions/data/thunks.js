@@ -1,9 +1,7 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getHttpErrorStatus } from 'features/shared/data/utils';
 import { getInstitutions } from './api';
 import {
-  fetchInstitutionsDenied,
   fetchInstitutionsFailed,
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
@@ -17,15 +15,9 @@ export function fetchInstitutions() {
   return async (dispatch) => {
     try {
       dispatch(fetchInstitutionsRequest());
-      const data = await getInstitutions();
-      const formattedData = camelCaseObject(data);
-      dispatch(fetchInstitutionsSuccess(formattedData));
+      dispatch(fetchInstitutionsSuccess(camelCaseObject((await getInstitutions()).data)));
     } catch (error) {
-      if (getHttpErrorStatus(error) === 403) {
-        dispatch(fetchInstitutionsDenied());
-      } else {
-        dispatch(fetchInstitutionsFailed());
-      }
+      dispatch(fetchInstitutionsFailed());
       logError(error);
     }
   };

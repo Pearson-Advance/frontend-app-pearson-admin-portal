@@ -20,7 +20,7 @@ subscribe(APP_READY, () => {
       <Header />
       <MenuBar />
       <Switch>
-        <Route path="/institution" exact component={InstitutionsPage} />
+        <Route path="/" exact component={InstitutionsPage} />
       </Switch>
       <Footer />
     </AppProvider>,
