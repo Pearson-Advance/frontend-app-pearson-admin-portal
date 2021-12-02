@@ -9,8 +9,8 @@ import Footer, { messages as footerMessages } from '@edx/frontend-component-foot
 import { Route, Switch } from 'react-router';
 import { InstitutionsPage } from 'features/institutions';
 import { MenuBar } from 'features/shared/components/MenuBar';
-import appMessages from './i18n';
 import { store } from './store';
+import appMessages from './i18n';
 
 import './index.scss';
 
