@@ -58,11 +58,15 @@
   },
   "devDependencies": {
     "@edx/frontend-build": "8.1.6",
+    "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/react": "12.1.2",
+    "axios-mock-adapter": "1.20.0",
     "codecov": "3.8.3",
     "es-check": "5.2.4",
     "glob": "7.2.0",
     "husky": "7.0.4",
     "jest": "27.3.1",
-    "reactifex": "1.1.1"
+    "reactifex": "1.1.1",
+    "rosie": "2.1.0"
   }
 }
