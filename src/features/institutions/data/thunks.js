@@ -11,11 +11,11 @@ import {
  * Fetches all the institutions.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchInstitutions() {
+export function fetchInstitutions(search, active, name) {
   return async (dispatch) => {
     try {
       dispatch(fetchInstitutionsRequest());
-      dispatch(fetchInstitutionsSuccess(camelCaseObject((await getInstitutions()).data)));
+      dispatch(fetchInstitutionsSuccess(camelCaseObject((await getInstitutions(search, active, name)).data)));
     } catch (error) {
       dispatch(fetchInstitutionsFailed());
       logError(error);
