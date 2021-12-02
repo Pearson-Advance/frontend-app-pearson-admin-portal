@@ -8,7 +8,10 @@ const MenuBar = () => {
   const history = useHistory();
   const onLinkClick = (e) => {
     e.preventDefault();
-    history.push(e.currentTarget.pathname);
+
+    if (e.currentTarget.pathname !== history.location.pathname) {
+      history.push(e.currentTarget.pathname);
+    }
   };
 
   return (

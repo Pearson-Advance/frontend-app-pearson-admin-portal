@@ -6,7 +6,7 @@ import { COLUMNS } from './columns';
 
 const InstitutionsTable = ({ data }) => (
   <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
-    <Col xs={12} className="my-4">
+    <Col xs={12}>
       <DataTable
         isSortable
         isPaginated

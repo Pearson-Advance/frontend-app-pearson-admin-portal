@@ -7,6 +7,11 @@ const institutionSlice = createSlice({
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     data: [],
+    filters: {
+      search: '',
+      active: '',
+      name: '',
+    },
   },
   reducers: {
     fetchInstitutionsRequest: (state) => {
@@ -19,6 +24,21 @@ const institutionSlice = createSlice({
     fetchInstitutionsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
+    setFilters: (state, { payload }) => {
+      state.filters = {
+        ...state.filters,
+        search: payload.search,
+        active: payload.active,
+        name: payload.name,
+      };
+    },
+    clearFilters: (state) => {
+      state.filters = {
+        search: '',
+        active: '',
+        name: '',
+      };
+    },
   },
 });
 
@@ -26,6 +46,8 @@ export const {
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
   fetchInstitutionsFailed,
+  setFilters,
+  clearFilters,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;
