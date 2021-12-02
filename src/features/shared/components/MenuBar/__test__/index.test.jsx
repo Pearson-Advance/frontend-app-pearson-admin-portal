@@ -12,6 +12,9 @@ jest.mock('react-router', () => ({
   ...jest.requireActual('react-router'),
   useHistory: () => ({
     push: mockHistoryPush,
+    location: {
+      pathname: '/',
+    },
   }),
 }));
 
@@ -33,6 +36,18 @@ describe('MenuBar tests', () => {
 
     fireEvent.click(component.getByText('Institutions'));
 
-    expect(mockHistoryPush).toHaveBeenCalledWith('/');
+    expect(mockHistoryPush).not.toHaveBeenCalledWith('/');
+  });
+
+  test('redirects to the licenses URL on clicking the licenses button', () => {
+    const component = render(
+      <MemoryRouter>
+        <MenuBar />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(component.getByText('Licenses'));
+
+    expect(mockHistoryPush).toHaveBeenCalledWith('/license');
   });
 });
