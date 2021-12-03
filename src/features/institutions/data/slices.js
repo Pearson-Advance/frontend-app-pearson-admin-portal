@@ -12,6 +12,10 @@ const institutionSlice = createSlice({
       active: '',
       name: '',
     },
+    form: {
+      isOpen: false,
+      errors: {},
+    },
   },
   reducers: {
     fetchInstitutionsRequest: (state) => {
@@ -39,6 +43,30 @@ const institutionSlice = createSlice({
         name: '',
       };
     },
+    openModalForm: (state) => {
+      state.form.isOpen = true;
+    },
+    closeModalForm: (state) => {
+      state.form = {
+        errors: {},
+        isOpen: false,
+      };
+    },
+    postInstitutionSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.data = [payload, ...state.data];
+      state.form = {
+        errors: {},
+        isOpen: false,
+      };
+    },
+    postInstitutionFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        errors: payload,
+        isOpen: true,
+      };
+    },
   },
 });
 
@@ -48,6 +76,10 @@ export const {
   fetchInstitutionsFailed,
   setFilters,
   clearFilters,
+  openModalForm,
+  closeModalForm,
+  postInstitutionSuccess,
+  postInstitutionFailed,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;
