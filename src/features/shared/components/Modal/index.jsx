@@ -3,6 +3,7 @@ import {
   ActionRow, Button, ModalDialog,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
+
 import './index.scss';
 
 export const Modal = (props) => {

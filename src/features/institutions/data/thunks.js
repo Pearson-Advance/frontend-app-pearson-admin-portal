@@ -32,9 +32,9 @@ export function fetchInstitutions(search, active, name) {
 export function createInstitution(name, shortName, active) {
   return async (dispatch) => {
     try {
-      dispatch(institutionPostSuccess(camelCaseObject((await postInstitution(name, shortName, active)))));
+      dispatch(institutionPostSuccess(camelCaseObject((await postInstitution(name, shortName, active)).data)));
     } catch (error) {
-      dispatch(institutionPostFailed(error.response.data));
+      dispatch(institutionPostFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };

@@ -13,10 +13,9 @@ export function getInstitutions(search, active, name) {
   return getAuthenticatedHttpClient().get(institutionURL, { params });
 }
 
-export async function postInstitution(name, shortName, active = true) {
-  const { data } = await getAuthenticatedHttpClient().post(
+export function postInstitution(name, shortName, active = true) {
+  return getAuthenticatedHttpClient().post(
     institutionURL,
     snakeCaseObject({ name, shortName, active }),
   );
-  return data;
 }

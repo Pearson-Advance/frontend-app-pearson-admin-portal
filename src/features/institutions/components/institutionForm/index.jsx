@@ -22,7 +22,7 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
         />
         {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
       </Form.Group>
-      <Form.Group isInvalid={Object.prototype.hasOwnProperty.call(errors, 'short_name')}>
+      <Form.Group isInvalid={Object.prototype.hasOwnProperty.call(errors, 'shortName')}>
         <Form.Label>Short name</Form.Label>
         <Form.Control
           name="shortName"
@@ -30,7 +30,7 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
           value={fields.shortName}
           onChange={handleInputChange}
         />
-        {errors.short_name && <Form.Control.Feedback type="invalid">{errors.short_name}</Form.Control.Feedback>}
+        {errors.shortName && <Form.Control.Feedback type="invalid">{errors.shortName}</Form.Control.Feedback>}
       </Form.Group>
       <Form.Group>
         <Form.Checkbox
@@ -54,6 +54,6 @@ InstitutionForm.propTypes = {
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     name: PropTypes.string,
-    short_name: PropTypes.string,
+    shortName: PropTypes.string,
   }).isRequired,
 };

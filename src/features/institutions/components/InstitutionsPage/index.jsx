@@ -50,7 +50,6 @@ const InstitutionsPage = () => {
   return (
     <Container size="xl">
       <Filters />
-
       <Modal
         title="Add institution"
         isOpen={form.isOpen}
