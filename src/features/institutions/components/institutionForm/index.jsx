@@ -26,7 +26,7 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
         <Form.Label>Short name</Form.Label>
         <Form.Control
           name="shortName"
-          maxLength="20"
+          maxLength="30"
           value={fields.shortName}
           onChange={handleInputChange}
         />

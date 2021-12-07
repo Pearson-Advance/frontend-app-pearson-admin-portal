@@ -1,12 +1,14 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getInstitutions, postInstitution } from './api';
+import { getInstitutions, postInstitution, updateInstitution } from './api';
 import {
   fetchInstitutionsFailed,
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
   institutionPostFailed,
   institutionPostSuccess,
+  institutionPatchFailed,
+  institutionPatchSuccess,
 } from './slices';
 
 /**
@@ -35,6 +37,17 @@ export function createInstitution(name, shortName, active) {
       dispatch(institutionPostSuccess(camelCaseObject((await postInstitution(name, shortName, active)).data)));
     } catch (error) {
       dispatch(institutionPostFailed(camelCaseObject(error.response.data)));
+      logError(error);
+    }
+  };
+}
+
+export function editInstitution(id, name, shortName, active) {
+  return async (dispatch) => {
+    try {
+      dispatch(institutionPatchSuccess(camelCaseObject((await updateInstitution(id, name, shortName, active)).data)));
+    } catch (error) {
+      dispatch(institutionPatchFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };

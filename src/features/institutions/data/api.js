@@ -19,3 +19,10 @@ export function postInstitution(name, shortName, active = true) {
     snakeCaseObject({ name, shortName, active }),
   );
 }
+
+export function updateInstitution(id, name, shortName, active) {
+  return getAuthenticatedHttpClient().patch(
+    `${institutionURL}${id}/`,
+    snakeCaseObject({ name, shortName, active }),
+  );
+}
