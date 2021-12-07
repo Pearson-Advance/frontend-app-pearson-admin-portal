@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from '@edx/paragon/dist/Container';
 import { InstitutionsTable } from 'features/institutions/components/InstitutionsTable';
-import { fetchInstitutions, createInstitution } from 'features/institutions/data';
+import { fetchInstitutions, createInstitution, editInstitution } from 'features/institutions/data';
 import { useLocation } from 'react-router';
 import { Filters } from 'features/institutions/components/Filters';
 import { InstitutionForm } from 'features/institutions/components/institutionForm';
@@ -24,6 +24,7 @@ const InstitutionsPage = () => {
   const [fields, setFields] = useState(initialFormValues);
   const { data, form } = useSelector(state => state.institutions);
   const params = new URLSearchParams(location.search);
+  const create = form.institution.id === undefined;
 
   const handleCloseModal = () => {
     setFields(initialFormValues);
@@ -36,22 +37,36 @@ const InstitutionsPage = () => {
   };
 
   const handleSubmit = () => {
-    dispatch(createInstitution(
-      fields.name,
-      fields.shortName,
-      fields.active,
-    ));
+    if (create) {
+      dispatch(createInstitution(
+        fields.name,
+        fields.shortName,
+        fields.active,
+      ));
+    } else {
+      dispatch(editInstitution(form.institution.id, fields.name, fields.shortName, fields.active));
+    }
   };
 
   useEffect(() => {
     dispatch(fetchInstitutions(params.get('search'), params.get('active'), params.get('name')));
   }, [dispatch, location.search]);
 
+  useEffect(() => {
+    if (!create) {
+      setFields({
+        name: form.institution.name,
+        shortName: form.institution.shortName,
+        active: form.institution.active,
+      });
+    }
+  }, [form]);
+
   return (
     <Container size="xl">
       <Filters />
       <Modal
-        title="Add institution"
+        title={create ? 'Add institution' : `Edit institution: ${form.institution.shortName}`}
         isOpen={form.isOpen}
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}

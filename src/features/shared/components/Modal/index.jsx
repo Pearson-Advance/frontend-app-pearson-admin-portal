@@ -49,7 +49,7 @@ export const Modal = (props) => {
 };
 
 Modal.propTypes = {
-  children: PropTypes.elementType.isRequired,
+  children: PropTypes.element.isRequired,
   title: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,

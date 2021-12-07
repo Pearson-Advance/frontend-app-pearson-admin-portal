@@ -15,6 +15,8 @@ const institutionSlice = createSlice({
     form: {
       isOpen: false,
       errors: {},
+      create: true,
+      institution: {},
     },
   },
   reducers: {
@@ -47,6 +49,7 @@ const institutionSlice = createSlice({
       state.status = RequestStatus.SUCCESSFUL;
       state.data = [payload, ...state.data];
       state.form = {
+        ...state.form,
         errors: {},
         isOpen: false,
       };
@@ -54,17 +57,51 @@ const institutionSlice = createSlice({
     institutionPostFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
       state.form = {
+        ...state.form,
         errors: payload,
         isOpen: true,
       };
     },
-    openModalForm: (state) => {
-      state.form.isOpen = true;
+    openModalForm: (state, { payload }) => {
+      if (payload) {
+        // When there is a payload, it opens the Edit modal.
+        state.form = {
+          ...state.form,
+          isOpen: true,
+          institution: payload,
+        };
+      } else {
+        state.form = {
+          ...state.form,
+          isOpen: true,
+          institution: {},
+        };
+      }
     },
     closeModalForm: (state) => {
       state.form = {
+        ...state.form,
         errors: {},
         isOpen: false,
+      };
+    },
+    institutionPatchSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? payload : content),
+      );
+      state.form = {
+        ...state.form,
+        errors: {},
+        isOpen: false,
+      };
+    },
+    institutionPatchFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        ...state.form,
+        errors: payload,
+        isOpen: true,
       };
     },
   },
@@ -81,6 +118,8 @@ export const {
   institutionPostClean,
   closeModalForm,
   openModalForm,
+  institutionPatchFailed,
+  institutionPatchSuccess,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;
