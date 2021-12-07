@@ -1,2 +1,2 @@
 export { reducer } from './slices';
-export { fetchInstitutions } from './thunks';
+export { fetchInstitutions, createInstitution } from './thunks';
