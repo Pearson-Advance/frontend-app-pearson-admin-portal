@@ -12,3 +12,15 @@ export const RequestStatus = {
   SUCCESSFUL: 'successful',
   FAILED: 'failed',
 };
+
+/**
+ * Enum for Tab indexes.
+ * @readonly
+ * @enum {string}
+ */
+export const TabIndex = {
+  INSTITUTIONS: '1',
+  ADMINS: '2',
+  LICENSES: '3',
+  DATA_REPORT: '4',
+};

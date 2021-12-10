@@ -8,6 +8,7 @@ import Header, { messages as headerMessages } from '@edx/frontend-component-head
 import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 import { Route, Switch } from 'react-router';
 import { InstitutionsPage } from 'features/institutions';
+import { InstitutionAdminsPage } from 'features/institutionAdmins';
 import { MenuBar } from 'features/shared/components/MenuBar';
 import { store } from './store';
 import appMessages from './i18n';
@@ -21,6 +22,7 @@ subscribe(APP_READY, () => {
       <MenuBar />
       <Switch>
         <Route path="/" exact component={InstitutionsPage} />
+        <Route path="/institution-admin" exact component={InstitutionAdminsPage} />
       </Switch>
       <Footer />
     </AppProvider>,
