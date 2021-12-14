@@ -1,10 +1,14 @@
 import React from 'react';
+
 import Nav from '@edx/paragon/dist/Nav';
 import { useHistory } from 'react-router';
+import { useSelector } from 'react-redux';
+import { selectPage } from 'features/shared/data/selectors';
 
 import './index.scss';
 
 const MenuBar = () => {
+  const { tab } = useSelector(selectPage);
   const history = useHistory();
   const onLinkClick = (e) => {
     e.preventDefault();
@@ -15,7 +19,7 @@ const MenuBar = () => {
   };
 
   return (
-    <Nav variant="pills" activeKey="1" className="justify-content-center menu-bar">
+    <Nav variant="pills" activeKey={tab} className="justify-content-center menu-bar">
       <Nav.Item>
         <Nav.Link onClick={onLinkClick} eventKey="1" href="/">
           Institutions

@@ -10,6 +10,8 @@ import { Add } from '@edx/paragon/icons';
 import { ActionRow, Button } from '@edx/paragon';
 import { Modal } from 'features/shared/components/Modal';
 import { closeModalForm, openModalForm } from 'features/institutions/data/slices';
+import { changeTab } from 'features/shared/data/slices';
+import { TabIndex } from 'features/shared/data/constants';
 
 const initialFormValues = {
   id: '',
@@ -50,6 +52,7 @@ const InstitutionsPage = () => {
 
   useEffect(() => {
     dispatch(fetchInstitutions(params.get('search'), params.get('active'), params.get('name')));
+    dispatch(changeTab(TabIndex.INSTITUTIONS));
   }, [dispatch, location.search]);
 
   useEffect(() => {
