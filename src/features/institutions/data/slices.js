@@ -25,7 +25,7 @@ const institutionSlice = createSlice({
     fetchInstitutionsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    institutionPostSuccess: (state, { payload }) => {
+    postInstitutionSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.data = [payload, ...state.data];
       state.form = {
@@ -34,7 +34,7 @@ const institutionSlice = createSlice({
         isOpen: false,
       };
     },
-    institutionPostFailed: (state, { payload }) => {
+    postInstitutionFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
       state.form = {
         ...state.form,
@@ -65,7 +65,7 @@ const institutionSlice = createSlice({
         isOpen: false,
       };
     },
-    institutionPatchSuccess: (state, { payload }) => {
+    patchInstitutionSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.data = state.data.map(
         (content) => (content.id === payload.id ? payload : content),
@@ -76,7 +76,7 @@ const institutionSlice = createSlice({
         isOpen: false,
       };
     },
-    institutionPatchFailed: (state, { payload }) => {
+    patchInstitutionFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
       state.form = {
         ...state.form,
@@ -91,13 +91,13 @@ export const {
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
   fetchInstitutionsFailed,
-  institutionPostSuccess,
-  institutionPostFailed,
+  postInstitutionSuccess,
+  postInstitutionFailed,
   institutionPostClean,
   closeModalForm,
   openModalForm,
-  institutionPatchFailed,
-  institutionPatchSuccess,
+  patchInstitutionFailed,
+  patchInstitutionSuccess,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;

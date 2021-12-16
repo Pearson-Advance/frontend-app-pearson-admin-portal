@@ -3,7 +3,7 @@ import { Factory } from 'rosie';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { fetchInstitutions, createInstitution, editInstitution } from 'features/institutions/data/thunks';
-import { openModalForm, closeModalForm, institutionPostSuccess } from 'features/institutions/data/slices';
+import { openModalForm, closeModalForm, postInstitutionSuccess } from 'features/institutions/data/slices';
 import { executeThunk } from 'test-utils';
 import { initializeStore } from 'store';
 
@@ -192,7 +192,7 @@ describe('Institutions data layer tests', () => {
   test('open modal with edit.', async () => {
     const institution = Factory.build('institution');
 
-    store.dispatch(institutionPostSuccess(institution));
+    store.dispatch(postInstitutionSuccess(institution));
 
     const beforeStore = store.getState().institutions;
     const expected = {
