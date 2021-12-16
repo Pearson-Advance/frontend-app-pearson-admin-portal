@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DataTable from '@edx/paragon/dist/DataTable';
-import { Row, Col } from '@edx/paragon';
+import { Row, Col, TextFilter } from '@edx/paragon';
 import { COLUMNS } from './columns';
 
 const InstitutionAdminsTable = ({ data }) => (
@@ -9,7 +9,10 @@ const InstitutionAdminsTable = ({ data }) => (
     <Col xs={12}>
       <DataTable
         isSortable
+        isFilterable
+        showFiltersInSidebar
         isPaginated
+        defaultColumnValues={{ Filter: TextFilter }}
         initialState={{
           pageSize: 10,
           pageIndex: 0,
