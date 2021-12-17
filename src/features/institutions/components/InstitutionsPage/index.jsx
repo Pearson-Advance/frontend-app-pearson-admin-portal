@@ -10,6 +10,7 @@ import { Modal } from 'features/shared/components/Modal';
 import { closeModalForm, openModalForm } from 'features/institutions/data/slices';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
+import { has } from 'lodash';
 
 const initialFormValues = {
   id: '',
@@ -22,7 +23,7 @@ const InstitutionsPage = () => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState(initialFormValues);
   const { data, form } = useSelector(state => state.institutions);
-  const create = form.institution.id === undefined;
+  const create = !has(form.institution, 'id');
 
   const handleCloseModal = () => {
     setFields(initialFormValues);

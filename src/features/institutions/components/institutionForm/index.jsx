@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form } from '@edx/paragon';
 import PropTypes from 'prop-types';
+import { has } from 'lodash';
 
 export const InstitutionForm = ({ fields, setFields, errors }) => {
   const handleInputChange = (e) => {
@@ -12,7 +13,7 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
 
   return (
     <>
-      <Form.Group isInvalid={Object.prototype.hasOwnProperty.call(errors, 'name')}>
+      <Form.Group isInvalid={has(errors, 'name')}>
         <Form.Label>Name</Form.Label>
         <Form.Control
           name="name"
@@ -22,7 +23,7 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
         />
         {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
       </Form.Group>
-      <Form.Group isInvalid={Object.prototype.hasOwnProperty.call(errors, 'shortName')}>
+      <Form.Group isInvalid={has(errors, 'shortName')}>
         <Form.Label>Short name</Form.Label>
         <Form.Control
           name="shortName"

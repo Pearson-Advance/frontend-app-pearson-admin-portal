@@ -13,6 +13,7 @@ export const Modal = (props) => {
     isOpen,
     handleCloseModal,
     handlePrimaryAction,
+    variant,
   } = props;
 
   return (
@@ -21,7 +22,7 @@ export const Modal = (props) => {
       isOpen={isOpen}
       onClose={handleCloseModal}
       size="md"
-      variant="default"
+      variant={variant}
       isBlocking
       hasCloseButton={false}
       isFullscreenOnMobile
@@ -49,9 +50,15 @@ export const Modal = (props) => {
 };
 
 Modal.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.element,
   title: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
   handlePrimaryAction: PropTypes.func.isRequired,
+  variant: PropTypes.string,
+};
+
+Modal.defaultProps = {
+  children: (<></>),
+  variant: 'default',
 };

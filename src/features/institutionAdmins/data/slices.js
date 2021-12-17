@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 import { RequestStatus } from 'features/shared/data/constants';
+import { omit } from 'lodash';
 
 const institutionAdminSlice = createSlice({
   name: 'institutionAdmins',
@@ -40,6 +41,24 @@ const institutionAdminSlice = createSlice({
         isOpen: true,
       };
     },
+    patchAdminRequest: (state, { payload }) => {
+      state.status = RequestStatus.IN_PROGRESS;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? { ...content, loading: true } : content),
+      );
+    },
+    patchAdminSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? payload : content),
+      );
+    },
+    patchAdminFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? omit(content, 'loading') : content),
+      );
+    },
     openModal: (state) => {
       state.form = {
         ...state.form,
@@ -64,6 +83,9 @@ export const {
   postAdminFailed,
   openModal,
   closeModal,
+  patchAdminRequest,
+  patchAdminSuccess,
+  patchAdminFailed,
 } = institutionAdminSlice.actions;
 
 export const { reducer } = institutionAdminSlice;
