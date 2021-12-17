@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DataTable from '@edx/paragon/dist/DataTable';
-import { Row, Col } from '@edx/paragon';
+import { Row, Col, TextFilter } from '@edx/paragon';
 import { useDispatch } from 'react-redux';
 import { openModalForm } from 'features/institutions/data/slices';
 import { getColumns } from './columns';
@@ -23,6 +23,9 @@ const InstitutionsTable = ({ data }) => {
         <DataTable
           isSortable
           isPaginated
+          isFilterable
+          showFiltersInSidebar
+          defaultColumnValues={{ Filter: TextFilter }}
           initialState={{
             pageSize: 10,
             pageIndex: 0,

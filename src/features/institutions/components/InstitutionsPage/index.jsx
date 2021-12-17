@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Container from '@edx/paragon/dist/Container';
 import { InstitutionsTable } from 'features/institutions/components/InstitutionsTable';
 import { fetchInstitutions, createInstitution, editInstitution } from 'features/institutions/data';
-import { useLocation } from 'react-router';
-import { Filters } from 'features/institutions/components/Filters';
 import { InstitutionForm } from 'features/institutions/components/institutionForm';
 import { Add } from '@edx/paragon/icons';
 import { ActionRow, Button } from '@edx/paragon';
@@ -22,10 +20,8 @@ const initialFormValues = {
 
 const InstitutionsPage = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
   const [fields, setFields] = useState(initialFormValues);
   const { data, form } = useSelector(state => state.institutions);
-  const params = new URLSearchParams(location.search);
   const create = form.institution.id === undefined;
 
   const handleCloseModal = () => {
@@ -51,9 +47,9 @@ const InstitutionsPage = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchInstitutions(params.get('search'), params.get('active'), params.get('name')));
+    dispatch(fetchInstitutions());
     dispatch(changeTab(TabIndex.INSTITUTIONS));
-  }, [dispatch, location.search]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!create) {
@@ -67,7 +63,6 @@ const InstitutionsPage = () => {
 
   return (
     <Container size="xl">
-      <Filters />
       <Modal
         title={create ? 'Add institution' : `Edit institution: ${form.institution.shortName}`}
         isOpen={form.isOpen}
@@ -80,7 +75,7 @@ const InstitutionsPage = () => {
           errors={form.errors}
         />
       </Modal>
-      <ActionRow>
+      <ActionRow className="pt-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add institution</Button>
       </ActionRow>
       <InstitutionsTable data={data} />
