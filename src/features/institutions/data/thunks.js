@@ -5,10 +5,10 @@ import {
   fetchInstitutionsFailed,
   fetchInstitutionsRequest,
   fetchInstitutionsSuccess,
-  postInstitutionFailed,
-  postInstitutionSuccess,
-  patchInstitutionFailed,
-  patchInstitutionSuccess,
+  institutionPostFailed,
+  institutionPostSuccess,
+  institutionPatchFailed,
+  institutionPatchSuccess,
 } from './slices';
 
 /**
@@ -34,9 +34,9 @@ export function fetchInstitutions(search, active, name) {
 export function createInstitution(name, shortName, active) {
   return async (dispatch) => {
     try {
-      dispatch(postInstitutionSuccess(camelCaseObject((await postInstitution(name, shortName, active)).data)));
+      dispatch(institutionPostSuccess(camelCaseObject((await postInstitution(name, shortName, active)).data)));
     } catch (error) {
-      dispatch(postInstitutionFailed(camelCaseObject(error.response.data)));
+      dispatch(institutionPostFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };
@@ -45,9 +45,9 @@ export function createInstitution(name, shortName, active) {
 export function editInstitution(id, name, shortName, active) {
   return async (dispatch) => {
     try {
-      dispatch(patchInstitutionSuccess(camelCaseObject((await updateInstitution(id, name, shortName, active)).data)));
+      dispatch(institutionPatchSuccess(camelCaseObject((await updateInstitution(id, name, shortName, active)).data)));
     } catch (error) {
-      dispatch(patchInstitutionFailed(camelCaseObject(error.response.data)));
+      dispatch(institutionPatchFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };
