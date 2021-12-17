@@ -1,10 +1,12 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getInstitutionAdmins } from './api';
+import { getInstitutionAdmins, postInstitutionAdmin } from './api';
 import {
   fetchInstitutionAdminsFailed,
   fetchInstitutionAdminsRequest,
   fetchInstitutionAdminsSuccess,
+  postAdminSuccess,
+  postAdminFailed,
 } from './slices';
 
 /**
@@ -18,6 +20,17 @@ export function fetchInstitutionAdmins() {
       dispatch(fetchInstitutionAdminsSuccess(camelCaseObject((await getInstitutionAdmins()).data)));
     } catch (error) {
       dispatch(fetchInstitutionAdminsFailed());
+      logError(error);
+    }
+  };
+}
+
+export function createInstitutionAdmin(institution, coach) {
+  return async (dispatch) => {
+    try {
+      dispatch(postAdminSuccess(camelCaseObject((await postInstitutionAdmin(institution, coach)).data)));
+    } catch (error) {
+      dispatch(postAdminFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };
