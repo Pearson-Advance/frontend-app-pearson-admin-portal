@@ -13,3 +13,10 @@ export function postInstitutionAdmin(institutionId, adminEmail) {
     snakeCaseObject({ institutionId, adminEmail }),
   );
 }
+
+export function patchInstitutionAdmin(id, active) {
+  return getAuthenticatedHttpClient().patch(
+    `${institutionAdminURL}${id}/`,
+    snakeCaseObject({ active }),
+  );
+}

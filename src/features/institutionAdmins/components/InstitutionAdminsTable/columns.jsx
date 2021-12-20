@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
-import { Badge, CheckboxFilter } from '@edx/paragon';
+import { CheckboxFilter, Form, Spinner } from '@edx/paragon';
+import { has } from 'lodash';
 
-export const COLUMNS = [
+export const getColumns = props => [
   {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
@@ -17,7 +18,23 @@ export const COLUMNS = [
   {
     Header: 'Active',
     accessor: 'active',
-    Cell: ({ row }) => <Badge variant={row.values.active ? 'success' : 'danger'}>{row.values.active ? 'Yes' : 'No'}</Badge>,
+    Cell: ({ row }) => {
+      if (!has(row.original, 'loading')) {
+        return (
+          <Form.Group
+            controlId={`formSwitch-${row.id}`}
+          >
+            <Form.Check
+              type="switch"
+              checked={row.values.active}
+              id={`active-switch-${row.id}`}
+              onChange={() => { props.setRow(row.original); props.open(); }}
+            />
+          </Form.Group>
+        );
+      }
+      return <Spinner animation="border" />;
+    },
     Filter: CheckboxFilter,
     filter: 'includesValue',
     filterChoices: [

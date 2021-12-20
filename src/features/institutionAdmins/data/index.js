@@ -1,3 +1,3 @@
 export { reducer } from './slices';
-export { fetchInstitutionAdmins, createInstitutionAdmin } from './thunks';
+export { fetchInstitutionAdmins, createInstitutionAdmin, editInstitutionAdmin } from './thunks';
 export { selectAdmins } from './selectors';
