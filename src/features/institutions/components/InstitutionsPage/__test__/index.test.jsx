@@ -6,15 +6,6 @@ import { InstitutionsPage } from 'features/institutions/components/InstitutionsP
 import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 
-const mockLocationSearch = jest.fn();
-
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useLocation: () => ({
-    search: mockLocationSearch,
-  }),
-}));
-
 let store;
 let component;
 

@@ -4,15 +4,6 @@ import { InstitutionForm } from 'features/institutions/components/institutionFor
 import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 
-const mockLocationSearch = jest.fn();
-
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useLocation: () => ({
-    search: mockLocationSearch,
-  }),
-}));
-
 let initialFormValues;
 let errors;
 
