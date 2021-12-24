@@ -21,12 +21,6 @@ const licenseSlice = createSlice({
     fetchLicensesFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    changePageIndex: (state, { payload }) => {
-      state.pageIndex = payload;
-    },
-    changePageSize: (state, { payload }) => {
-      state.pageSize = payload;
-    },
   },
 });
 
@@ -34,8 +28,6 @@ export const {
   fetchLicensesRequest,
   fetchLicensesSuccess,
   fetchLicensesFailed,
-  changePageIndex,
-  changePageSize,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;
