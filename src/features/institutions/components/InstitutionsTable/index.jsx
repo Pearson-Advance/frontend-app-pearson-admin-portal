@@ -2,12 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DataTable from '@edx/paragon/dist/DataTable';
 import { Row, Col, TextFilter } from '@edx/paragon';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openModalForm } from 'features/institutions/data/slices';
+import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
 
 const InstitutionsTable = ({ data }) => {
   const dispatch = useDispatch();
+  const {
+    pageSize, pageIndex, filters, sortBy,
+  } = useSelector(state => state.page.dataTable);
 
   const handleEditModal = (id, name, shortName, active) => {
     dispatch(openModalForm({
@@ -27,8 +31,7 @@ const InstitutionsTable = ({ data }) => {
           showFiltersInSidebar
           defaultColumnValues={{ Filter: TextFilter }}
           initialState={{
-            pageSize: 10,
-            pageIndex: 0,
+            pageSize, pageIndex, filters: JSON.parse(filters), sortBy,
           }}
           itemCount={data.length}
           data={data}
@@ -37,6 +40,7 @@ const InstitutionsTable = ({ data }) => {
           <DataTable.Table />
           <DataTable.EmptyTable content="No results found." />
           <DataTable.TableFooter />
+          <PersistController />
         </DataTable>
       </Col>
     </Row>

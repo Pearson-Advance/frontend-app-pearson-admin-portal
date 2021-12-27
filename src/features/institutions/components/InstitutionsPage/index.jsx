@@ -48,8 +48,8 @@ const InstitutionsPage = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchInstitutions());
     dispatch(changeTab(TabIndex.INSTITUTIONS));
+    dispatch(fetchInstitutions());
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import DataTable from '@edx/paragon/dist/DataTable';
 import {
@@ -8,10 +8,14 @@ import {
 import { editInstitutionAdmin } from 'features/institutionAdmins/data';
 import { Modal } from 'features/shared/components/Modal';
 import { isEmpty } from 'lodash';
+import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
 
 const InstitutionAdminsTable = ({ data }) => {
   const dispatch = useDispatch();
+  const {
+    pageSize, pageIndex, filters, sortBy,
+  } = useSelector(state => state.page.dataTable);
   const [isOpen, open, close] = useToggle(false);
   const [selectedRow, setRow] = useState({});
   const targetState = selectedRow.active ? 'disable' : 'enable';
@@ -38,8 +42,7 @@ const InstitutionAdminsTable = ({ data }) => {
             isPaginated
             defaultColumnValues={{ Filter: TextFilter }}
             initialState={{
-              pageSize: 10,
-              pageIndex: 0,
+              pageSize, pageIndex, filters: JSON.parse(filters), sortBy,
             }}
             itemCount={data.length}
             data={data}
@@ -48,6 +51,7 @@ const InstitutionAdminsTable = ({ data }) => {
             <DataTable.Table />
             <DataTable.EmptyTable content="No results found." />
             <DataTable.TableFooter />
+            <PersistController />
           </DataTable>
         </Col>
       </Row>
@@ -59,7 +63,7 @@ const InstitutionAdminsTable = ({ data }) => {
         variant="warning"
       >
         {selectedRow.active
-        && <p>This operation will remove <b>{`${selectedRow.user.username}'s`}</b> accesses of all licensed courses of <b>{`${selectedRow.institution.name}`}.</b></p>}
+          && <p>This operation will remove <b>{`${selectedRow.user.username}'s`}</b> accesses of all licensed courses of <b>{`${selectedRow.institution.name}`}.</b></p>}
       </Modal>
     </>
   );

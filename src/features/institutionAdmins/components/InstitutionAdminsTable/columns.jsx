@@ -18,6 +18,7 @@ export const getColumns = props => [
   {
     Header: 'Active',
     accessor: 'active',
+    disableSortBy: true,
     Cell: ({ row }) => {
       if (!has(row.original, 'loading')) {
         return (
