@@ -17,6 +17,7 @@ export const getColumns = props => [
   {
     Header: 'Active',
     accessor: 'active',
+    disableSortBy: true,
     Cell: ({ row }) => <Badge variant={row.values.active ? 'success' : 'danger'}>{row.values.active ? 'Yes' : 'No'}</Badge>,
     Filter: CheckboxFilter,
     filter: 'includesValue',
@@ -35,6 +36,7 @@ export const getColumns = props => [
     Header: 'Actions',
     accessor: 'id',
     disableFilters: true,
+    disableSortBy: true,
     Cell: ({ row }) => (
       <OverlayTrigger
         placement="right"
