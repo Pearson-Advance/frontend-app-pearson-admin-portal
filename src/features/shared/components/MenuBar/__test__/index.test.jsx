@@ -58,6 +58,6 @@ describe('MenuBar tests', () => {
 
     fireEvent.click(component.getByText('Licenses'));
 
-    expect(mockHistoryPush).toHaveBeenCalledWith('/license');
+    expect(mockHistoryPush).toHaveBeenCalledWith('/licenses');
   });
 });
