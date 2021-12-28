@@ -13,7 +13,7 @@ const LicensesPage = () => {
   }, [dispatch]);
 
   return (
-    <Container size="xl" className="pt-4">
+    <Container className="p-4">
       <LicenseTable />
     </Container>
   );

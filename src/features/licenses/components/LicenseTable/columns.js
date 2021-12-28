@@ -16,15 +16,18 @@ export const getColumns = () => [
   {
     Header: 'Purchased seats',
     accessor: 'purchasedSeats',
+    disableFilters: true,
   },
   {
     Header: 'Course access duration',
     accessor: 'courseAccessDuration',
     disableSortBy: true,
+    disableFilters: true,
   },
   {
     Header: 'Status',
     accessor: 'status',
     disableSortBy: true,
+    disableFilters: true,
   },
 ];
