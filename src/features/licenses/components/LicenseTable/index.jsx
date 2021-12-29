@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 
 import { PersistController } from 'features/shared/components/PersistController';
 import { fetchLicenses } from 'features/licenses/data';
@@ -9,11 +10,17 @@ import { getColumns } from './columns';
 
 const LicenseTable = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     pageSize, pageIndex, filters, sortBy,
   } = useSelector(state => state.page.dataTable);
-  const columns = useMemo(() => getColumns(), []);
   const { data } = useSelector(state => state.licenses);
+
+  const handleSowDetails = (licenseId) => {
+    history.push(`/licenses/${licenseId}`);
+  };
+
+  const columns = useMemo(() => getColumns({ handleSowDetails }), []);
 
   useEffect(() => {
     dispatch(fetchLicenses());

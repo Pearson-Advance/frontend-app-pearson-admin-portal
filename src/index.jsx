@@ -9,7 +9,7 @@ import Footer, { messages as footerMessages } from '@edx/frontend-component-foot
 import { Route, Switch } from 'react-router';
 import { InstitutionsPage } from 'features/institutions';
 import { InstitutionAdminsPage } from 'features/institutionAdmins';
-import { LicensesPage } from 'features/licenses';
+import { LicensesPage, LicenseDetail } from 'features/licenses';
 import { MenuBar } from 'features/shared/components/MenuBar';
 import { store } from './store';
 import appMessages from './i18n';
@@ -23,8 +23,9 @@ subscribe(APP_READY, () => {
       <MenuBar />
       <Switch>
         <Route path="/" exact component={InstitutionsPage} />
-        <Route path="/institution-admin" exact component={InstitutionAdminsPage} />
-        <Route path="/license" exact component={LicensesPage} />
+        <Route path="/institution-admins" exact component={InstitutionAdminsPage} />
+        <Route path="/licenses" exact component={LicensesPage} />
+        <Route path="/licenses/:id" exact component={LicenseDetail} />
       </Switch>
       <Footer />
     </AppProvider>,

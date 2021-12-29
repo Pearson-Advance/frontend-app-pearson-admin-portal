@@ -26,12 +26,12 @@ const MenuBar = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="2" href="/institution-admin">
+        <Nav.Link onClick={onLinkClick} eventKey="2" href="/institution-admins">
           Institution Administrators
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="3" href="/license">
+        <Nav.Link onClick={onLinkClick} eventKey="3" href="/licenses">
           Licenses
         </Nav.Link>
       </Nav.Item>
