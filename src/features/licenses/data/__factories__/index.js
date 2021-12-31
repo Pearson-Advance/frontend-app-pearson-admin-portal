@@ -16,4 +16,11 @@ Factory.define('license')
   }))
   .sequence('purchasedSeats', (i) => i)
   .sequence('courseAccessDuration', (i) => i * 10)
-  .attr('status', 'active');
+  .attr('status', 'active')
+  .attr('licenseOrder', () => []);
+
+Factory.define('licenseOrder')
+  .sequence('id')
+  .sequence('orderReference', (i) => i)
+  .sequence('purchasedSeats', (i) => i)
+  .attr('active', true);

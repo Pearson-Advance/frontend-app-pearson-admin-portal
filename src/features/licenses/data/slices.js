@@ -30,7 +30,6 @@ const licenseSlice = createSlice({
     },
     fetchLicenseRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
-      state.licenseById = null;
     },
     fetchLicenseSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
