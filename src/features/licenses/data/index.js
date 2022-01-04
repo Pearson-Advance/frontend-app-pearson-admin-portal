@@ -1,2 +1,2 @@
 export { reducer } from './slices';
-export { fetchLicenses } from './thunks';
+export { fetchLicenses, createLicense, fetchLicenseManageCourses } from './thunks';

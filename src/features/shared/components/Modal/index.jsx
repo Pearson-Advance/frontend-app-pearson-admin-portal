@@ -14,6 +14,7 @@ export const Modal = (props) => {
     handleCloseModal,
     handlePrimaryAction,
     variant,
+    size,
   } = props;
 
   return (
@@ -21,7 +22,7 @@ export const Modal = (props) => {
       title={title}
       isOpen={isOpen}
       onClose={handleCloseModal}
-      size="md"
+      size={size}
       variant={variant}
       isBlocking
       hasCloseButton={false}
@@ -56,9 +57,11 @@ Modal.propTypes = {
   handleCloseModal: PropTypes.func.isRequired,
   handlePrimaryAction: PropTypes.func.isRequired,
   variant: PropTypes.string,
+  size: PropTypes.string,
 };
 
 Modal.defaultProps = {
   children: (<></>),
   variant: 'default',
+  size: 'md',
 };

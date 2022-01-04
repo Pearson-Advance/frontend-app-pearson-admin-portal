@@ -32,7 +32,6 @@ export const getColumns = ({ handleSowDetails }) => [
     Header: 'Status',
     accessor: 'status',
     disableSortBy: true,
-    disableFilters: true,
   },
   {
     Header: 'Actions',
