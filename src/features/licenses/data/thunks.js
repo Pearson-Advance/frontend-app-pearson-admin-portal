@@ -2,6 +2,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
   getLicenses, getLicenseById, postLicense, getLicenseManageCourses,
+  postLicenseOrder,
 } from './api';
 import {
   fetchLicensesRequest,
@@ -15,6 +16,8 @@ import {
   fetchLicenseManageCoursesRequest,
   fetchLicenseManageCoursesSuccess,
   fetchLicenseManageCoursesFailed,
+  postLicenseOrderSuccess,
+  postLicenseOrderFailed,
 } from './slices';
 
 /**
@@ -88,6 +91,27 @@ export function fetchLicenseManageCourses(url) {
       );
     } catch (error) {
       dispatch(fetchLicenseManageCoursesFailed());
+      logError(error);
+    }
+  };
+}
+
+/**
+ * Post LicenseOrder Creation.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export function createLicenseOrder(license, orderReference, purchasedSeats, courseAccessDuration, active) {
+  return async (dispatch) => {
+    try {
+      dispatch(postLicenseOrderSuccess(camelCaseObject((await postLicenseOrder(
+        license,
+        orderReference,
+        purchasedSeats,
+        courseAccessDuration,
+        active,
+      )).data)));
+    } catch (error) {
+      dispatch(postLicenseOrderFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };
