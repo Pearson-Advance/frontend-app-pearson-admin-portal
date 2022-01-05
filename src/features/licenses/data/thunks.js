@@ -1,6 +1,5 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { startsWith } from 'lodash';
 import {
   getLicenses, getLicenseById, postLicense, getLicenseManageCourses,
 } from './api';
@@ -81,12 +80,10 @@ export function createLicense(institution, course, courseAccessDuration, status)
 export function fetchLicenseManageCourses(url) {
   return async (dispatch) => {
     try {
-      const response = (await getLicenseManageCourses(url)).data;
-
       dispatch(fetchLicenseManageCoursesRequest());
       dispatch(
         fetchLicenseManageCoursesSuccess(
-          camelCaseObject(response.results.filter(course => startsWith(course.id, 'course-v1'))),
+          camelCaseObject((await getLicenseManageCourses(url)).data),
         ),
       );
     } catch (error) {
