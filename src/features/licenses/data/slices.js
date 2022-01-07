@@ -7,6 +7,7 @@ const licenseSlice = createSlice({
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     data: [],
+    ordersData: [],
     licenseById: null,
     pageSize: 10,
     pageIndex: 0,
@@ -79,6 +80,23 @@ const licenseSlice = createSlice({
         errors: {},
       };
     },
+    postLicenseOrderSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.ordersData = [payload, ...state.ordersData];
+      state.form = {
+        ...state.form,
+        errors: {},
+        isOpen: false,
+      };
+    },
+    postLicenseOrderFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        ...state.form,
+        errors: payload,
+        isOpen: true,
+      };
+    },
   },
 });
 
@@ -96,6 +114,8 @@ export const {
   fetchLicenseManageCoursesFailed,
   openLicenseModal,
   closeLicenseModal,
+  postLicenseOrderSuccess,
+  postLicenseOrderFailed,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;

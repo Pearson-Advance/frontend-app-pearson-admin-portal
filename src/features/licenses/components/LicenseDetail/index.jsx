@@ -2,27 +2,61 @@ import {
   ActionRow, Button, Card, Col, Container, Icon, IconButton, Row, Spinner,
 } from '@edx/paragon';
 import { Add, ArrowBack } from '@edx/paragon/icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useHistory, useParams } from 'react-router';
-import { fetchLicensebyId } from '../../data/thunks';
-import { LicenseOrders } from '../LicenseOrders';
+import { Modal } from 'features/shared/components/Modal';
+import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
+import { createLicenseOrder, fetchLicensebyId } from 'features/licenses/data/thunks';
+import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
+import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
+
+const initialFormValues = {
+  id: '',
+  orderReference: '',
+  purchasedSeats: 0,
+  courseAccessDuration: 180,
+  active: true,
+};
 
 export const LicenseDetail = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { id } = useParams();
-  const { licenseById } = useSelector(state => state.licenses);
+  const { ordersData, form, licenseById } = useSelector(state => state.licenses);
+  const [fields, setFields] = useState(initialFormValues);
 
   const handleGoBackClick = () => {
     history.push('/licenses');
   };
 
+  const handleCloseModal = () => {
+    setFields(initialFormValues);
+    dispatch(closeLicenseModal());
+  };
+
+  const handleOpenModal = () => {
+    setFields(initialFormValues);
+    dispatch(openLicenseModal());
+  };
+
+  const handleSubmit = () => {
+    dispatch(
+      createLicenseOrder(
+        { id: parseInt(id, 10) },
+        fields.orderReference,
+        fields.purchasedSeats,
+        fields.courseAccessDuration,
+        fields.active,
+      ),
+    );
+  };
+
   useEffect(() => {
     dispatch(fetchLicensebyId(id));
-  }, [id]);
+  }, [id, ordersData]);
 
   return (
     <Container size="xl" className="p-4">
@@ -71,12 +105,28 @@ export const LicenseDetail = () => {
                           src={Add}
                           iconAs={Icon}
                           alt="Close"
-                          onClick={() => { }}
+                          onClick={handleOpenModal}
                           className="mr-2"
                         />
                       </ActionRow>
                     )}
                   />
+                  <Container size="xl">
+                    <Modal
+                      title="Add order"
+                      isOpen={form.isOpen}
+                      handleCloseModal={handleCloseModal}
+                      handlePrimaryAction={handleSubmit}
+                    >
+                      <LicenseOrderForm
+                        id={licenseById}
+                        fields={fields}
+                        setFields={setFields}
+                        errors={form.errors}
+                      />
+                    </Modal>
+                  </Container>
+
                   <Card.Body>
                     <Card.Text>
                       <LicenseOrders data={licenseById.licenseOrder} />
