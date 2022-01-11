@@ -17,7 +17,6 @@ const initialFormValues = {
   id: '',
   orderReference: '',
   purchasedSeats: 0,
-  courseAccessDuration: 180,
   active: true,
 };
 

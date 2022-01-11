@@ -100,14 +100,13 @@ export function fetchLicenseManageCourses(url) {
  * Post LicenseOrder Creation.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function createLicenseOrder(license, orderReference, purchasedSeats, courseAccessDuration, active) {
+export function createLicenseOrder(license, orderReference, purchasedSeats, active) {
   return async (dispatch) => {
     try {
       dispatch(postLicenseOrderSuccess(camelCaseObject((await postLicenseOrder(
         license,
         orderReference,
         purchasedSeats,
-        courseAccessDuration,
         active,
       )).data)));
     } catch (error) {
