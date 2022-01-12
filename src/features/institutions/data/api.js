@@ -7,16 +7,20 @@ export function getInstitutions() {
   return getAuthenticatedHttpClient().get(institutionURL);
 }
 
-export function postInstitution(name, shortName, active = true) {
+export function postInstitution(name, shortName, externalId, active = true) {
   return getAuthenticatedHttpClient().post(
     institutionURL,
-    snakeCaseObject({ name, shortName, active }),
+    snakeCaseObject({
+      name, shortName, externalId, active,
+    }),
   );
 }
 
-export function updateInstitution(id, name, shortName, active) {
+export function updateInstitution(id, name, shortName, externalId, active) {
   return getAuthenticatedHttpClient().patch(
     `${institutionURL}${id}/`,
-    snakeCaseObject({ name, shortName, active }),
+    snakeCaseObject({
+      name, shortName, externalId, active,
+    }),
   );
 }

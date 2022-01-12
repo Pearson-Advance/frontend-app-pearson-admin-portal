@@ -13,9 +13,9 @@ const InstitutionsTable = ({ data }) => {
     pageSize, pageIndex, filters, sortBy,
   } = useSelector(state => state.page.dataTable);
 
-  const handleEditModal = (id, name, shortName, active) => {
+  const handleEditModal = (id, name, shortName, externalId, active) => {
     dispatch(openModalForm({
-      id, name, shortName, active,
+      id, name, shortName, externalId, active,
     }));
   };
 
