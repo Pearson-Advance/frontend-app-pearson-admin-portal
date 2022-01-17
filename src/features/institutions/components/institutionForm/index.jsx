@@ -33,6 +33,16 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
         />
         {errors.shortName && <Form.Control.Feedback type="invalid">{errors.shortName}</Form.Control.Feedback>}
       </Form.Group>
+      <Form.Group isInvalid={has(errors, 'name')}>
+        <Form.Label>External Id</Form.Label>
+        <Form.Control
+          name="externalId"
+          maxLength="64"
+          value={fields.externalId}
+          onChange={handleInputChange}
+        />
+        {errors.externalId && <Form.Control.Feedback type="invalid">{errors.externalId}</Form.Control.Feedback>}
+      </Form.Group>
       <Form.Group>
         <Form.Checkbox
           name="active"
@@ -50,11 +60,13 @@ InstitutionForm.propTypes = {
   fields: PropTypes.shape({
     name: PropTypes.string,
     shortName: PropTypes.string,
+    externalId: PropTypes.string,
     active: PropTypes.bool,
   }).isRequired,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     name: PropTypes.string,
     shortName: PropTypes.string,
+    externalId: PropTypes.string,
   }).isRequired,
 };

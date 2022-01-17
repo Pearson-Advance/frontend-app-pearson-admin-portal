@@ -15,6 +15,10 @@ export const getColumns = props => [
     accessor: 'shortName',
   },
   {
+    Header: 'External ID',
+    accessor: 'externalId',
+  },
+  {
     Header: 'Active',
     accessor: 'active',
     disableSortBy: true,
@@ -47,7 +51,7 @@ export const getColumns = props => [
           iconAs={Edit}
           onClick={() => {
             props.handleEditModal(
-              row.values.id, row.values.name, row.values.shortName, row.values.active,
+              row.values.id, row.values.name, row.values.shortName, row.values.externalId, row.values.active,
             );
           }}
         />

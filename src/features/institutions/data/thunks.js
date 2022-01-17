@@ -31,10 +31,15 @@ export function fetchInstitutions() {
  * Post InstitutionCreation.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function createInstitution(name, shortName, active) {
+export function createInstitution(name, shortName, externalId, active) {
   return async (dispatch) => {
     try {
-      dispatch(postInstitutionSuccess(camelCaseObject((await postInstitution(name, shortName, active)).data)));
+      dispatch(postInstitutionSuccess(camelCaseObject((await postInstitution(
+        name,
+        shortName,
+        externalId,
+        active,
+      )).data)));
     } catch (error) {
       dispatch(postInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);
@@ -42,10 +47,16 @@ export function createInstitution(name, shortName, active) {
   };
 }
 
-export function editInstitution(id, name, shortName, active) {
+export function editInstitution(id, name, shortName, externalId, active) {
   return async (dispatch) => {
     try {
-      dispatch(patchInstitutionSuccess(camelCaseObject((await updateInstitution(id, name, shortName, active)).data)));
+      dispatch(patchInstitutionSuccess(camelCaseObject((await updateInstitution(
+        id,
+        name,
+        shortName,
+        externalId,
+        active,
+      )).data)));
     } catch (error) {
       dispatch(patchInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);

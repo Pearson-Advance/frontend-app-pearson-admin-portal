@@ -16,6 +16,7 @@ const initialFormValues = {
   id: '',
   name: '',
   shortName: '',
+  externalId: '',
   active: true,
 };
 
@@ -40,10 +41,17 @@ const InstitutionsPage = () => {
       dispatch(createInstitution(
         fields.name,
         fields.shortName,
+        fields.externalId,
         fields.active,
       ));
     } else {
-      dispatch(editInstitution(form.institution.id, fields.name, fields.shortName, fields.active));
+      dispatch(editInstitution(
+        form.institution.id,
+        fields.name,
+        fields.shortName,
+        fields.externalId,
+        fields.active,
+      ));
     }
   };
 
@@ -57,6 +65,7 @@ const InstitutionsPage = () => {
       setFields({
         name: form.institution.name,
         shortName: form.institution.shortName,
+        externalId: form.institution.externalId,
         active: form.institution.active,
       });
     }

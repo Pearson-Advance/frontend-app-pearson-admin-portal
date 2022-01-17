@@ -13,6 +13,7 @@ describe('Test suite for InstitutionForm', () => {
       id: '',
       name: '',
       shortName: '',
+      externalId: '',
       active: true,
     };
     errors = {};
