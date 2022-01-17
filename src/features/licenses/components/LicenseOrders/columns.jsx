@@ -6,15 +6,10 @@ export const COLUMNS = [
   {
     Header: 'Order Reference',
     accessor: 'orderReference',
-
   },
   {
     Header: 'Purchased seats',
     accessor: 'purchasedSeats',
-  },
-  {
-    Header: 'Course Access duration',
-    accessor: 'courseAccessDuration',
   },
   {
     Header: 'Status',

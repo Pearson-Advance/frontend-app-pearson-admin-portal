@@ -29,11 +29,11 @@ export function getLicenseManageCourses(url = managedCoursesEndpoint) {
   return getAuthenticatedHttpClient().get(url, { params: { site_org_filter: 1 } });
 }
 
-export function postLicenseOrder(license, orderReference, purchasedSeats, courseAccessDuration, active = true) {
+export function postLicenseOrder(license, orderReference, purchasedSeats, active = true) {
   return getAuthenticatedHttpClient().post(
     ordersEndpoint,
     snakeCaseObject({
-      license, orderReference, purchasedSeats, courseAccessDuration, active,
+      license, orderReference, purchasedSeats, active,
     }),
   );
 }

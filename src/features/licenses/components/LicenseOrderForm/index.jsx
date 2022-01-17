@@ -33,16 +33,6 @@ export const LicenseOrderForm = ({ fields, setFields, errors }) => {
         />
         {errors.purchasedSeats && <Form.Control.Feedback type="invalid">{errors.purchasedSeats}</Form.Control.Feedback>}
       </Form.Group>
-      <Form.Group isInvalid={has(errors, 'courseAccessDuration')}>
-        <Form.Label>Course Access Duration</Form.Label>
-        <Form.Control
-          name="courseAccessDuration"
-          maxLength="6"
-          value={fields.courseAccessDuration}
-          onChange={handleInputChange}
-        />
-        {errors.courseAccessDuration && <Form.Control.Feedback type="invalid">{errors.courseAccessDuration}</Form.Control.Feedback>}
-      </Form.Group>
     </>
   );
 };
@@ -51,13 +41,11 @@ LicenseOrderForm.propTypes = {
   fields: PropTypes.shape({
     orderReference: PropTypes.string,
     purchasedSeats: PropTypes.number,
-    courseAccessDuration: PropTypes.number,
   }).isRequired,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     orderReference: PropTypes.string,
     purchasedSeats: PropTypes.number,
-    courseAccessDuration: PropTypes.number,
     nonFieldErrors: PropTypes.string,
   }).isRequired,
 };
