@@ -23,4 +23,5 @@ export const TabIndex = {
   ADMINS: '2',
   LICENSES: '3',
   DATA_REPORT: '4',
+  ENROLLMENTS: '5',
 };

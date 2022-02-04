@@ -40,6 +40,11 @@ const MenuBar = () => {
           Data Report
         </Nav.Link>
       </Nav.Item>
+      <Nav.Item>
+        <Nav.Link onClick={onLinkClick} eventKey="5" href="/enrollments">
+          Enrollments
+        </Nav.Link>
+      </Nav.Item>
     </Nav>
   );
 };
