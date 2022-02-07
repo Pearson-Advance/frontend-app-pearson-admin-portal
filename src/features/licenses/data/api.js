@@ -5,8 +5,14 @@ const endpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
 const managedCoursesEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/managed-courses/`;
 const ordersEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 
-export function getLicenses() {
-  return getAuthenticatedHttpClient().get(endpoint);
+export function getLicenses(selectedInstitution = null) {
+  const params = {};
+
+  if (selectedInstitution) {
+    params.institution_id = selectedInstitution;
+  }
+
+  return getAuthenticatedHttpClient().get(endpoint, { params: { ...params } });
 }
 
 export function getLicenseById(id) {

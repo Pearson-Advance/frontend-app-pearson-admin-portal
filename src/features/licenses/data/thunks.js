@@ -24,11 +24,11 @@ import {
  * Fetches all licenses.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchLicenses() {
+export function fetchLicenses(selectedInstitution = null) {
   return async (dispatch) => {
     try {
       dispatch(fetchLicensesRequest());
-      dispatch(fetchLicensesSuccess(camelCaseObject((await getLicenses()).data)));
+      dispatch(fetchLicensesSuccess(camelCaseObject((await getLicenses(selectedInstitution)).data)));
     } catch (error) {
       dispatch(fetchLicensesFailed());
       logError(error);

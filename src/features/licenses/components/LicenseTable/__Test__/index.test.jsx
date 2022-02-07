@@ -30,7 +30,7 @@ describe('Unit tests for Licenses data table.', () => {
         },
       })}
       >
-        <LicenseTable />
+        <LicenseTable data={data} />
       </Provider>,
     );
 

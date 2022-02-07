@@ -8,6 +8,7 @@ export const getColumns = ({ handleSowDetails }) => [
   {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
+    disableFilters: true,
   },
   {
     Header: 'Course name',

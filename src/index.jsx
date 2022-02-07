@@ -12,6 +12,7 @@ import { InstitutionAdminsPage } from 'features/institutionAdmins';
 import { LicensesPage, LicenseDetail } from 'features/licenses';
 import { StudentEnrollmentsPage } from 'features/enrollments';
 import { MenuBar } from 'features/shared/components/MenuBar';
+import { GlobalFilters } from 'features/shared/components/GlobalFilters';
 import { store } from './store';
 import appMessages from './i18n';
 
@@ -21,6 +22,7 @@ subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
       <Header />
+      <GlobalFilters />
       <MenuBar />
       <Switch>
         <Route path="/" exact component={InstitutionsPage} />

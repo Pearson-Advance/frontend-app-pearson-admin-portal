@@ -6,6 +6,7 @@ export const getColumns = props => [
   {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
+    disableFilters: true,
   },
   {
     Header: 'Coach username',

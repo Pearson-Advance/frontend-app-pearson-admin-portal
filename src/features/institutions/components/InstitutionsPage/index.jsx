@@ -24,6 +24,7 @@ const InstitutionsPage = () => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState(initialFormValues);
   const { data, form } = useSelector(state => state.institutions);
+  const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const create = !has(form.institution, 'id');
 
   const handleCloseModal = () => {
@@ -57,8 +58,8 @@ const InstitutionsPage = () => {
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.INSTITUTIONS));
-    dispatch(fetchInstitutions());
-  }, [dispatch]);
+    dispatch(fetchInstitutions(selectedInstitution));
+  }, [dispatch, selectedInstitution]);
 
   useEffect(() => {
     if (!create) {
