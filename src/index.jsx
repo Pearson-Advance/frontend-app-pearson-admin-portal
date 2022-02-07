@@ -10,6 +10,7 @@ import { Route, Switch } from 'react-router';
 import { InstitutionsPage } from 'features/institutions';
 import { InstitutionAdminsPage } from 'features/institutionAdmins';
 import { LicensesPage, LicenseDetail } from 'features/licenses';
+import { StudentEnrollmentsPage } from 'features/enrollments';
 import { MenuBar } from 'features/shared/components/MenuBar';
 import { store } from './store';
 import appMessages from './i18n';
@@ -26,6 +27,7 @@ subscribe(APP_READY, () => {
         <Route path="/institution-admins" exact component={InstitutionAdminsPage} />
         <Route path="/licenses" exact component={LicensesPage} />
         <Route path="/licenses/:id" exact component={LicenseDetail} />
+        <Route path="/enrollments" exact component={StudentEnrollmentsPage} />
       </Switch>
       <Footer />
     </AppProvider>,
