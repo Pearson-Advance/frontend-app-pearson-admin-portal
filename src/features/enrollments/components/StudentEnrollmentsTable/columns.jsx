@@ -28,7 +28,7 @@ export const COLUMNS = [
     accessor: 'ccxCoachEmail',
   },
   {
-    Header: 'Lerner Email',
+    Header: 'Learner Email',
     accessor: 'learnerEmail',
   },
   {

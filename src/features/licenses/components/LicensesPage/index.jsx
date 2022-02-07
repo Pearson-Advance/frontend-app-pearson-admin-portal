@@ -9,8 +9,9 @@ import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
+import { fetchLicenses, createLicense, fetchLicenseManageCourses } from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
-import { createLicense, fetchLicenseManageCourses } from 'features/licenses/data';
+
 import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
 
 const initialFormValues = {
@@ -23,13 +24,16 @@ const initialFormValues = {
 const LicensesPage = () => {
   const dispatch = useDispatch();
   const { form } = useSelector(state => state.licenses);
+  const { selectedInstitution } = useSelector(state => state.page.globalFilters);
+  const { data } = useSelector(state => state.licenses);
   const [fields, setFields] = useState(initialFormValues);
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
+    dispatch(fetchLicenses(selectedInstitution));
     dispatch(fetchInstitutions());
     dispatch(fetchLicenseManageCourses());
-  }, [dispatch]);
+  }, [dispatch, selectedInstitution]);
 
   const handleCloseModal = () => {
     setFields(initialFormValues);
@@ -69,7 +73,7 @@ const LicensesPage = () => {
       <ActionRow className="pb-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add license</Button>
       </ActionRow>
-      <LicenseTable />
+      <LicenseTable data={data} />
     </Container>
   );
 };

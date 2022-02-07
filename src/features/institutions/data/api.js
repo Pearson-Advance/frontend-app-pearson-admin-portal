@@ -3,8 +3,14 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const institutionURL = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/institutions/`;
 
-export function getInstitutions() {
-  return getAuthenticatedHttpClient().get(institutionURL);
+export function getInstitutions(selectedInstitution = null) {
+  const params = {};
+
+  if (selectedInstitution) {
+    params.id = selectedInstitution;
+  }
+
+  return getAuthenticatedHttpClient().get(institutionURL, { params: { ...params } });
 }
 
 export function postInstitution(name, shortName, externalId, active = true) {

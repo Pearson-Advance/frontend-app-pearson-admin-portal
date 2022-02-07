@@ -19,6 +19,7 @@ const initialFormValues = {
 const InstitutionAdminsPage = () => {
   const dispatch = useDispatch();
   const { data, form } = useSelector(selectAdmins);
+  const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const [fields, setFields] = useState(initialFormValues);
 
   const handleCloseModal = () => {
@@ -37,8 +38,8 @@ const InstitutionAdminsPage = () => {
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.ADMINS));
-    dispatch(fetchInstitutionAdmins());
-  }, [dispatch]);
+    dispatch(fetchInstitutionAdmins(selectedInstitution));
+  }, [dispatch, selectedInstitution]);
 
   return (
     <Container size="xl">

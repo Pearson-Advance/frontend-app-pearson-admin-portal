@@ -9,6 +9,7 @@ export const getColumns = props => [
   {
     Header: 'Name',
     accessor: 'name',
+    disableFilters: true,
   },
   {
     Header: 'Short name',
