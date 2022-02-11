@@ -30,7 +30,6 @@ export const {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
-
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

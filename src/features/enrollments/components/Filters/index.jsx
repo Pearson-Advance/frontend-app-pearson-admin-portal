@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';
 import { ENROLLMENT_STATUS } from 'features/shared/data/constants';
-import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export const Filters = props => {
   const {
@@ -15,6 +15,9 @@ export const Filters = props => {
     managedCourses,
     handleCleanFilters,
     handleApplyFilters,
+    handleExportEnrollments,
+    isFilterApplied,
+    setIsFilterApplied,
   } = props;
 
   const handleInputChange = (e) => {
@@ -22,6 +25,7 @@ export const Filters = props => {
       ...filters,
       [e.target.name]: e.target.value.trim(),
     });
+    setIsFilterApplied(false);
   };
 
   const handleSelectInstitutionChange = (selected) => {
@@ -29,6 +33,7 @@ export const Filters = props => {
       ...filters,
       institution: selected ? selected.value : null,
     });
+    setIsFilterApplied(false);
   };
 
   const handleSelectMasterCourseChange = (selected) => {
@@ -36,6 +41,7 @@ export const Filters = props => {
       ...filters,
       masterCourseId: selected ? selected.value : null,
     });
+    setIsFilterApplied(false);
   };
 
   return (
@@ -122,6 +128,21 @@ export const Filters = props => {
         >
           <IconButton icon={faTrash} alt="filter" onClick={handleCleanFilters} variant="secondary" />
         </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={(
+            <Tooltip variant="light">
+              {isFilterApplied
+                ? 'Export as CSV'
+                : 'Apply filters to enable this feature'}
+            </Tooltip>
+          )}
+        >
+          <div className="ml-6">
+            <IconButton disabled={!isFilterApplied} icon={faDownload} alt="filter" onClick={handleExportEnrollments} variant="secondary" />
+          </div>
+        </OverlayTrigger>
+
       </Form>
     </Card>
   );
@@ -140,6 +161,9 @@ Filters.propTypes = {
   managedCourses: PropTypes.arrayOf(PropTypes.shape([])),
   handleCleanFilters: PropTypes.func.isRequired,
   handleApplyFilters: PropTypes.func.isRequired,
+  handleExportEnrollments: PropTypes.func.isRequired,
+  isFilterApplied: PropTypes.bool.isRequired,
+  setIsFilterApplied: PropTypes.func.isRequired,
 };
 
 Filters.defaultProps = {

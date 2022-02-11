@@ -1,6 +1,6 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getStudentEnrollments } from './api';
+import { getStudentEnrollments, getExportStudentEnrollments } from './api';
 import {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
@@ -11,7 +11,7 @@ import {
  * Fetches all student enrollments.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchStudentEnrollments(filters = null) {
+function fetchStudentEnrollments(filters = null) {
   return async (dispatch) => {
     try {
       dispatch(fetchStudentEnrollmentsRequest());
@@ -22,3 +22,29 @@ export function fetchStudentEnrollments(filters = null) {
     }
   };
 }
+
+/**
+ * Export all student enrollments.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+function fetchExportStudentEnrollments(filters) {
+  return async () => {
+    try {
+      const response = await getExportStudentEnrollments(filters);
+      const href = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = href;
+
+      link.setAttribute('download', `enrollments_${(new Date().toISOString().toString())}.csv`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      logError(error);
+    }
+  };
+}
+
+export {
+  fetchStudentEnrollments,
+  fetchExportStudentEnrollments,
+};
