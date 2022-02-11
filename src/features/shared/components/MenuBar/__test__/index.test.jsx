@@ -30,7 +30,7 @@ describe('MenuBar tests', () => {
     const navLinks = component.container.querySelectorAll('a');
 
     expect(component.container).toHaveTextContent('Institutions');
-    expect(navLinks).toHaveLength(5);
+    expect(navLinks).toHaveLength(4);
   });
 
   test('redirects to the institutions URL on clicking the institutions button', () => {
