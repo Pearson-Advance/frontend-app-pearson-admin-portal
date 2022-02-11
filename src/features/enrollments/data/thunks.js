@@ -31,9 +31,8 @@ function fetchExportStudentEnrollments(filters) {
   return async () => {
     try {
       const response = await getExportStudentEnrollments(filters);
-      const href = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
-      link.href = href;
+      link.href = window.URL.createObjectURL(new Blob([response.data]));
 
       link.setAttribute('download', `enrollments_${(new Date().toISOString().toString())}.csv`);
       document.body.appendChild(link);
