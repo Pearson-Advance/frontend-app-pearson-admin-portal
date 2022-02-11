@@ -2,7 +2,7 @@ import React from 'react';
 import {
   render,
 } from '@testing-library/react';
-import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
+import { StudentEnrollmentsPage } from 'features/enrollments/components/StudentEnrollmentsPage';
 import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 
@@ -15,7 +15,7 @@ describe('Test suite for StudentEnrollmentsPage component.', () => {
 
     component = render(
       <Provider store={store}>
-        <StudentEnrollmentsTable data={[]} />
+        <StudentEnrollmentsPage />
       </Provider>,
     );
   });

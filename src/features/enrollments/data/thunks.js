@@ -11,11 +11,11 @@ import {
  * Fetches all student enrollments.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchStudentEnrollments() {
+export function fetchStudentEnrollments(filters = null) {
   return async (dispatch) => {
     try {
       dispatch(fetchStudentEnrollmentsRequest());
-      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments()).data)));
+      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments(filters)).data)));
     } catch (error) {
       dispatch(fetchStudentEnrollmentsFailed());
       logError(error);

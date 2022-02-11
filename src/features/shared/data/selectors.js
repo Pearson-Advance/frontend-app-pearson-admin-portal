@@ -4,3 +4,5 @@ export const selectPage = createSelector(
   (state) => state,
   (state) => state.page,
 );
+
+export const institutionsSelector = state => state.institutions.data;

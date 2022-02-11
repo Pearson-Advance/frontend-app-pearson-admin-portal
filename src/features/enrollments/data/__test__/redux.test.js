@@ -34,7 +34,7 @@ describe('Enrollments data layer tests', () => {
 
   test('successful enrollments retrieval', async () => {
     axiosMock.onGet(enrollmentsApiUrl)
-      .reply(200, Factory.build('enrollmentsList'));
+      .reply(200, { results: Factory.build('enrollmentsList') });
 
     expect(store.getState().enrollments.status)
       .toEqual('in-progress');

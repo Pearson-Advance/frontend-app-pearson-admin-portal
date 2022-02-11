@@ -8,13 +8,13 @@ const licenseSlice = createSlice({
     status: RequestStatus.IN_PROGRESS,
     data: [],
     ordersData: [],
+    managedCourses: [],
     licenseById: null,
     pageSize: 10,
     pageIndex: 0,
     form: {
       isOpen: false,
       errors: {},
-      managedCourses: [],
     },
   },
   reducers: {
@@ -62,7 +62,7 @@ const licenseSlice = createSlice({
     },
     fetchLicenseManageCoursesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.form.managedCourses = payload.map(course => ({ value: course.id, label: course.id }));
+      state.managedCourses = payload.map(course => ({ value: course.id, label: course.id }));
     },
     fetchLicenseManageCoursesFailed: (state) => {
       state.status = RequestStatus.FAILED;

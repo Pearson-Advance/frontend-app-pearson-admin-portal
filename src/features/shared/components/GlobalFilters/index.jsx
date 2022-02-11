@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { TabIndex } from 'features/shared/data/constants';
 import { fetchInstitutionsForGlobalFilter } from 'features/shared/data/thunks';
 import { changeGlobalFilters } from 'features/shared/data/slices';
 import { Col, Container, Row } from '@edx/paragon';
 
 export const GlobalFilters = () => {
   const dispatch = useDispatch();
-  const data = useSelector(state => state.page.globalFilters.institutions);
+  const { institutions, selectedInstitution } = useSelector(state => state.page.globalFilters);
+  const tab = useSelector(state => state.page.tab);
 
   const handleSelectInstitutionChange = (selected) => {
     dispatch(changeGlobalFilters(selected ? selected.value : null));
@@ -17,6 +18,10 @@ export const GlobalFilters = () => {
   useEffect(() => {
     dispatch(fetchInstitutionsForGlobalFilter());
   }, [dispatch]);
+
+  if (tab === TabIndex.ENROLLMENTS) {
+    return null;
+  }
 
   return (
     <Container size="sm" className="py-3">
@@ -32,10 +37,11 @@ export const GlobalFilters = () => {
             isClearable
             isRtl={false}
             isSearchable
-            options={data}
+            options={institutions}
             maxMenuHeight={250}
             name="institutionsFilter"
             onChange={handleSelectInstitutionChange}
+            value={institutions.find(institution => institution.value === selectedInstitution) || null}
           />
         </Col>
       </Row>

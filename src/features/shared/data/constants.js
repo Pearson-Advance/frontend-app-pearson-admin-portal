@@ -25,3 +25,14 @@ export const TabIndex = {
   DATA_REPORT: '4',
   ENROLLMENTS: '5',
 };
+
+/**
+ * Enum for Tab indexes.
+ * @readonly
+ * @enum {string}
+ */
+export const ENROLLMENT_STATUS = {
+  ACTIVE: 'Active',
+  INACTIVE: 'Inactive',
+  PENDING: 'Pending',
+};
