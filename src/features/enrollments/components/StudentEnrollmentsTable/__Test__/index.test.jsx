@@ -11,7 +11,7 @@ import 'features/enrollments/data/__factories__';
 test('render StudentEnrollmentsTable with no data', () => {
   const component = render(
     <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={[]} />
+      <StudentEnrollmentsTable data={[]} count={0} />
     </Provider>,
   );
   expect(component.container).toHaveTextContent('No enrollments found');
@@ -21,7 +21,7 @@ test('render StudentEnrollmentsTable with data', () => {
   const data = Factory.build('enrollmentsList');
   const component = render(
     <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={data} />
+      <StudentEnrollmentsTable data={data} count={data.length} />
     </Provider>,
   );
   // This should have 4 table rows, inside the table component, 1 for the header and 3 for the enrollments.
@@ -46,4 +46,15 @@ test('render StudentEnrollmentsTable with data', () => {
   expect(component.container).toHaveTextContent('Inactive');
   // Check datetime is formatted.
   expect(component.container).toHaveTextContent('Fri, 14 Jan 2022 16:15:10 GMT');
+});
+
+test('Check sorting columns of StudentEnrollmentsTable', () => {
+  const component = render(
+    <Provider store={initializeStore()}>
+      <StudentEnrollmentsTable data={[]} count={0} />
+    </Provider>,
+  );
+
+  // The 4 Sorting columns are: institution, master course name, coach email and learner email.
+  expect(component.getAllByTitle('Toggle SortBy')).toHaveLength(4);
 });

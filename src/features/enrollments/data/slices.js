@@ -7,6 +7,10 @@ const studentEnrollmentsSlice = createSlice({
   initialState: {
     status: RequestStatus.IN_PROGRESS,
     data: [],
+    requestResponse: {
+      results: [],
+      count: 0,
+    },
     filtersForm: {
       institutions: null,
       managedMasterCourses: null,
@@ -18,7 +22,7 @@ const studentEnrollmentsSlice = createSlice({
     },
     fetchStudentEnrollmentsSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.data = payload.results;
+      state.requestResponse = payload;
     },
     fetchStudentEnrollmentsFailed: (state) => {
       state.status = RequestStatus.FAILED;

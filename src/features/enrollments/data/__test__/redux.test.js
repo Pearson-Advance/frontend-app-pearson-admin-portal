@@ -41,7 +41,7 @@ describe('Enrollments data layer tests', () => {
 
     await executeThunk(fetchStudentEnrollments(), store.dispatch, store.getState);
 
-    expect(store.getState().enrollments.data)
+    expect(store.getState().enrollments.requestResponse.results)
       .toEqual([
         {
           id: 1,

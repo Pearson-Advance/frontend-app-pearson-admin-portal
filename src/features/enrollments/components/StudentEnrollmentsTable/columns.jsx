@@ -14,14 +14,17 @@ export const COLUMNS = [
   {
     Header: 'Master Course ID',
     accessor: 'masterCourseId',
+    disableSortBy: true,
   },
   {
     Header: 'Ccx Id',
     accessor: 'ccxId',
+    disableSortBy: true,
   },
   {
     Header: 'Ccx Name',
     accessor: 'ccxName',
+    disableSortBy: true,
   },
   {
     Header: 'Coach Email',
@@ -34,6 +37,7 @@ export const COLUMNS = [
   {
     Header: 'Status',
     accessor: 'status',
+    disableSortBy: true,
     Cell: ({ row }) => {
       const value = row.values.status;
       let variant = 'success';
@@ -46,10 +50,12 @@ export const COLUMNS = [
   {
     Header: 'Remaining Accesss Time (days)',
     accessor: 'remainingCourseAccessDuration',
+    disableSortBy: true,
   },
   {
     Header: 'Created at',
     accessor: 'created',
     Cell: ({ row }) => new Date(row.values.created).toUTCString(),
+    disableSortBy: true,
   },
 ];
