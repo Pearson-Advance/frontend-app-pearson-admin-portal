@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 
-import { Badge } from '@edx/paragon';
+import { Badge, Dropdown, DropdownButton } from '@edx/paragon';
+import React from 'react';
+import { Button } from 'react-bootstrap';
 
-export const COLUMNS = [
+export const getColumns = props => [
   {
     Header: 'Institution',
     accessor: 'institution',
@@ -51,5 +53,20 @@ export const COLUMNS = [
     Header: 'Created at',
     accessor: 'created',
     Cell: ({ row }) => new Date(row.values.created).toUTCString(),
+  },
+  {
+    Header: 'Action',
+    accessor: 'action',
+    Cell: ({ row }) => {
+      const value = row.values.status;
+      let variant = 'primary';
+      let action = 'Enable';
+
+      if (value === 'Pending') { variant = 'danger'; action = 'Delete'; }
+      else if (value === 'Inactive') { variant = 'primary'; action = 'Enable'; }
+      else if (value === 'Inactive') { variant = 'warning'; action = 'Delete'; }
+
+      return <Button variant={variant} onClick ={() => {props.open(); props.setRow(row.values); } }>{action}</Button>
+    },
   },
 ];

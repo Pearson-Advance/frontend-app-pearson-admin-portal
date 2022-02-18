@@ -26,7 +26,13 @@ function getExportStudentEnrollments(filters) {
   );
 }
 
+function createUnenrollment(data) {
+  return getAuthenticatedHttpClient().post(
+    `${process.env.ENROLLMENT_API_BASE_URL}/unenrollment`, data);
+}
+
 export {
   getStudentEnrollments,
   getExportStudentEnrollments,
+  createUnenrollment,
 };
