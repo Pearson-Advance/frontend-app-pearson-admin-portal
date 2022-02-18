@@ -9,6 +9,8 @@ import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
+import { Pagination } from '@edx/paragon';
+import { getOrdering } from 'features/shared/data/utils';
 import { Filters } from '../Filters';
 
 const initialFiltersState = {
@@ -21,7 +23,9 @@ const initialFiltersState = {
 
 const StudentEnrollmentsPage = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector(state => state.enrollments);
+  const requestResponse = useSelector(state => state.enrollments.requestResponse);
+  const sortBy = useSelector(state => state.page.dataTable.sortBy);
+  const pageTab = useSelector(state => state.page.tab);
   const [filters, setFilters] = useState(initialFiltersState);
   const [isFilterApplied, setIsFilterApplied] = useState(true);
   const institutions = useSelector(allInstitutionsForSelect);
@@ -29,25 +33,43 @@ const StudentEnrollmentsPage = () => {
 
   const handleCleanFilters = () => {
     setFilters(initialFiltersState);
-    dispatch(fetchStudentEnrollments());
+    dispatch(fetchStudentEnrollments({ ordering: getOrdering(sortBy) }));
     setIsFilterApplied(true);
   };
 
   const handleApplyFilters = () => {
-    dispatch(fetchStudentEnrollments(filters));
+    dispatch(fetchStudentEnrollments({
+      ...filters,
+      ordering: getOrdering(sortBy),
+    }));
     setIsFilterApplied(true);
   };
 
   const handleExportEnrollments = () => {
-    dispatch(fetchExportStudentEnrollments(filters));
+    dispatch(fetchExportStudentEnrollments({
+      ...filters,
+      ordering: getOrdering(sortBy),
+    }));
+  };
+
+  const handlePagination = (targetPage) => {
+    dispatch(fetchStudentEnrollments({
+      ...filters,
+      ordering: getOrdering(sortBy),
+      page: targetPage,
+    }));
   };
 
   useEffect(() => {
-    dispatch(changeTab(TabIndex.ENROLLMENTS));
-    dispatch(fetchStudentEnrollments());
+    if (TabIndex.ENROLLMENTS !== pageTab) { dispatch(changeTab(TabIndex.ENROLLMENTS)); }
+
+    dispatch(fetchStudentEnrollments({
+      ...filters,
+      ordering: getOrdering(sortBy),
+    }));
     dispatch(fetchInstitutions());
     dispatch(fetchLicenseManageCourses());
-  }, [dispatch]);
+  }, [dispatch, sortBy]);
 
   return (
     <Container>
@@ -62,7 +84,13 @@ const StudentEnrollmentsPage = () => {
         handleApplyFilters={handleApplyFilters}
         handleExportEnrollments={handleExportEnrollments}
       />
-      <StudentEnrollmentsTable data={data} />
+      <StudentEnrollmentsTable data={requestResponse.results} count={requestResponse.count} />
+      <Pagination
+        paginationLabel="paginationNavigation"
+        pageCount={requestResponse.numPages}
+        currentPage={requestResponse.currentPage}
+        onPageSelect={handlePagination}
+      />
     </Container>
   );
 };

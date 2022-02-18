@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   render,
+  screen,
 } from '@testing-library/react';
 import { StudentEnrollmentsPage } from 'features/enrollments/components/StudentEnrollmentsPage';
 import { Provider } from 'react-redux';
@@ -22,5 +23,9 @@ describe('Test suite for StudentEnrollmentsPage component.', () => {
 
   test('render StudentEnrollmentsPage component', () => {
     expect(component.container.querySelectorAll('table')).toHaveLength(1);
+  });
+
+  test('render Pagination component', () => {
+    screen.getByLabelText('paginationNavigation');
   });
 });
