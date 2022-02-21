@@ -19,7 +19,7 @@ export const GlobalFilters = () => {
     dispatch(fetchInstitutionsForGlobalFilter());
   }, [dispatch]);
 
-  if (tab === TabIndex.ENROLLMENTS) {
+  if (tab === TabIndex.ENROLLMENTS || tab === TabIndex.DATA_REPORT) {
     return null;
   }
 

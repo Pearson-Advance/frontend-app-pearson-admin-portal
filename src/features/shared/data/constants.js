@@ -31,8 +31,18 @@ export const TabIndex = {
  * @readonly
  * @enum {string}
  */
-export const ENROLLMENT_STATUS = {
+export const EnrollmentStatus = {
   ACTIVE: 'Active',
   INACTIVE: 'Inactive',
   PENDING: 'Pending',
+};
+
+/**
+ * Enum for Data report tabs.
+ * @readonly
+ * @enum {string}
+ */
+export const DataReportTab = {
+  CCX_LEVEL: 'CCXLevel',
+  MC_LEVEL: 'MCLevel',
 };
