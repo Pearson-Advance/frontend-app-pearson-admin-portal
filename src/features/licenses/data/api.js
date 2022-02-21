@@ -32,7 +32,7 @@ export function postLicense(institution, course, courseAccessDuration, status) {
 }
 
 export function getLicenseManageCourses(url = managedCoursesEndpoint) {
-  return getAuthenticatedHttpClient().get(url, { params: { site_org_filter: 1 } });
+  return getAuthenticatedHttpClient().get(url);
 }
 
 export function postLicenseOrder(license, orderReference, purchasedSeats, active = true) {

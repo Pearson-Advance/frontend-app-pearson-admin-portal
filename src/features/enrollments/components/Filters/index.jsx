@@ -4,7 +4,7 @@ import {
 import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';
-import { ENROLLMENT_STATUS } from 'features/shared/data/constants';
+import { EnrollmentStatus } from 'features/shared/data/constants';
 import { faDownload, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export const Filters = props => {
@@ -111,9 +111,9 @@ export const Filters = props => {
             onChange={handleInputChange}
           >
             <option value="">Choose...</option>
-            <option value={ENROLLMENT_STATUS.ACTIVE}>{ENROLLMENT_STATUS.ACTIVE}</option>
-            <option value={ENROLLMENT_STATUS.INACTIVE}>{ENROLLMENT_STATUS.INACTIVE}</option>
-            <option value={ENROLLMENT_STATUS.PENDING}>{ENROLLMENT_STATUS.PENDING}</option>
+            <option value={EnrollmentStatus.ACTIVE}>{EnrollmentStatus.ACTIVE}</option>
+            <option value={EnrollmentStatus.INACTIVE}>{EnrollmentStatus.INACTIVE}</option>
+            <option value={EnrollmentStatus.PENDING}>{EnrollmentStatus.PENDING}</option>
           </Form.Control>
         </Form.Group>
         <OverlayTrigger

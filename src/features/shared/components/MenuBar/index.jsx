@@ -35,11 +35,11 @@ const MenuBar = () => {
           Licenses
         </Nav.Link>
       </Nav.Item>
-      {/* <Nav.Item>
+      <Nav.Item>
         <Nav.Link onClick={onLinkClick} eventKey="4" href="/data-report">
           Data Report
         </Nav.Link>
-      </Nav.Item> */}
+      </Nav.Item>
       <Nav.Item>
         <Nav.Link onClick={onLinkClick} eventKey="5" href="/enrollments">
           Enrollments

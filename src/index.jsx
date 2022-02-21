@@ -17,6 +17,7 @@ import { store } from './store';
 import appMessages from './i18n';
 
 import './index.scss';
+import { DataReportPage } from './features/DataReport/components/DataReportPage';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
@@ -30,6 +31,7 @@ subscribe(APP_READY, () => {
         <Route path="/licenses" exact component={LicensesPage} />
         <Route path="/licenses/:id" exact component={LicenseDetail} />
         <Route path="/enrollments" exact component={StudentEnrollmentsPage} />
+        <Route path="/data-report" exact component={DataReportPage} />
       </Switch>
       <Footer />
     </AppProvider>,
