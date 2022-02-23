@@ -63,8 +63,8 @@ export const getColumns = props => [
       let action = 'Enable';
 
       if (value === 'Pending') { variant = 'danger'; action = 'Delete'; }
+      else if (value === 'Active') { variant = 'primary'; action = 'Disable'; }
       else if (value === 'Inactive') { variant = 'primary'; action = 'Enable'; }
-      else if (value === 'Inactive') { variant = 'warning'; action = 'Delete'; }
 
       return <Button variant={variant} onClick ={() => {props.open(); props.setRow(row.values); } }>{action}</Button>
     },

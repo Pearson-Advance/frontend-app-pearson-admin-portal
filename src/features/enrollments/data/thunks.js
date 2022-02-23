@@ -6,6 +6,9 @@ import {
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
   deleteSuccessful,
+  deleteFailed,
+  unenrollSuccessful,
+  // unenrollFailed,
 } from './slices';
 
 /**
@@ -48,11 +51,27 @@ function fetchExportStudentEnrollments(filters) {
  * Export all student enrollments.
  * @returns {(function(*): Promise<void>)|*}
  */
-function unenrollAction(data) {
+function deleteAction(data) {
   return async (dispatch) => {
     try {
       const response = await createUnenrollment(data);
       dispatch(deleteSuccessful(response.config.data));
+    } catch (error) {
+      dispatch(deleteFailed());
+      logError(error);
+    }
+  }
+};
+
+/**
+ * Export all student enrollments.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+ function unenrollAction(data) {
+  return async (dispatch) => {
+    try {
+      const response = await createUnenrollment(data);
+      dispatch(unenrollSuccessful(response.data.result));
     } catch (error) {
       logError(error);
     }
@@ -62,5 +81,6 @@ function unenrollAction(data) {
 export {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
+  deleteAction,
   unenrollAction,
 };

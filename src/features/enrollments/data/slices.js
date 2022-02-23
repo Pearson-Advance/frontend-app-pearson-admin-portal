@@ -33,12 +33,23 @@ const studentEnrollmentsSlice = createSlice({
     deleteSuccessful: (state, { payload }) => {
       const dataCopy = _.cloneDeep(state.data);
       const obj = JSON.parse(payload);
-      const newData = dataCopy.filter(item =>
+      const deleteData = dataCopy.filter(item =>
         item.learnerEmail !== get(obj, "username", "")
       );
-
-      state.data = newData;
+      state.data = deleteData;
     },
+    deleteFailed: (state) => {
+      state.status = RequestStatus.FAILED;
+    },
+    unenrollSuccessful: (state, { payload }) => {
+      const dataCopy = _.cloneDeep(state.data);
+      const unenrollData = dataCopy.map(item => {
+        if (item.learnerEmail == payload.user_email)
+          item.status = payload.is_active
+        return item
+      });
+      state.data = unenrollData
+    }
   },
 });
 
@@ -47,6 +58,8 @@ export const {
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
   deleteSuccessful,
+  deleteFailed,
+  unenrollSuccessful,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

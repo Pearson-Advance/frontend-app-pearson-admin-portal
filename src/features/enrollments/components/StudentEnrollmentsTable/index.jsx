@@ -6,7 +6,7 @@ import {
 } from '@edx/paragon';
 import { getColumns } from './columns';
 import { useDispatch } from 'react-redux';
-import { unenrollAction } from '../../data/thunks'; //CORREGIR
+import { deleteAction, unenrollAction } from '../../data/thunks'; //CORREGIR
 
 const StudentEnrollmentsTable = ({ data }) => {
   const dispatch = useDispatch();
@@ -50,7 +50,8 @@ const StudentEnrollmentsTable = ({ data }) => {
                 variant="primary"
                 onClick={() => {
                   setShow(true);
-                  dispatch(unenrollAction(unenrollData));
+                  dispatch(deleteAction(unenrollData));
+                  dispatch(unenrollAction(unenrollData))
                   close()
                 }}>
                 Submit
