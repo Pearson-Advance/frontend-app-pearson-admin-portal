@@ -15,8 +15,8 @@ const StudentEnrollmentsTable = ({ data }) => {
   const [selectedRow, setRow] = useState({});
 
   const unenrollData = {
-    course_id: selectedRow.course_id,
-    username: selectedRow.username,
+    course_id: selectedRow.ccxId,
+    username: selectedRow.learnerEmail,
   };
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), []); //eslint-disable-line react-hooks/exhaustive-deps

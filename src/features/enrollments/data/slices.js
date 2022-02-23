@@ -3,6 +3,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RequestStatus } from 'features/shared/data/constants';
 import _ from 'lodash';
 
+
+function get(object, key, default_value) {
+  var result = object[key];
+  return (typeof result !== "undefined") ? result : default_value;
+};
+
 const studentEnrollmentsSlice = createSlice({
   name: 'enrollments',
   initialState: {
@@ -24,16 +30,14 @@ const studentEnrollmentsSlice = createSlice({
     fetchStudentEnrollmentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    Unenroll_Success: (state) => {
-      const newData = dataCopy.map(item => {
-        if (item.id == action.data.enrollment_id)
-          item.is_active = action.data.is_active
-        return item
-      })
-      state.data = newData
-    },
-    Unenroll_Failure: (state) => {
-      state.status = RequestStatus.FAILED;
+    deleteSuccessful: (state, { payload }) => {
+      const dataCopy = _.cloneDeep(state.data);
+      const obj = JSON.parse(payload);
+      const newData = dataCopy.filter(item =>
+        item.learnerEmail !== get(obj, "username", "")
+      );
+
+      state.data = newData;
     },
   },
 });
@@ -42,8 +46,7 @@ export const {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
-  Unenroll_Success,
-  Unenroll_Failure,
+  deleteSuccessful,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

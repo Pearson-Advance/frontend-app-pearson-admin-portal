@@ -5,10 +5,8 @@ import {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
-  Unenroll_Success,
-  Unenroll_Failure,
+  deleteSuccessful,
 } from './slices';
-import { getErrorMessages } from '../../../utils';
 
 /**
  * Fetches all student enrollments.
@@ -51,18 +49,12 @@ function fetchExportStudentEnrollments(filters) {
  * @returns {(function(*): Promise<void>)|*}
  */
 function unenrollAction(data) {
-  return async dispatch => {
+  return async (dispatch) => {
     try {
       const response = await createUnenrollment(data);
-      dispatch({
-        type: Unenroll_Success,
-        data: response.data.result,
-      });
+      dispatch(deleteSuccessful(response.config.data));
     } catch (error) {
-      dispatch({
-        type: Unenroll_Failure,
-        error: getErrorMessages(error),
-      });
+      logError(error);
     }
   }
 };
