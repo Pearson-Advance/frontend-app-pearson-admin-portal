@@ -9,6 +9,7 @@ import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { fetchInstitutions } from 'features/institutions/data/thunks';
 import { Filters } from '../Filters';
 import { LicenseUsageCCXLevel } from '../LicenseUsageCCXLevel';
+import { LicenseUsageMCLevel } from '../LicenseUsageMCLevel';
 
 const initialFiltersState = {
   institutionId: null,
@@ -55,10 +56,11 @@ export const DataReportPage = () => {
             <LicenseUsageCCXLevel filters={filters} />
           )}
         </Tab>
-        {/* <Tab eventKey="MCLevel" title="MC Level">
-          MC level license usage
-          ## Leaving this as reference.
-        </Tab> */}
+        <Tab eventKey="MCLevel" title="MC Level">
+          {dataReportTab === DataReportTab.MC_LEVEL && (
+            <LicenseUsageMCLevel filters={filters} />
+          )}
+        </Tab>
       </Tabs>
     </Container>
   );
