@@ -3,16 +3,28 @@ import { snakeCaseObject } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
 
 function getLicenseUsageCCXLevel(filters) {
+  let params = {};
+
+  if (filters) {
+    params = snakeCaseObject(removeNullOrEmptyObjectAttributes(filters));
+  }
+
   return getAuthenticatedHttpClient().get(
     `${process.env.COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage/`,
-    { params: snakeCaseObject(removeNullOrEmptyObjectAttributes(filters)) },
+    { params },
   );
 }
 
 function getLicenseUsageMCLevel(filters) {
+  let params = {};
+
+  if (filters) {
+    params = snakeCaseObject(removeNullOrEmptyObjectAttributes(filters));
+  }
+
   return getAuthenticatedHttpClient().get(
     `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-usage/`,
-    { params: snakeCaseObject(removeNullOrEmptyObjectAttributes(filters)) },
+    { params },
   );
 }
 
