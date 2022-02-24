@@ -59,14 +59,19 @@ export const getColumns = props => [
     accessor: 'action',
     Cell: ({ row }) => {
       const value = row.values.status;
-      let variant = 'primary';
-      let action = 'Enable';
+      let button = null;
 
-      if (value === 'Pending') { variant = 'danger'; action = 'Delete'; }
-      else if (value === 'Active') { variant = 'primary'; action = 'Disable'; }
-      else if (value === 'Inactive') { variant = 'primary'; action = 'Enable'; }
+      if (value === 'Pending') {
+        button = <Button variant='danger' onClick={() => { props.openDelete(); props.setRow(row.values); }}>Delete</Button>
+      }
+      else if (value === 'Active') {
+        button = <Button variant='primary' onClick={() => { props.openUnenroll(); props.setRow(row.values); }}>Disable</Button>
+      }
+      else if (value === 'Inactive') {
+        button = <Button variant='primary' onClick={() => { props.openEnroll(); props.setRow(row.values); }}>Enable</Button>
+      }
 
-      return <Button variant={variant} onClick ={() => {props.open(); props.setRow(row.values); } }>{action}</Button>
+      return button
     },
   },
 ];

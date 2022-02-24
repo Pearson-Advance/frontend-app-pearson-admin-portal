@@ -45,11 +45,15 @@ const studentEnrollmentsSlice = createSlice({
       const dataCopy = _.cloneDeep(state.data);
       const unenrollData = dataCopy.map(item => {
         if (item.learnerEmail == payload.user_email)
-          item.status = payload.is_active
+          [item.status = "Inactive",
+          item.remainingCourseAccessDuration = '0']
         return item
       });
-      state.data = unenrollData
-    }
+      state.data = unenrollData;
+    },
+    unenrollFailed: (state) => {
+      state.status = RequestStatus.FAILED;
+    },
   },
 });
 
@@ -60,6 +64,7 @@ export const {
   deleteSuccessful,
   deleteFailed,
   unenrollSuccessful,
+  unenrollFailed,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

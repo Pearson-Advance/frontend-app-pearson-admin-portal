@@ -48,7 +48,7 @@ function fetchExportStudentEnrollments(filters) {
 }
 
 /**
- * Export all student enrollments.
+ * Delete student enrollment.
  * @returns {(function(*): Promise<void>)|*}
  */
 function deleteAction(data) {
@@ -64,10 +64,26 @@ function deleteAction(data) {
 };
 
 /**
- * Export all student enrollments.
+ * Unenroll student.
  * @returns {(function(*): Promise<void>)|*}
  */
- function unenrollAction(data) {
+function unenrollAction(data) {
+  return async (dispatch) => {
+    try {
+      const response = await createUnenrollment(data);
+      dispatch(unenrollSuccessful(response.data.result));
+    } catch (error) {
+      dispatch(unenrollFailed());
+      logError(error);
+    }
+  }
+};
+
+/**
+ * Enroll student.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+function enrollAction(data) {
   return async (dispatch) => {
     try {
       const response = await createUnenrollment(data);
@@ -83,4 +99,5 @@ export {
   fetchExportStudentEnrollments,
   deleteAction,
   unenrollAction,
+  enrollAction,
 };
