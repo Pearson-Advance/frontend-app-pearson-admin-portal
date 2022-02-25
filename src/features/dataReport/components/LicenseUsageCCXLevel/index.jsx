@@ -7,20 +7,20 @@ import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchExportLicenseUsageMCLevel, fetchLicenseUsageMCLevel } from 'features/DataReport/data/thunks';
+import { fetchExportLicenseUsageCCXLevel, fetchLicenseUsageCCXLevel } from 'features/dataReport/data/thunks';
 import { fetchLicenseManageCourses } from 'features/licenses/data';
 import { Table } from './Table';
 
-export const LicenseUsageMCLevel = ({ filters }) => {
+export const LicenseUsageCCXLevel = ({ filters }) => {
   const dispatch = useDispatch();
-  const mcLevelTable = useSelector(state => state.dataReport.mcLevelData);
+  const ccxLevelTable = useSelector(state => state.dataReport.ccxLevelData);
 
   const handleExportAsCSV = () => {
-    dispatch(fetchExportLicenseUsageMCLevel(filters));
+    dispatch(fetchExportLicenseUsageCCXLevel(filters));
   };
 
   const handlePagination = (targetPage) => {
-    dispatch(fetchLicenseUsageMCLevel({
+    dispatch(fetchLicenseUsageCCXLevel({
       ...filters,
       page: targetPage,
     }));
@@ -31,7 +31,7 @@ export const LicenseUsageMCLevel = ({ filters }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchLicenseUsageMCLevel(filters));
+    dispatch(fetchLicenseUsageCCXLevel(filters));
   }, [dispatch, filters]);
 
   return (
@@ -51,21 +51,21 @@ export const LicenseUsageMCLevel = ({ filters }) => {
           />
         </OverlayTrigger>
       </div>
-      <Table data={mcLevelTable.results} count={mcLevelTable.count} />
-      {mcLevelTable.count > 0 && (
-      <Pagination
-        paginationLabel="navigation"
-        className="pt-3"
-        pageCount={mcLevelTable.numPages}
-        currentPage={mcLevelTable.currentPage}
-        onPageSelect={handlePagination}
-      />
+      <Table data={ccxLevelTable.results} count={ccxLevelTable.count} />
+      {ccxLevelTable.count > 0 && (
+        <Pagination
+          paginationLabel="navigation"
+          className="pt-3"
+          pageCount={ccxLevelTable.numPages}
+          currentPage={ccxLevelTable.currentPage}
+          onPageSelect={handlePagination}
+        />
       )}
     </>
   );
 };
 
-LicenseUsageMCLevel.propTypes = {
+LicenseUsageCCXLevel.propTypes = {
   filters: PropTypes.shape({
     institutionId: PropTypes.number,
     masterCourseId: PropTypes.string,
@@ -73,7 +73,7 @@ LicenseUsageMCLevel.propTypes = {
   }),
 };
 
-LicenseUsageMCLevel.defaultProps = {
+LicenseUsageCCXLevel.defaultProps = {
   filters: {
     institutionId: null,
     masterCourseId: null,

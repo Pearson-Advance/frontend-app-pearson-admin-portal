@@ -5,7 +5,7 @@ import { reducer as institutionsReducer } from 'features/institutions/data';
 import { reducer as institutionAdminsReducer } from 'features/institutionAdmins/data';
 import { reducer as licensesReducer } from 'features/licenses/data';
 import { reducer as enrollmentsReducer } from 'features/enrollments/data';
-import { reducer as dataReportReducer } from 'features/DataReport/data';
+import { reducer as dataReportReducer } from 'features/dataReport/data';
 
 export function initializeStore(preloadedState = undefined) {
   return configureStore({

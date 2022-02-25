@@ -17,7 +17,7 @@ import { store } from './store';
 import appMessages from './i18n';
 
 import './index.scss';
-import { DataReportPage } from './features/DataReport/components/DataReportPage';
+import { DataReportPage } from './features/dataReport/components/DataReportPage';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(

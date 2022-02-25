@@ -6,7 +6,7 @@ const dataReportSlice = createSlice({
   name: 'dataReport',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    ccxLevel: {
+    ccxLevelData: {
       results: [],
       count: 0,
     },
@@ -22,7 +22,7 @@ const dataReportSlice = createSlice({
     },
     fetchLicenseUsageCCXLevelSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.ccxLevel = payload;
+      state.ccxLevelData = payload;
     },
     fetchLicenseUsageMCLevelSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
