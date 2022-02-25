@@ -12,6 +12,8 @@ import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slic
 import { createLicenseOrder, fetchLicensebyId } from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
+import { TabIndex } from 'features/shared/data/constants';
+import { changeTab } from 'features/shared/data/slices';
 
 const initialFormValues = {
   id: '',
@@ -54,6 +56,7 @@ export const LicenseDetail = () => {
   };
 
   useEffect(() => {
+    dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicensebyId(id));
   }, [id, ordersData]);
 
@@ -62,7 +65,7 @@ export const LicenseDetail = () => {
       {!licenseById
         && (
           <div className="d-flex justify-content-center pb-4">
-            <Spinner animation="border" className="mr-3" screenReaderText="loading" />
+            <Spinner animation="border" className="mr-3" />
           </div>
         )}
       {licenseById
@@ -81,14 +84,12 @@ export const LicenseDetail = () => {
                 <Card className="mb-2">
                   <Card.Header title="License details" />
                   <Card.Body>
-                    <Card.Text>
-                      <p><b>Institution:</b> {licenseById.institution.name}</p>
-                      <p><b>Course:</b> {licenseById.course.displayName} - ({licenseById.course.id})</p>
-                      <p><b>Purchased seats:</b> {licenseById.purchasedSeats}</p>
-                      <p><b>Course access duration:</b> {licenseById.courseAccessDuration} days</p>
-                      <p><b>Status:</b> {licenseById.status}</p>
-                      <p><b># orders:</b> {licenseById.licenseOrder.length}</p>
-                    </Card.Text>
+                    <p><b>Institution:</b> {licenseById.institution.name}</p>
+                    <p><b>Course:</b> {licenseById.course.displayName} - ({licenseById.course.id})</p>
+                    <p><b>Purchased seats:</b> {licenseById.purchasedSeats}</p>
+                    <p><b>Course access duration:</b> {licenseById.courseAccessDuration} days</p>
+                    <p><b>Status:</b> {licenseById.status}</p>
+                    <p><b># orders:</b> {licenseById.licenseOrder.length}</p>
                   </Card.Body>
                 </Card>
 
@@ -100,7 +101,6 @@ export const LicenseDetail = () => {
                     actions={(
                       <ActionRow>
                         <IconButton
-                          isActive
                           src={Add}
                           iconAs={Icon}
                           alt="Close"
@@ -127,9 +127,7 @@ export const LicenseDetail = () => {
                   </Container>
 
                   <Card.Body>
-                    <Card.Text>
-                      <LicenseOrders data={licenseById.licenseOrder} />
-                    </Card.Text>
+                    <LicenseOrders data={licenseById.licenseOrder} />
                   </Card.Body>
                 </Card>
               </Col>

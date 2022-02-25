@@ -41,7 +41,7 @@ export const getColumns = ({ handleSowDetails }) => [
     disableSortBy: true,
     Cell: ({ row }) => (
       <OverlayTrigger
-        placement="right"
+        placement="top"
         overlay={<Tooltip variant="light">View details</Tooltip>}
       >
         <IconButton
