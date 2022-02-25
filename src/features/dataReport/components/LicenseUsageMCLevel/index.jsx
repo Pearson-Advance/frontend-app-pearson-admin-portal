@@ -8,12 +8,12 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchExportLicenseUsageMCLevel, fetchLicenseUsageMCLevel } from 'features/dataReport/data/thunks';
-import { fetchLicenseManageCourses } from 'features/licenses/data';
+import { fetchEligibleCourses } from 'features/licenses/data';
 import { Table } from './Table';
 
 export const LicenseUsageMCLevel = ({ filters }) => {
   const dispatch = useDispatch();
-  const mcLevelTable = useSelector(state => state.dataReport.mcLevelData);
+  const mcLevelTable = useSelector(state => state.dataReport.mcLevelResponse);
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageMCLevel(filters));
@@ -27,7 +27,7 @@ export const LicenseUsageMCLevel = ({ filters }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchLicenseManageCourses());
+    dispatch(fetchEligibleCourses());
   }, [dispatch]);
 
   useEffect(() => {

@@ -42,7 +42,7 @@ describe('CCX Level license usage data report tests', () => {
 
     await executeThunk(fetchLicenseUsageCCXLevel(), store.dispatch, store.getState);
 
-    expect(store.getState().dataReport.ccxLevelData.results)
+    expect(store.getState().dataReport.ccxLevelResponse.results)
       .toEqual([
         {
           institution: 'Training Center 1',
@@ -86,7 +86,7 @@ describe('CCX Level license usage data report tests', () => {
 
     await executeThunk(fetchLicenseUsageCCXLevel(), store.dispatch, store.getState);
 
-    expect(store.getState().dataReport.ccxLevelData.results)
+    expect(store.getState().dataReport.ccxLevelResponse.results)
       .toEqual([]);
 
     expect(store.getState().dataReport.status)
@@ -94,7 +94,7 @@ describe('CCX Level license usage data report tests', () => {
   });
 });
 
-describe('Report data layer tests', () => {
+describe('MC Level license usage data report tests', () => {
   beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {
@@ -123,7 +123,7 @@ describe('Report data layer tests', () => {
 
     await executeThunk(fetchLicenseUsageMCLevel(), store.dispatch, store.getState);
 
-    expect(store.getState().dataReport.mcLevelData.results)
+    expect(store.getState().dataReport.mcLevelResponse.results)
       .toEqual([
         {
           institution: 'Training Center 1',
@@ -158,7 +158,7 @@ describe('Report data layer tests', () => {
 
     await executeThunk(fetchLicenseUsageMCLevel(), store.dispatch, store.getState);
 
-    expect(store.getState().dataReport.mcLevelData.results)
+    expect(store.getState().dataReport.mcLevelResponse.results)
       .toEqual([]);
 
     expect(store.getState().dataReport.status)

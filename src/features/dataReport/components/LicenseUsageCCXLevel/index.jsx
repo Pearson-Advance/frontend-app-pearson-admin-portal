@@ -8,12 +8,12 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchExportLicenseUsageCCXLevel, fetchLicenseUsageCCXLevel } from 'features/dataReport/data/thunks';
-import { fetchLicenseManageCourses } from 'features/licenses/data';
+import { fetchEligibleCourses } from 'features/licenses/data';
 import { Table } from './Table';
 
 export const LicenseUsageCCXLevel = ({ filters }) => {
   const dispatch = useDispatch();
-  const ccxLevelTable = useSelector(state => state.dataReport.ccxLevelData);
+  const ccxLevelTable = useSelector(state => state.dataReport.ccxLevelResponse);
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageCCXLevel(filters));
@@ -27,7 +27,7 @@ export const LicenseUsageCCXLevel = ({ filters }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchLicenseManageCourses());
+    dispatch(fetchEligibleCourses());
   }, [dispatch]);
 
   useEffect(() => {

@@ -21,7 +21,7 @@ export const DataReportPage = () => {
   const dispatch = useDispatch();
   const [dataReportTab, setDataReport] = useState(DataReportTab.CCX_LEVEL);
   const [filters, setFilters] = useState(initialFiltersState);
-  const managedCourses = useSelector(managedCoursesForSelect);
+  const eligibleCourses = useSelector(managedCoursesForSelect);
   const institutions = useSelector(allInstitutionsForSelect);
   const pageTab = useSelector(state => state.page.tab);
 
@@ -39,7 +39,7 @@ export const DataReportPage = () => {
   return (
     <Container className="pt-3">
       <Filters
-        managedCourses={managedCourses}
+        eligibleCourses={eligibleCourses}
         institutions={institutions}
         filters={filters}
         setFilters={setFilters}

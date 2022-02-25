@@ -23,7 +23,7 @@ describe('Test suite for Filters component.', () => {
           filters={{}}
           setFilters={setFilters}
           institutions={[]}
-          managedCourses={[]}
+          eligibleCourses={[]}
           handleCleanFilters={handleCleanFilters}
           handleApplyFilters={handleApplyFilters}
           isFilterApplied

@@ -9,7 +9,7 @@ import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
-import { fetchLicenses, createLicense, fetchLicenseManageCourses } from 'features/licenses/data';
+import { fetchLicenses, createLicense, fetchEligibleCourses } from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
 
 import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
@@ -32,7 +32,7 @@ const LicensesPage = () => {
     dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicenses(selectedInstitution));
     dispatch(fetchInstitutions());
-    dispatch(fetchLicenseManageCourses());
+    dispatch(fetchEligibleCourses());
   }, [dispatch, selectedInstitution]);
 
   const handleCloseModal = () => {

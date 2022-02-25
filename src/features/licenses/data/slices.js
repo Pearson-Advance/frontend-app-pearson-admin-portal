@@ -8,7 +8,7 @@ const licenseSlice = createSlice({
     status: RequestStatus.IN_PROGRESS,
     data: [],
     ordersData: [],
-    managedCourses: [],
+    eligibleCourses: [],
     licenseById: null,
     pageSize: 10,
     pageIndex: 0,
@@ -56,14 +56,14 @@ const licenseSlice = createSlice({
         isOpen: true,
       };
     },
-    fetchLicenseManageCoursesRequest: (state) => {
+    fetchEligibleCoursesRequest: (state) => {
       state.status = RequestStatus.IN_PROGRESS;
     },
-    fetchLicenseManageCoursesSuccess: (state, { payload }) => {
+    fetchEligibleCoursesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.managedCourses = payload.map(course => ({ value: course.id, label: course.id }));
+      state.eligibleCourses = payload.map(course => ({ value: course.id, label: course.id }));
     },
-    fetchLicenseManageCoursesFailed: (state) => {
+    fetchEligibleCoursesFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
     openLicenseModal: (state) => {
@@ -108,9 +108,9 @@ export const {
   fetchLicenseFailed,
   postLicenseSuccess,
   postLicenseFailed,
-  fetchLicenseManageCoursesRequest,
-  fetchLicenseManageCoursesSuccess,
-  fetchLicenseManageCoursesFailed,
+  fetchEligibleCoursesRequest,
+  fetchEligibleCoursesSuccess,
+  fetchEligibleCoursesFailed,
   openLicenseModal,
   closeLicenseModal,
   postLicenseOrderSuccess,

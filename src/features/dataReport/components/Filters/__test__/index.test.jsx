@@ -7,10 +7,6 @@ import { Filters } from 'features/dataReport/components/Filters';
 import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 
-const institutionsData = [
-  { value: 'course1' },
-  { value: 'course2' },
-];
 const setFilters = jest.fn();
 const handleCleanFilters = jest.fn();
 
@@ -23,8 +19,8 @@ describe('Test suite for Filters component.', () => {
         <Filters
           filters={{}}
           setFilters={setFilters}
-          institutions={institutionsData}
-          managedCourses={[]}
+          institutions={[]}
+          eligibleCourses={[]}
           handleCleanFilters={handleCleanFilters}
         />
       </Provider>,

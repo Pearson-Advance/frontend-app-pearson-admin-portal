@@ -10,7 +10,7 @@ export const Filters = (props) => {
   const {
     filters,
     setFilters,
-    managedCourses,
+    eligibleCourses,
     institutions,
     handleCleanFilters,
   } = props;
@@ -60,11 +60,11 @@ export const Filters = (props) => {
             isClearable
             isRtl={false}
             isSearchable
-            options={managedCourses}
+            options={eligibleCourses}
             maxMenuHeight={250}
             name="masterCourseId"
             onChange={handleSelectMasterCourseChange}
-            value={managedCourses.find(course => course.value === filters.masterCourseId) || null}
+            value={eligibleCourses.find(course => course.value === filters.masterCourseId) || null}
           />
         </Form.Group>
         <OverlayTrigger
@@ -86,7 +86,7 @@ Filters.propTypes = {
   }),
   setFilters: PropTypes.func.isRequired,
   handleCleanFilters: PropTypes.func.isRequired,
-  managedCourses: PropTypes.arrayOf(PropTypes.shape([])),
+  eligibleCourses: PropTypes.arrayOf(PropTypes.shape([])),
   institutions: PropTypes.arrayOf(PropTypes.shape([])),
 };
 
@@ -96,6 +96,6 @@ Filters.defaultProps = {
     masterCourseId: null,
     page: 1,
   },
-  managedCourses: [],
+  eligibleCourses: [],
   institutions: [],
 };
