@@ -12,6 +12,7 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { executeThunk } from 'test-utils';
 import { fetchLicensebyId } from 'features/licenses/data/thunks';
+import { TabIndex } from 'features/shared/data/constants';
 
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
 let axiosMock = null;
@@ -63,6 +64,7 @@ describe('Test suite for license detail component.', () => {
 
     expect(container).toHaveTextContent('Training center 1');
     expect(tableRows).toHaveLength(3);
+    expect(store.getState().page.tab).toEqual(TabIndex.LICENSES);
   });
 
   test('render license detail with no orders', async () => {

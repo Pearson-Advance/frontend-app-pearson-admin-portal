@@ -12,6 +12,8 @@ import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slic
 import { createLicenseOrder, fetchLicensebyId } from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
+import { TabIndex } from 'features/shared/data/constants';
+import { changeTab } from 'features/shared/data/slices';
 
 const initialFormValues = {
   id: '',
@@ -54,6 +56,7 @@ export const LicenseDetail = () => {
   };
 
   useEffect(() => {
+    dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicensebyId(id));
   }, [id, ordersData]);
 
