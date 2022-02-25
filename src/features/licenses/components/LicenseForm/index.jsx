@@ -9,7 +9,7 @@ import { WarningFilled } from '@edx/paragon/icons';
 
 export const LicenseForm = ({ fields, setFields, errors }) => {
   const data = useSelector(activeInstitutions);
-  const { managedCourses } = useSelector(state => state.licenses);
+  const { eligibleCourses } = useSelector(state => state.licenses);
 
   const handleInputChange = (e) => {
     setFields({
@@ -62,7 +62,7 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
           isClearable
           isRtl={false}
           isSearchable
-          options={managedCourses}
+          options={eligibleCourses}
           maxMenuHeight={150}
           name="course"
           onChange={handleSelectCourseChange}

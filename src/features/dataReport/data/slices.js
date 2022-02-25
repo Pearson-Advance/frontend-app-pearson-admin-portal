@@ -6,11 +6,11 @@ const dataReportSlice = createSlice({
   name: 'dataReport',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
-    ccxLevel: {
+    ccxLevelResponse: {
       results: [],
       count: 0,
     },
-    mcLevelData: {
+    mcLevelResponse: {
       results: [],
       count: 0,
     },
@@ -22,11 +22,11 @@ const dataReportSlice = createSlice({
     },
     fetchLicenseUsageCCXLevelSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.ccxLevel = payload;
+      state.ccxLevelResponse = payload;
     },
     fetchLicenseUsageMCLevelSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.mcLevelData = payload;
+      state.mcLevelResponse = payload;
     },
     fetchLicenseUsageFailed: (state) => {
       state.status = RequestStatus.FAILED;

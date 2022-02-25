@@ -1,7 +1,7 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
-  getLicenses, getLicenseById, postLicense, getLicenseManageCourses,
+  getLicenses, getLicenseById, postLicense, getEligibleCourses,
   postLicenseOrder,
 } from './api';
 import {
@@ -13,9 +13,9 @@ import {
   fetchLicenseFailed,
   postLicenseSuccess,
   postLicenseFailed,
-  fetchLicenseManageCoursesRequest,
-  fetchLicenseManageCoursesSuccess,
-  fetchLicenseManageCoursesFailed,
+  fetchEligibleCoursesRequest,
+  fetchEligibleCoursesSuccess,
+  fetchEligibleCoursesFailed,
   postLicenseOrderSuccess,
   postLicenseOrderFailed,
 } from './slices';
@@ -80,17 +80,17 @@ export function createLicense(institution, course, courseAccessDuration, status)
  * Fetches all license managed courses.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchLicenseManageCourses(url) {
+export function fetchEligibleCourses(url) {
   return async (dispatch) => {
     try {
-      dispatch(fetchLicenseManageCoursesRequest());
+      dispatch(fetchEligibleCoursesRequest());
       dispatch(
-        fetchLicenseManageCoursesSuccess(
-          camelCaseObject((await getLicenseManageCourses(url)).data),
+        fetchEligibleCoursesSuccess(
+          camelCaseObject((await getEligibleCourses(url)).data),
         ),
       );
     } catch (error) {
-      dispatch(fetchLicenseManageCoursesFailed());
+      dispatch(fetchEligibleCoursesFailed());
       logError(error);
     }
   };

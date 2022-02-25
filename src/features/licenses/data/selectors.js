@@ -1,1 +1,1 @@
-export const managedCoursesForSelect = state => state.licenses.managedCourses;
+export const managedCoursesForSelect = state => state.licenses.eligibleCourses;

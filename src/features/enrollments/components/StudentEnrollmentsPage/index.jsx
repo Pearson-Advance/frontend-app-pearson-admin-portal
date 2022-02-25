@@ -4,7 +4,7 @@ import Container from '@edx/paragon/dist/Container';
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { fetchStudentEnrollments, fetchExportStudentEnrollments } from 'features/enrollments/data';
 import { fetchInstitutions } from 'features/institutions/data';
-import { fetchLicenseManageCourses } from 'features/licenses/data';
+import { fetchEligibleCourses } from 'features/licenses/data';
 import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 import { changeTab } from 'features/shared/data/slices';
@@ -29,7 +29,7 @@ const StudentEnrollmentsPage = () => {
   const [filters, setFilters] = useState(initialFiltersState);
   const [isFilterApplied, setIsFilterApplied] = useState(true);
   const institutions = useSelector(allInstitutionsForSelect);
-  const managedCourses = useSelector(managedCoursesForSelect);
+  const eligibleCourses = useSelector(managedCoursesForSelect);
 
   const handleCleanFilters = () => {
     setFilters(initialFiltersState);
@@ -68,7 +68,7 @@ const StudentEnrollmentsPage = () => {
       ordering: getOrdering(sortBy),
     }));
     dispatch(fetchInstitutions());
-    dispatch(fetchLicenseManageCourses());
+    dispatch(fetchEligibleCourses());
   }, [dispatch, sortBy]);
 
   return (
@@ -79,7 +79,7 @@ const StudentEnrollmentsPage = () => {
         isFilterApplied={isFilterApplied}
         setIsFilterApplied={setIsFilterApplied}
         institutions={institutions}
-        managedCourses={managedCourses}
+        eligibleCourses={eligibleCourses}
         handleCleanFilters={handleCleanFilters}
         handleApplyFilters={handleApplyFilters}
         handleExportEnrollments={handleExportEnrollments}

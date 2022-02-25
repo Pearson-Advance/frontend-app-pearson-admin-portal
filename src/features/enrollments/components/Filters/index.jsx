@@ -12,7 +12,7 @@ export const Filters = props => {
     filters,
     setFilters,
     institutions,
-    managedCourses,
+    eligibleCourses,
     handleCleanFilters,
     handleApplyFilters,
     handleExportEnrollments,
@@ -75,11 +75,11 @@ export const Filters = props => {
             isClearable
             isRtl={false}
             isSearchable
-            options={managedCourses}
+            options={eligibleCourses}
             maxMenuHeight={250}
             name="masterCourseId"
             onChange={handleSelectMasterCourseChange}
-            value={managedCourses.find(courses => courses.value === filters.masterCourseId) || null}
+            value={eligibleCourses.find(courses => courses.value === filters.masterCourseId) || null}
           />
         </Form.Group>
 
@@ -158,7 +158,7 @@ Filters.propTypes = {
   }).isRequired,
   setFilters: PropTypes.func.isRequired,
   institutions: PropTypes.arrayOf(PropTypes.shape([])),
-  managedCourses: PropTypes.arrayOf(PropTypes.shape([])),
+  eligibleCourses: PropTypes.arrayOf(PropTypes.shape([])),
   handleCleanFilters: PropTypes.func.isRequired,
   handleApplyFilters: PropTypes.func.isRequired,
   handleExportEnrollments: PropTypes.func.isRequired,
@@ -168,5 +168,5 @@ Filters.propTypes = {
 
 Filters.defaultProps = {
   institutions: [],
-  managedCourses: [],
+  eligibleCourses: [],
 };

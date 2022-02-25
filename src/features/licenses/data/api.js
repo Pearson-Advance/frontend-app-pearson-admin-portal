@@ -2,7 +2,7 @@ import { snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const endpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
-const managedCoursesEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/managed-courses/`;
+const eligibleCoursesEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-eligible-courses/`;
 const ordersEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 
 export function getLicenses(selectedInstitution = null) {
@@ -31,7 +31,7 @@ export function postLicense(institution, course, courseAccessDuration, status) {
   );
 }
 
-export function getLicenseManageCourses(url = managedCoursesEndpoint) {
+export function getEligibleCourses(url = eligibleCoursesEndpoint) {
   return getAuthenticatedHttpClient().get(url);
 }
 
