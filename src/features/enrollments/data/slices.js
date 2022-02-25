@@ -30,30 +30,44 @@ const studentEnrollmentsSlice = createSlice({
     fetchStudentEnrollmentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    deleteSuccessful: (state, { payload }) => {
-      const dataCopy = _.cloneDeep(state.data);
-      const obj = JSON.parse(payload);
-      const deleteData = dataCopy.filter(item =>
-        item.learnerEmail !== get(obj, "username", "")
-      );
-      state.data = deleteData;
-    },
-    deleteFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
-    unenrollSuccessful: (state, { payload }) => {
-      const dataCopy = _.cloneDeep(state.data);
-      const unenrollData = dataCopy.map(item => {
-        if (item.learnerEmail == payload.user_email)
-          [item.status = "Inactive",
-          item.remainingCourseAccessDuration = '0']
-        return item
-      });
-      state.data = unenrollData;
-    },
-    unenrollFailed: (state) => {
-      state.status = RequestStatus.FAILED;
-    },
+    // deleteSuccessful: (state, { payload }) => {
+    //   const dataCopy = _.cloneDeep(state.data);
+    //   const obj = JSON.parse(payload);
+    //   const deleteData = dataCopy.filter(item =>
+    //     item.learnerEmail !== get(obj, "username", "")
+    //   );
+    //   state.data = deleteData;
+    // },
+    // deleteFailed: (state) => {
+    //   state.status = RequestStatus.FAILED;
+    // },
+    // unenrollSuccessful: (state, { payload }) => {
+    //   const dataCopy = _.cloneDeep(state.data);
+    //   const unenrollData = dataCopy.map(item => {
+    //     if (item.learnerEmail == payload.user_email)
+    //       [item.status = "Inactive",
+    //       item.remainingCourseAccessDuration = '0']
+    //     return item
+    //   });
+    //   state.data = unenrollData;
+    // },
+    // unenrollFailed: (state) => {
+    //   state.status = RequestStatus.FAILED;
+    // },
+    // enrollSuccessful: (state, { payload }) => {
+    //   const dataCopy = _.cloneDeep(state.data);
+    //   const obj = JSON.parse(payload);
+    //   console.log(get(obj, "email_list", "")[0])
+    //   console.log(payload)
+    //   console.log(state)
+    //   const enrollData = dataCopy.map(item => {
+    //     if (item.learnerEmail ==  get(obj, "email_list", "")[0])
+    //       [item.status = "Active",
+    //       item.remainingCourseAccessDuration]
+    //     return item
+    //   });
+    //   state.data = enrollData;
+    // },
   },
 });
 
@@ -65,6 +79,7 @@ export const {
   deleteFailed,
   unenrollSuccessful,
   unenrollFailed,
+  enrollSuccessful,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

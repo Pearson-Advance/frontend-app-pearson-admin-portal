@@ -1,14 +1,12 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getStudentEnrollments, getExportStudentEnrollments, createUnenrollment } from './api';
+import { getStudentEnrollments, getExportStudentEnrollments, createUnenrollment, createEnrollment } from './api';
 import {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
   deleteSuccessful,
   deleteFailed,
-  unenrollSuccessful,
-  // unenrollFailed,
 } from './slices';
 
 /**
@@ -48,36 +46,34 @@ function fetchExportStudentEnrollments(filters) {
 }
 
 /**
- * Delete student enrollment.
- * @returns {(function(*): Promise<void>)|*}
- */
-function deleteAction(data) {
-  return async (dispatch) => {
-    try {
-      const response = await createUnenrollment(data);
-      dispatch(deleteSuccessful(response.config.data));
-    } catch (error) {
-      dispatch(deleteFailed());
-      logError(error);
-    }
-  }
-};
-
-/**
- * Unenroll student.
+ * Delete and Unenroll student enrollment.
  * @returns {(function(*): Promise<void>)|*}
  */
 function unenrollAction(data) {
   return async (dispatch) => {
     try {
-      const response = await createUnenrollment(data);
-      dispatch(unenrollSuccessful(response.data.result));
+      dispatch(createUnenrollment(data));
     } catch (error) {
-      dispatch(unenrollFailed());
       logError(error);
     }
   }
 };
+
+// /**
+//  * Unenroll student.
+//  * @returns {(function(*): Promise<void>)|*}
+//  */
+// function unenrollAction(filters) {
+//   return async (dispatch) => {
+//     try {
+//       const response = await createUnenrollment(filters);
+//       dispatch(fetchStudentEnrollments(response));
+//     } catch (error) {
+//       // dispatch(unenrollFailed());
+//       logError(error);
+//     }
+//   }
+// };
 
 /**
  * Enroll student.
@@ -86,8 +82,7 @@ function unenrollAction(data) {
 function enrollAction(data) {
   return async (dispatch) => {
     try {
-      const response = await createUnenrollment(data);
-      dispatch(unenrollSuccessful(response.data.result));
+      dispatch(createEnrollment(data));
     } catch (error) {
       logError(error);
     }
@@ -97,7 +92,6 @@ function enrollAction(data) {
 export {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
-  deleteAction,
   unenrollAction,
   enrollAction,
 };

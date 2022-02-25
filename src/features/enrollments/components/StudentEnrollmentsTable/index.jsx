@@ -6,26 +6,46 @@ import {
 } from '@edx/paragon';
 import { getColumns } from './columns';
 import { useDispatch } from 'react-redux';
-import { deleteAction, unenrollAction, enrollAction } from '../../data/thunks'; //CORREGIR
+import { unenrollAction, enrollAction } from '../../data/thunks'; //CORREGIR
+import { fetchStudentEnrollments } from 'features/enrollments/data';
+import { StudentEnrollmentsPage } from 'features/enrollments';
 
 const StudentEnrollmentsTable = ({ data }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
-  const [isOpenDelete, openDelete, closeDelete] = useToggle(false);
+  // const [isOpenDelete, openDelete, closeDelete] = useToggle(false);
   const [isOpenUnenroll, openUnenroll, closeUnenroll] = useToggle(false);
-  const [isOpenEnroll, openEnroll, closeEnroll] = useToggle(false);
+  // const [isOpenEnroll, openEnroll, closeEnroll] = useToggle(false);
   const [selectedRow, setRow] = useState({});
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
 
-  const Data = {
+  const unenrollData = {
     course_id: selectedRow.ccxId,
     username: selectedRow.learnerEmail,
   };
 
-  const COLUMNS = useMemo(() => getColumns({ openDelete, openUnenroll, openEnroll, setRow }), []); //eslint-disable-line react-hooks/exhaustive-deps
+  const EnrollData = {
+    course_id: selectedRow.ccxId,
+    username: selectedRow.learnerEmail,
+  }
+  const initialFiltersState = {
+    institution: null,
+    masterCourseId: null,
+    learnerEmail: '',
+    ccxCoachEmail: '',
+    enrollmentStatus: '',
+  };
+
+  const handleApplyFilters = () => {
+    dispatch(fetchStudentEnrollments(initialFiltersState));
+    setIsFilterApplied(true);
+  };
+
+  const COLUMNS = useMemo(() => getColumns({ openUnenroll, setRow }), []); //eslint-disable-line react-hooks/exhaustive-deps
   let status = 'Deleted';
-  if (selectedRow.status === 'Pending') { status = 'Deleted' }
-  if (selectedRow.status === 'Active') { status = 'Unenrolled' }
-  if (selectedRow.status === 'Inactive') { status = 'Enrolled' }
+  if (selectedRow.status === 'Pending') { status = 'Deleted' };
+  if (selectedRow.status === 'Active') { status = 'Unenrolled' };
+  if (selectedRow.status === 'Inactive') { status = 'Enrolled' };
 
   return (
     <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
@@ -47,17 +67,19 @@ const StudentEnrollmentsTable = ({ data }) => {
         </Toast>
         <AlertModal
           title='Are you sure you want to delete?'
-          isOpen={isOpenDelete}
-          onClose={close}
+          isOpen={isOpenUnenroll}
+          onClose={closeUnenroll}
           footerNode={(
             <ActionRow>
-              <Button variant="tertiary" onClick={closeDelete}>cancel</Button>
+              <Button variant="tertiary" onClick={closeUnenroll}>cancel</Button>
               <Button
                 variant="primary"
+                isFilterApplied={isFilterApplied}
                 onClick={() => {
                   setShow(true);
-                  dispatch(deleteAction(Data));
-                  closeDelete()
+                  dispatch(unenrollAction(unenrollData));
+                  handleApplyFilters();
+                  closeUnenroll();
                 }}>
                 Submit
               </Button>
@@ -65,50 +87,6 @@ const StudentEnrollmentsTable = ({ data }) => {
           )}>
           <p>
             Once submitted the user will be deleted.
-          </p>
-        </AlertModal>
-        <AlertModal
-          title='Are you sure you want to unenroll?'
-          isOpen={isOpenUnenroll}
-          onClose={close}
-          footerNode={(
-            <ActionRow>
-              <Button variant="tertiary" onClick={closeUnenroll}>cancel</Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setShow(true);
-                  dispatch(unenrollAction(Data));
-                  closeUnenroll()
-                }}>
-                Submit
-              </Button>
-            </ActionRow>
-          )}>
-          <p>
-            Once submitted the user will be unenrolled from the CCX.
-          </p>
-        </AlertModal>
-        <AlertModal
-          title='Are you sure you want to enroll?'
-          isOpen={isOpenEnroll}
-          onClose={close}
-          footerNode={(
-            <ActionRow>
-              <Button variant="tertiary" onClick={closeEnroll}>cancel</Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setShow(true);
-                  dispatch(enrollAction(Data));
-                  closeEnroll()
-                }}>
-                Submit
-              </Button>
-            </ActionRow>
-          )}>
-          <p>
-            Once submitted the user will be enrolled.
           </p>
         </AlertModal>
       </Col>

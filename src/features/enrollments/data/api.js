@@ -31,8 +31,14 @@ function createUnenrollment(data) {
     `${process.env.ENROLLMENT_API_BASE_URL}/unenrollment`, data);
 }
 
+function createEnrollment(data) {
+  return getAuthenticatedHttpClient().post(
+    `${process.env.ENROLLMENT_API_BASE_URL}/batch-enrollment`, data);
+}
+
 export {
   getStudentEnrollments,
   getExportStudentEnrollments,
   createUnenrollment,
+  createEnrollment,
 };

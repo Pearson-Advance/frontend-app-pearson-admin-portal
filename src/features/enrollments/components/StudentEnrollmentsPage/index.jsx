@@ -23,7 +23,7 @@ const StudentEnrollmentsPage = () => {
   const dispatch = useDispatch();
   const { data } = useSelector(state => state.enrollments);
   const [filters, setFilters] = useState(initialFiltersState);
-  const [isFilterApplied, setIsFilterApplied] = useState(true);
+  const [isFilterApplied, setIsFilterApplied] = useState(false);
   const institutions = useSelector(allInstitutionsForSelect);
   const managedCourses = useSelector(managedCoursesForSelect);
 
