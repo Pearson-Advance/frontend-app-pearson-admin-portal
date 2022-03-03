@@ -1,6 +1,11 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { getStudentEnrollments, getExportStudentEnrollments } from './api';
+import {
+  getStudentEnrollments,
+  getExportStudentEnrollments,
+  createUnenrollment,
+  createEnrollment,
+} from './api';
 import {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
@@ -43,7 +48,41 @@ function fetchExportStudentEnrollments(filters) {
   };
 }
 
+/**
+ * Delete and Unenroll student enrollment.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+function unenrollAction(data, filters = null) {
+  return async (dispatch) => {
+    try {
+      await createUnenrollment(data);
+      dispatch(fetchStudentEnrollmentsRequest());
+      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments(filters)).data)));
+    } catch (error) {
+      logError(error);
+    }
+  };
+}
+
+/**
+ * Enroll student.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+function enrollAction(data, filters = null) {
+  return async (dispatch) => {
+    try {
+      await createEnrollment(data);
+      dispatch(fetchStudentEnrollmentsRequest());
+      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments(filters)).data)));
+    } catch (error) {
+      logError(error);
+    }
+  };
+}
+
 export {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
+  unenrollAction,
+  enrollAction,
 };

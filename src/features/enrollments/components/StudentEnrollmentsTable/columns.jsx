@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 
-import { Badge } from '@edx/paragon';
+import { Badge, Button } from '@edx/paragon';
 
-export const COLUMNS = [
+export const getColumns = props => [
   {
     Header: 'Institution',
     accessor: 'institution',
@@ -57,5 +57,32 @@ export const COLUMNS = [
     accessor: 'created',
     Cell: ({ row }) => new Date(row.values.created).toUTCString(),
     disableSortBy: true,
+  },
+  {
+    Header: 'Action',
+    accessor: 'action',
+    disableSortBy: true,
+    Cell: ({ row }) => {
+      const value = row.values;
+      let variant = 'primary';
+      let action = 'Enable';
+
+      switch (value.status) {
+        case 'Active':
+          action = 'Disable';
+          break;
+        case 'Pending':
+          variant = 'danger';
+          action = 'Revoke';
+          break;
+        case 'Inactive':
+          action = 'Enable';
+          break;
+        default:
+          variant = 'primary';
+          action = 'Enable';
+      }
+      return <Button variant={variant} onClick={() => { props.open(); props.setRow(value); }}>{action}</Button>;
+    },
   },
 ];

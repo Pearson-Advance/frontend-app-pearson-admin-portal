@@ -4,6 +4,7 @@ import { Factory } from 'rosie';
 import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
+import { getColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 
 import '@testing-library/jest-dom/extend-expect';
 import 'features/enrollments/data/__factories__';
@@ -11,7 +12,7 @@ import 'features/enrollments/data/__factories__';
 test('render StudentEnrollmentsTable with no data', () => {
   const component = render(
     <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={[]} count={0} />
+      <StudentEnrollmentsTable data={[]} count={0} columns={[]} />
     </Provider>,
   );
   expect(component.container).toHaveTextContent('No enrollments found');
@@ -21,7 +22,7 @@ test('render StudentEnrollmentsTable with data', () => {
   const data = Factory.build('enrollmentsList');
   const component = render(
     <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={data} count={data.length} />
+      <StudentEnrollmentsTable data={data} count={data.length} columns={getColumns()} />
     </Provider>,
   );
   // This should have 4 table rows, inside the table component, 1 for the header and 3 for the enrollments.
@@ -51,7 +52,7 @@ test('render StudentEnrollmentsTable with data', () => {
 test('Check sorting columns of StudentEnrollmentsTable', () => {
   const component = render(
     <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={[]} count={0} />
+      <StudentEnrollmentsTable data={[]} count={0} columns={getColumns()} />
     </Provider>,
   );
 
