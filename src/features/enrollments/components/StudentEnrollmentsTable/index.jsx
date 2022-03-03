@@ -5,9 +5,8 @@ import {
   Row, Col,
 } from '@edx/paragon';
 import { PersistController } from 'features/shared/components/PersistController';
-import { COLUMNS } from './columns';
 
-const StudentEnrollmentsTable = ({ data, count }) => (
+const StudentEnrollmentsTable = ({ data, count, columns }) => (
   <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
     <Col xs={12}>
       <DataTable
@@ -15,7 +14,7 @@ const StudentEnrollmentsTable = ({ data, count }) => (
         manualSortBy
         itemCount={count}
         data={data}
-        columns={COLUMNS}
+        columns={columns}
       >
         <DataTable.Table />
         <DataTable.EmptyTable content="No enrollments found." />
@@ -29,11 +28,13 @@ const StudentEnrollmentsTable = ({ data, count }) => (
 StudentEnrollmentsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
   count: PropTypes.number,
+  columns: PropTypes.arrayOf(PropTypes.shape([])),
 };
 
 StudentEnrollmentsTable.defaultProps = {
   data: [],
   count: 0,
+  columns: [],
 };
 
 export { StudentEnrollmentsTable };

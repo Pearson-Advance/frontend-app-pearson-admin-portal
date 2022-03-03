@@ -10,6 +10,7 @@ const studentEnrollmentsSlice = createSlice({
     requestResponse: {
       results: [],
       count: 0,
+      numPages: 0,
     },
     filtersForm: {
       institutions: null,

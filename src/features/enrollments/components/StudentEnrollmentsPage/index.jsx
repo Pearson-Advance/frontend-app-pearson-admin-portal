@@ -1,16 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from '@edx/paragon/dist/Container';
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
-import { fetchStudentEnrollments, fetchExportStudentEnrollments } from 'features/enrollments/data';
+import {
+  fetchStudentEnrollments,
+  fetchExportStudentEnrollments,
+  unenrollAction,
+  enrollAction,
+} from 'features/enrollments/data';
 import { fetchInstitutions } from 'features/institutions/data';
 import { fetchEligibleCourses } from 'features/licenses/data';
 import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
-import { Pagination } from '@edx/paragon';
+import {
+  Pagination,
+  useToggle,
+  AlertModal,
+  ActionRow,
+  Button,
+} from '@edx/paragon';
 import { getOrdering } from 'features/shared/data/utils';
+import { getColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 import { Filters } from '../Filters';
 
 const initialFiltersState = {
@@ -30,6 +42,43 @@ const StudentEnrollmentsPage = () => {
   const [isFilterApplied, setIsFilterApplied] = useState(true);
   const institutions = useSelector(allInstitutionsForSelect);
   const eligibleCourses = useSelector(managedCoursesForSelect);
+  const [isOpen, open, close] = useToggle(false);
+  const [selectedRow, setRow] = useState({});
+
+  const unenrollData = {
+    courseId: selectedRow.ccxId,
+    username: selectedRow.learnerEmail,
+  };
+
+  const enrollData = {
+    userEmail: selectedRow.learnerEmail,
+    courseDetails: { 'course_id': selectedRow.ccxId }, // eslint-disable-line quote-props
+    isActive: true,
+    mode: 'audit',
+  };
+
+  const COLUMNS = useMemo(() => getColumns({ open, setRow }), []);
+
+  let status = '';
+  let enrollmentData = unenrollData;
+
+  switch (selectedRow.status) {
+    case 'Pending':
+      status = 'revoked';
+      enrollmentData = unenrollData;
+      break;
+    case 'Active':
+      status = 'unenrolled';
+      enrollmentData = unenrollData;
+      break;
+    case 'Inactive':
+      status = 'enrolled';
+      enrollmentData = enrollData;
+      break;
+    default:
+      status = '';
+      enrollmentData = unenrollData;
+  }
 
   const handleCleanFilters = () => {
     setFilters(initialFiltersState);
@@ -60,6 +109,25 @@ const StudentEnrollmentsPage = () => {
     }));
   };
 
+  const handleAction = () => {
+    if (selectedRow.status === 'Pending' || selectedRow.status === 'Active') {
+      dispatch(unenrollAction(enrollmentData,
+        {
+          ...initialFiltersState,
+          ordering: getOrdering(sortBy),
+          page: requestResponse.currentPage,
+        }));
+    } else if (selectedRow.status === 'Inactive') {
+      dispatch(enrollAction(enrollmentData,
+        {
+          ...initialFiltersState,
+          ordering: getOrdering(sortBy),
+          page: requestResponse.currentPage,
+        }));
+    }
+    close();
+  };
+
   useEffect(() => {
     if (TabIndex.ENROLLMENTS !== pageTab) { dispatch(changeTab(TabIndex.ENROLLMENTS)); }
 
@@ -84,13 +152,30 @@ const StudentEnrollmentsPage = () => {
         handleApplyFilters={handleApplyFilters}
         handleExportEnrollments={handleExportEnrollments}
       />
-      <StudentEnrollmentsTable data={requestResponse.results} count={requestResponse.count} />
+      <StudentEnrollmentsTable data={requestResponse.results} count={requestResponse.count} columns={COLUMNS} />
       <Pagination
         paginationLabel="paginationNavigation"
         pageCount={requestResponse.numPages}
         currentPage={requestResponse.currentPage}
         onPageSelect={handlePagination}
       />
+      <AlertModal
+        title={`Are you sure you want the ${status === 'revoked' ? 'learner\'s enrollment to be' : 'learner to be'} ${status}?`}
+        isOpen={isOpen}
+        onClose={close}
+        footerNode={(
+          <ActionRow>
+            <Button variant="tertiary" onClick={close}>cancel</Button>
+            <Button variant="primary" onClick={handleAction}>
+              Submit
+            </Button>
+          </ActionRow>
+        )}
+      >
+        <p>
+          Learner with email <b>{selectedRow.learnerEmail}</b> will be <b>{status}</b> {status === 'enrolled' ? 'to' : 'from'} <b>{selectedRow.ccxName}</b> course.
+        </p>
+      </AlertModal>
     </Container>
   );
 };
