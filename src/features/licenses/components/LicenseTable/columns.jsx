@@ -11,12 +11,11 @@ export const getColumns = ({ handleSowDetails }) => [
     disableFilters: true,
   },
   {
-    Header: 'Course name',
-    accessor: ({ course }) => course.displayName,
-  },
-  {
-    Header: 'Course ID',
-    accessor: ({ course }) => course.id,
+    Header: 'Master Courses',
+    accessor: ({ courses }) => (
+      courses.map(course => `${course.id} - ${course.displayName}`).join('; ')
+    ),
+    filter: 'includes',
   },
   {
     Header: 'Purchased seats',
