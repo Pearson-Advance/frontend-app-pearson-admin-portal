@@ -1,9 +1,11 @@
 import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { getLicenses, getLicenseById } from 'features/licenses/data/api';
+import { getLicenses, getLicenseById, updateLicenseOrder } from 'features/licenses/data/api';
+import { snakeCaseObject } from '@edx/frontend-platform';
 
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
+const licensesOrdersApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 let axiosMock = null;
 
 describe('Licenses API tests', () => {
@@ -54,6 +56,19 @@ describe('Licenses API tests', () => {
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, { ...expectedResponse });
 
     const response = await getLicenseById(1);
+
+    expect(response.data).toEqual(expectedResponse);
+  });
+
+  test('Successfully complete a patch request to the licenses orders endpoint', async () => {
+    const expectedResponse = snakeCaseObject({
+      orderReference: 'TEST04',
+      purchasedSeats: 300,
+    });
+
+    axiosMock.onPatch(`${licensesOrdersApiUrl}1/`).reply(200, expectedResponse);
+
+    const response = await updateLicenseOrder(1, 'TEST04', 300);
 
     expect(response.data).toEqual(expectedResponse);
   });

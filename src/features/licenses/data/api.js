@@ -43,3 +43,13 @@ export function postLicenseOrder(license, orderReference, purchasedSeats, active
     }),
   );
 }
+
+export function updateLicenseOrder(orderId, orderReference, purchasedSeats) {
+  return getAuthenticatedHttpClient().patch(
+    `${ordersEndpoint}${orderId}/`,
+    snakeCaseObject({
+      orderReference,
+      purchasedSeats,
+    }),
+  );
+}

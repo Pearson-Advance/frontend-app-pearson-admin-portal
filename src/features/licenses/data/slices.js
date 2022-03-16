@@ -15,6 +15,7 @@ const licenseSlice = createSlice({
     form: {
       isOpen: false,
       errors: {},
+      order: {},
     },
   },
   reducers: {
@@ -66,10 +67,12 @@ const licenseSlice = createSlice({
     fetchEligibleCoursesFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
-    openLicenseModal: (state) => {
+    openLicenseModal: (state, { payload }) => {
+      // When there is a payload, it opens the Edit modal.
       state.form = {
         ...state.form,
         isOpen: true,
+        order: payload,
       };
     },
     closeLicenseModal: (state) => {
@@ -96,6 +99,23 @@ const licenseSlice = createSlice({
         isOpen: true,
       };
     },
+    patchLicenseOrderSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.ordersData = [payload, ...state.ordersData];
+      state.form = {
+        ...state.form,
+        errors: {},
+        isOpen: false,
+      };
+    },
+    patchLicenseOrderFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        ...state.form,
+        errors: payload,
+        isOpen: true,
+      };
+    },
   },
 });
 
@@ -115,6 +135,8 @@ export const {
   closeLicenseModal,
   postLicenseOrderSuccess,
   postLicenseOrderFailed,
+  patchLicenseOrderSuccess,
+  patchLicenseOrderFailed,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;

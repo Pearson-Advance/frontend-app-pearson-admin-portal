@@ -9,11 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import { Modal } from 'features/shared/components/Modal';
 import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
-import { createLicenseOrder, fetchLicensebyId } from 'features/licenses/data/thunks';
+import { createLicenseOrder, fetchLicensebyId, editLicenseOrder } from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
 import { TabIndex } from 'features/shared/data/constants';
 import { changeTab } from 'features/shared/data/slices';
+import { has } from 'lodash';
 
 const initialFormValues = {
   id: '',
@@ -38,22 +39,49 @@ export const LicenseDetail = () => {
     dispatch(closeLicenseModal());
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (orderId, orderReference = null, purchasedSeats = null, active = null) => {
     setFields(initialFormValues);
-    dispatch(openLicenseModal());
+    if (orderReference != null) {
+      dispatch(openLicenseModal({
+        orderId, orderReference, purchasedSeats, active,
+      }));
+    } else {
+      dispatch(openLicenseModal());
+    }
   };
 
+  const create = !has(form.order, 'orderId');
+
   const handleSubmit = () => {
-    dispatch(
-      createLicenseOrder(
-        { id: parseInt(id, 10) },
-        fields.orderReference,
-        fields.purchasedSeats,
-        fields.courseAccessDuration,
-        fields.active,
-      ),
-    );
+    if (create) {
+      dispatch(
+        createLicenseOrder(
+          parseInt(id, 10),
+          fields.orderReference,
+          fields.purchasedSeats,
+          fields.courseAccessDuration,
+          fields.active,
+        ),
+      );
+    } else {
+      dispatch(
+        editLicenseOrder(
+          form.order.orderId,
+          fields.orderReference,
+          fields.purchasedSeats,
+        ),
+      );
+    }
   };
+
+  useEffect(() => {
+    if (!create) {
+      setFields({
+        orderReference: form.order.orderReference,
+        purchasedSeats: form.order.purchasedSeats,
+      });
+    }
+  }, [form]);
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
@@ -112,7 +140,7 @@ export const LicenseDetail = () => {
                   />
                   <Container size="xl">
                     <Modal
-                      title="Add order"
+                      title={create ? 'Add order:' : `Edit order: ${form.order.orderReference}`}
                       isOpen={form.isOpen}
                       handleCloseModal={handleCloseModal}
                       handlePrimaryAction={handleSubmit}
@@ -125,9 +153,8 @@ export const LicenseDetail = () => {
                       />
                     </Modal>
                   </Container>
-
                   <Card.Body>
-                    <LicenseOrders data={licenseById.licenseOrder} />
+                    <LicenseOrders data={licenseById.licenseOrder} handleOpenModal={handleOpenModal} />
                   </Card.Body>
                 </Card>
               </Col>
