@@ -1,23 +1,31 @@
 import React from 'react';
 import { DataTable } from '@edx/paragon';
 import PropTypes from 'prop-types';
-import { COLUMNS } from './columns';
+import { getColumns } from 'features/licenses/components/LicenseOrders/columns';
 
-export const LicenseOrders = ({ data }) => (
-  <DataTable
-    columns={COLUMNS}
-    itemCount={data.length}
-    data={data}
-  >
-    <DataTable.Table />
-    <DataTable.EmptyTable content="No orders found." />
-  </DataTable>
-);
+const LicenseOrders = ({ data, handleOpenModal }) => {
+  const COLUMNS = getColumns({ handleOpenModal });
+
+  return (
+    <DataTable
+      columns={COLUMNS}
+      itemCount={data.length}
+      data={data}
+    >
+      <DataTable.Table />
+      <DataTable.EmptyTable content="No orders found." />
+    </DataTable>
+  );
+};
 
 LicenseOrders.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  handleOpenModal: PropTypes.arrayOf(PropTypes.shape([])),
 };
 
 LicenseOrders.defaultProps = {
   data: [],
+  handleOpenModal: [],
 };
+
+export { LicenseOrders };
