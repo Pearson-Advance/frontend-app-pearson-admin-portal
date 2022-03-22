@@ -63,7 +63,7 @@ describe('Test suite for license detail component.', () => {
     const tableRows = container.querySelectorAll('tr');
 
     expect(container).toHaveTextContent('Training center 1');
-    expect(tableRows).toHaveLength(3);
+    expect(tableRows).toHaveLength(1);
     expect(store.getState().page.tab).toEqual(TabIndex.LICENSES);
   });
 

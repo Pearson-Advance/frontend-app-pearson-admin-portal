@@ -116,6 +116,11 @@ const licenseSlice = createSlice({
         isOpen: true,
       };
     },
+    clearLicenseOrder: (state) => {
+      if (state.licenseById && state.licenseById.licenseOrder) {
+        state.licenseById.licenseOrder = [];
+      }
+    },
   },
 });
 
@@ -137,6 +142,7 @@ export const {
   postLicenseOrderFailed,
   patchLicenseOrderSuccess,
   patchLicenseOrderFailed,
+  clearLicenseOrder,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;
