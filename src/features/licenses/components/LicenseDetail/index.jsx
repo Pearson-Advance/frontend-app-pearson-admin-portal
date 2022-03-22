@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useHistory, useParams } from 'react-router';
 import { Modal } from 'features/shared/components/Modal';
-import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
+import { openLicenseModal, closeLicenseModal, clearLicenseOrder } from 'features/licenses/data/slices';
 import { createLicenseOrder, fetchLicensebyId, editLicenseOrder } from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
@@ -82,6 +82,10 @@ export const LicenseDetail = () => {
       });
     }
   }, [form]);
+
+  useEffect(() => {
+    dispatch(clearLicenseOrder());
+  }, [id]);
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
