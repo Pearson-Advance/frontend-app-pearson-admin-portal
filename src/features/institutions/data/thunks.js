@@ -1,5 +1,6 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
+import { fetchInstitutionsForGlobalFilter } from 'features/shared/data/thunks';
 import { getInstitutions, postInstitution, updateInstitution } from './api';
 import {
   fetchInstitutionsFailed,
@@ -40,6 +41,7 @@ export function createInstitution(name, shortName, externalId, active) {
         externalId,
         active,
       )).data)));
+      dispatch(fetchInstitutionsForGlobalFilter());
     } catch (error) {
       dispatch(postInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);
