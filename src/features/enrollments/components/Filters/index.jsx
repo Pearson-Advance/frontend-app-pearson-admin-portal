@@ -85,9 +85,9 @@ export const Filters = props => {
 
         <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
           <Form.Control
-            name="ccxCoachEmail"
-            floatingLabel="CCX coach email"
-            value={filters.ccxCoachEmail}
+            name="ccxAdminEmail"
+            floatingLabel="CCX admin email"
+            value={filters.ccxAdminEmail}
             onChange={handleInputChange}
           />
         </Form.Group>
@@ -153,7 +153,7 @@ Filters.propTypes = {
     institution: PropTypes.string,
     masterCourseId: PropTypes.string,
     learnerEmail: PropTypes.string,
-    ccxCoachEmail: PropTypes.string,
+    ccxAdminEmail: PropTypes.string,
     enrollmentStatus: PropTypes.string,
   }).isRequired,
   setFilters: PropTypes.func.isRequired,

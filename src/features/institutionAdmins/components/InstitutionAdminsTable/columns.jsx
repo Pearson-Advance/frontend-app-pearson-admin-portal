@@ -9,11 +9,11 @@ export const getColumns = props => [
     disableFilters: true,
   },
   {
-    Header: 'Coach username',
+    Header: 'Admin username',
     accessor: ({ user }) => user.username,
   },
   {
-    Header: 'Coach email',
+    Header: 'Admin email',
     accessor: ({ user }) => user.email,
   },
   {

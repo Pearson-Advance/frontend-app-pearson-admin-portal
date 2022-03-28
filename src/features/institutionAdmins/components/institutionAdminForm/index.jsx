@@ -37,7 +37,7 @@ export const InstitutionAdminForm = ({ fields, setFields, errors }) => {
         {errors.institutionId && <Form.Control.Feedback type="invalid">{errors.institutionId}</Form.Control.Feedback>}
       </Form.Group>
       <Form.Group isInvalid={Object.prototype.hasOwnProperty.call(errors, 'adminEmail')}>
-        <Form.Label>Coach email</Form.Label>
+        <Form.Label>Admin email</Form.Label>
         <Form.Control
           name="adminEmail"
           value={fields.adminEmail}

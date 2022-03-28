@@ -28,10 +28,10 @@ export function fetchInstitutionAdmins(selectedInstitution = null) {
   };
 }
 
-export function createInstitutionAdmin(institution, coach) {
+export function createInstitutionAdmin(institution, admin) {
   return async (dispatch) => {
     try {
-      dispatch(postAdminSuccess(camelCaseObject((await postInstitutionAdmin(institution, coach)).data)));
+      dispatch(postAdminSuccess(camelCaseObject((await postInstitutionAdmin(institution, admin)).data)));
     } catch (error) {
       dispatch(postAdminFailed(camelCaseObject(error.response.data)));
       logError(error);

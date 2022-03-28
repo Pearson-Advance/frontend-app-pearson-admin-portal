@@ -29,7 +29,7 @@ const initialFiltersState = {
   institution: null,
   masterCourseId: null,
   learnerEmail: '',
-  ccxCoachEmail: '',
+  ccxAdminEmail: '',
   enrollmentStatus: '',
 };
 

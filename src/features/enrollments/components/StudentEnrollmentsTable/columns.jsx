@@ -27,8 +27,8 @@ export const getColumns = props => [
     disableSortBy: true,
   },
   {
-    Header: 'Coach Email',
-    accessor: 'ccxCoachEmail',
+    Header: 'Admin Email',
+    accessor: 'ccxAdminEmail',
   },
   {
     Header: 'Learner Email',
