@@ -16,7 +16,7 @@ import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slic
 
 const initialFormValues = {
   institution: '',
-  course: '',
+  courses: [],
   status: 'active',
   courseAccessDuration: 180,
 };
@@ -49,7 +49,7 @@ const LicensesPage = () => {
     dispatch(
       createLicense(
         parseInt(fields.institution, 10),
-        fields.course,
+        fields.courses,
         fields.courseAccessDuration,
         fields.status,
       ),

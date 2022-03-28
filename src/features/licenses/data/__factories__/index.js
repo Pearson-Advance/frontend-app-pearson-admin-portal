@@ -10,10 +10,12 @@ Factory.define('license')
     name: `Training Center ${i}`,
     shortName: `TC${i}`,
   }))
-  .sequence('course', (i) => ({
-    id: `course-v1:PX+0${i}+2021`,
-    displayName: `TC${i}`,
-  }))
+  .sequence('courses', (i) => [
+    {
+      id: `course-v1:PX+0${i}+2021`,
+      displayName: `TC${i}`,
+    },
+  ])
   .sequence('purchasedSeats', (i) => i)
   .sequence('courseAccessDuration', (i) => i * 10)
   .attr('status', 'active')

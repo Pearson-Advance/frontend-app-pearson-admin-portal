@@ -21,9 +21,11 @@ const licenseData = {
   institution: {
     name: 'Training center 1',
   },
-  course: {
-    displayName: 'Master Course',
-  },
+  courses: [
+    {
+      displayName: 'Master Course',
+    },
+  ],
   purchasedSeats: 100,
   courseAccessDuration: 180,
   status: 'active',

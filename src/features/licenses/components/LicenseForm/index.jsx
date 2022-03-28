@@ -4,8 +4,8 @@ import { Form, Icon, PageBanner } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { activeInstitutions } from 'features/institutions/data/selector';
 import { has } from 'lodash';
-import Select from 'react-select';
 import { WarningFilled } from '@edx/paragon/icons';
+import Select from 'react-select';
 
 export const LicenseForm = ({ fields, setFields, errors }) => {
   const data = useSelector(activeInstitutions);
@@ -21,7 +21,7 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
   const handleSelectCourseChange = (selected) => {
     setFields({
       ...fields,
-      course: selected ? selected.value : '',
+      courses: selected.map(course => (course.value)),
     });
   };
 
@@ -37,7 +37,6 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
           </PageBanner>
         </Form.Group>
         )}
-
       <Form.Group>
         <Form.Control
           name="institution"
@@ -52,23 +51,19 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
         </Form.Control>
         {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
       </Form.Group>
-      <Form.Group isInvalid={has(errors, 'course') && has(errors.course, 'id')} className="mb-3">
+      <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
         <Select
-          className="basic-single"
-          classNamePrefix="select"
-          placeholder="Choose a master course..."
-          isDisabled={false}
-          isLoading={false}
-          isClearable
-          isRtl={false}
-          isSearchable
+          isMulti
           options={eligibleCourses}
-          maxMenuHeight={150}
-          name="course"
+          name="courses"
+          className="basic-multi-select"
+          placeholder="Select Master Courses..."
+          minMenuHeight={400}
           onChange={handleSelectCourseChange}
         />
-        {errors.course && errors.course.id && <Form.Control.Feedback type="invalid">{errors.course.id}</Form.Control.Feedback>}
+        {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
       </Form.Group>
+      <br />
       <Form.Group>
         <Form.Control
           name="courseAccessDuration"
@@ -92,6 +87,7 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
         </Form.Control>
         {errors.status && <Form.Control.Feedback type="invalid">{errors.status}</Form.Control.Feedback>}
       </Form.Group>
+      <br />
     </>
   );
 };
@@ -99,7 +95,7 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
 LicenseForm.propTypes = {
   fields: PropTypes.shape({
     institution: PropTypes.string,
-    course: PropTypes.string,
+    courses: PropTypes.array,
     courseAccessDuration: PropTypes.number,
     status: PropTypes.string,
   }).isRequired,
@@ -108,7 +104,7 @@ LicenseForm.propTypes = {
     institution: PropTypes.shape({
       id: PropTypes.string,
     }),
-    course: PropTypes.shape({
+    courses: PropTypes.shape({
       id: PropTypes.string,
     }),
     courseAccessDuration: PropTypes.number,

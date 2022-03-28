@@ -56,7 +56,7 @@ export function fetchLicensebyId(id) {
 /** Post License creation.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function createLicense(institution, course, courseAccessDuration, status) {
+export function createLicense(institution, courses, courseAccessDuration, status) {
   return async (dispatch) => {
     try {
       dispatch(
@@ -64,7 +64,7 @@ export function createLicense(institution, course, courseAccessDuration, status)
           camelCaseObject(
             (await postLicense(
               institution,
-              course,
+              courses,
               courseAccessDuration,
               status,
             )).data,

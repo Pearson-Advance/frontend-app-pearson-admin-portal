@@ -62,7 +62,7 @@ const licenseSlice = createSlice({
     },
     fetchEligibleCoursesSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
-      state.eligibleCourses = payload.map(course => ({ value: course.id, label: course.id }));
+      state.eligibleCourses = payload.map(course => ({ value: course.id, label: `${course.id} - ${course.displayName}` }));
     },
     fetchEligibleCoursesFailed: (state) => {
       state.status = RequestStatus.FAILED;

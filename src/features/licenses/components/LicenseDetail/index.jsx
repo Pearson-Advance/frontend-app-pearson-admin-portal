@@ -117,7 +117,10 @@ export const LicenseDetail = () => {
                   <Card.Header title="License details" />
                   <Card.Body>
                     <p><b>Institution:</b> {licenseById.institution.name}</p>
-                    <p><b>Course:</b> {licenseById.course.displayName} - ({licenseById.course.id})</p>
+                    <div>
+                      <p><b>Courses:</b></p>
+                      {licenseById.courses.map(course => <p>{(`${course.id} - ${course.displayName}`)}</p>)}
+                    </div>
                     <p><b>Purchased seats:</b> {licenseById.purchasedSeats}</p>
                     <p><b>Course access duration:</b> {licenseById.courseAccessDuration} days</p>
                     <p><b>Status:</b> {licenseById.status}</p>

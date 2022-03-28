@@ -39,10 +39,12 @@ describe('Licenses data layer tests', () => {
 
     expect(store.getState().licenses.data)
       .toEqual([{
-        course: {
-          displayName: 'TC1',
-          id: 'course-v1:PX+01+2021',
-        },
+        courses: [
+          {
+            displayName: 'TC1',
+            id: 'course-v1:PX+01+2021',
+          },
+        ],
         courseAccessDuration: 10,
         id: 1,
         institution: {
@@ -55,10 +57,12 @@ describe('Licenses data layer tests', () => {
         licenseOrder: [],
       },
       {
-        course: {
-          displayName: 'TC2',
-          id: 'course-v1:PX+02+2021',
-        },
+        courses: [
+          {
+            displayName: 'TC2',
+            id: 'course-v1:PX+02+2021',
+          },
+        ],
         courseAccessDuration: 20,
         id: 2,
         institution: {
