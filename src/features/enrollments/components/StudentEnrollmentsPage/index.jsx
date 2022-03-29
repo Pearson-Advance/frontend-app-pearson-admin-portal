@@ -13,7 +13,7 @@ import { fetchEligibleCourses } from 'features/licenses/data';
 import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex } from 'features/shared/data/constants';
+import { TabIndex, COURSEMODE } from 'features/shared/data/constants';
 import {
   Pagination,
   useToggle,
@@ -54,7 +54,7 @@ const StudentEnrollmentsPage = () => {
     userEmail: selectedRow.learnerEmail,
     courseDetails: { 'course_id': selectedRow.ccxId }, // eslint-disable-line quote-props
     isActive: true,
-    mode: 'audit',
+    mode: COURSEMODE,
   };
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), []);
