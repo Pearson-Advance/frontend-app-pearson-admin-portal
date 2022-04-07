@@ -47,7 +47,7 @@ const StudentEnrollmentsPage = () => {
 
   const unenrollData = {
     courseId: selectedRow.ccxId,
-    username: selectedRow.learnerEmail,
+    usernameOrEmail: selectedRow.learnerEmail,
   };
 
   const enrollData = {
