@@ -22,7 +22,7 @@ import {
   Button,
 } from '@edx/paragon';
 import { getOrdering } from 'features/shared/data/utils';
-import { getColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
+import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 import { Filters } from '../Filters';
 
 const initialFiltersState = {
@@ -113,14 +113,14 @@ const StudentEnrollmentsPage = () => {
     if (selectedRow.status === 'Pending' || selectedRow.status === 'Active') {
       dispatch(unenrollAction(enrollmentData,
         {
-          ...initialFiltersState,
+          ...filters,
           ordering: getOrdering(sortBy),
           page: requestResponse.currentPage,
         }));
     } else if (selectedRow.status === 'Inactive') {
       dispatch(enrollAction(enrollmentData,
         {
-          ...initialFiltersState,
+          ...filters,
           ordering: getOrdering(sortBy),
           page: requestResponse.currentPage,
         }));
@@ -152,7 +152,12 @@ const StudentEnrollmentsPage = () => {
         handleApplyFilters={handleApplyFilters}
         handleExportEnrollments={handleExportEnrollments}
       />
-      <StudentEnrollmentsTable data={requestResponse.results} count={requestResponse.count} columns={COLUMNS} />
+      <StudentEnrollmentsTable
+        data={requestResponse.results}
+        count={requestResponse.count}
+        columns={COLUMNS}
+        hideColumns={hideColumns}
+      />
       <Pagination
         paginationLabel="paginationNavigation"
         pageCount={requestResponse.numPages}
