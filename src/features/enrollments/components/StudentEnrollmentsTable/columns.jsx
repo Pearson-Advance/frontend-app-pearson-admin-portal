@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 
 import { Badge, Button } from '@edx/paragon';
+import React from 'react';
 
-export const getColumns = props => [
+const getColumns = props => [
   {
     Header: 'Institution',
     accessor: 'institution',
@@ -86,3 +87,7 @@ export const getColumns = props => [
     },
   },
 ];
+
+const hideColumns = { hiddenColumns: ['ccxId', 'masterCourseId'] };
+
+export { hideColumns, getColumns };
