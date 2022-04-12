@@ -15,7 +15,8 @@ export const getColumns = ({ handleSowDetails }) => [
     accessor: ({ courses }) => (
       courses.map(course => `${course.id} - ${course.displayName}`).join('; ')
     ),
-    filter: 'includes',
+    filter: 'text',
+    disableSortBy: true,
   },
   {
     Header: 'Purchased seats',
