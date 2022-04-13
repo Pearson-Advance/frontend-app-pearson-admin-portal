@@ -1,7 +1,6 @@
 import { getConfig } from '@edx/frontend-platform';
 
 export const API_BASE_URL = getConfig().LMS_BASE_URL;
-export const COURSEMODE = 'honor'; // Honor is the default mode in stage and production, because the master courses have eCommerce seats.
 
 /**
  * Enum for request status.

@@ -5,15 +5,14 @@ import { StudentEnrollmentsTable } from 'features/enrollments/components/Student
 import {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
-  unenrollAction,
-  enrollAction,
+  updateEnrollmentAction,
 } from 'features/enrollments/data';
 import { fetchInstitutions } from 'features/institutions/data';
 import { fetchEligibleCourses } from 'features/licenses/data';
 import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex, COURSEMODE } from 'features/shared/data/constants';
+import { TabIndex } from 'features/shared/data/constants';
 import {
   Pagination,
   useToggle,
@@ -45,39 +44,28 @@ const StudentEnrollmentsPage = () => {
   const [isOpen, open, close] = useToggle(false);
   const [selectedRow, setRow] = useState({});
 
-  const unenrollData = {
-    courseId: selectedRow.ccxId,
-    usernameOrEmail: selectedRow.learnerEmail,
-  };
-
-  const enrollData = {
-    userEmail: selectedRow.learnerEmail,
-    courseDetails: { 'course_id': selectedRow.ccxId }, // eslint-disable-line quote-props
-    isActive: true,
-    mode: COURSEMODE,
-  };
+  const enrollmentData = new FormData();
+  enrollmentData.append('identifiers', selectedRow.learnerEmail);
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), []);
 
   let status = '';
-  let enrollmentData = unenrollData;
 
   switch (selectedRow.status) {
     case 'Pending':
       status = 'revoked';
-      enrollmentData = unenrollData;
+      enrollmentData.append('action', 'unenroll');
       break;
     case 'Active':
       status = 'unenrolled';
-      enrollmentData = unenrollData;
+      enrollmentData.append('action', 'unenroll');
       break;
     case 'Inactive':
       status = 'enrolled';
-      enrollmentData = enrollData;
+      enrollmentData.append('action', 'enroll');
       break;
     default:
       status = '';
-      enrollmentData = unenrollData;
   }
 
   const handleCleanFilters = () => {
@@ -110,21 +98,12 @@ const StudentEnrollmentsPage = () => {
   };
 
   const handleAction = () => {
-    if (selectedRow.status === 'Pending' || selectedRow.status === 'Active') {
-      dispatch(unenrollAction(enrollmentData,
-        {
-          ...filters,
-          ordering: getOrdering(sortBy),
-          page: requestResponse.currentPage,
-        }));
-    } else if (selectedRow.status === 'Inactive') {
-      dispatch(enrollAction(enrollmentData,
-        {
-          ...filters,
-          ordering: getOrdering(sortBy),
-          page: requestResponse.currentPage,
-        }));
-    }
+    dispatch(updateEnrollmentAction(enrollmentData,
+      {
+        ...filters,
+        ordering: getOrdering(sortBy),
+        page: requestResponse.currentPage,
+      }, selectedRow.ccxId));
     close();
   };
 
