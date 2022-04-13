@@ -26,33 +26,18 @@ function getExportStudentEnrollments(filters) {
   );
 }
 
-function createUnenrollment(data) {
-  let params = '';
-
-  if (data) {
-    params = snakeCaseObject(removeNullOrEmptyObjectAttributes(data));
-  }
+function handleEnrollments(data, courseId) {
+  const INSTRUCTOR_API_URL = `${process.env.LMS_BASE_URL}/courses/course_id/instructor/api`;
+  const courseIdSearchPattern = /course_id/;
 
   return getAuthenticatedHttpClient().post(
-    `${process.env.PEARSON_CORE_ENROLLMENTS_API_BASE_URL}/unenrollment`, params,
-  );
-}
-
-function createEnrollment(data) {
-  let params = {};
-
-  if (data) {
-    params = snakeCaseObject(removeNullOrEmptyObjectAttributes(data));
-  }
-
-  return getAuthenticatedHttpClient().post(
-    `${process.env.PEARSON_CORE_ENROLLMENTS_API_BASE_URL}/enrollment`, params,
+    `${INSTRUCTOR_API_URL.replace(courseIdSearchPattern, courseId)}/students_update_enrollment`,
+    data,
   );
 }
 
 export {
   getStudentEnrollments,
   getExportStudentEnrollments,
-  createUnenrollment,
-  createEnrollment,
+  handleEnrollments,
 };
