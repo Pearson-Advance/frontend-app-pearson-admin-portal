@@ -38,9 +38,9 @@ test('render StudentEnrollmentsTable with data', () => {
   expect(component.container).toHaveTextContent('Training Center 2');
   expect(component.container).toHaveTextContent('Training Center 3');
   // Check emails
-  expect(component.container).toHaveTextContent('coach1@example.com');
-  expect(component.container).toHaveTextContent('coach2@example.com');
-  expect(component.container).toHaveTextContent('coach3@example.com');
+  expect(component.container).toHaveTextContent('admin1@example.com');
+  expect(component.container).toHaveTextContent('admin2@example.com');
+  expect(component.container).toHaveTextContent('admin3@example.com');
   expect(component.container).toHaveTextContent('lerner1@example.com');
   expect(component.container).toHaveTextContent('lerner2@example.com');
   expect(component.container).toHaveTextContent('lerner3@example.com');
@@ -59,6 +59,6 @@ test('Check sorting columns of StudentEnrollmentsTable', () => {
     </Provider>,
   );
 
-  // The 4 Sorting columns are: institution, master course name, coach email and learner email.
+  // The 4 Sorting columns are: institution, master course name, admin email and learner email.
   expect(component.getAllByTitle('Toggle SortBy')).toHaveLength(4);
 });

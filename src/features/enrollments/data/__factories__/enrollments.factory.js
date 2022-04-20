@@ -10,7 +10,7 @@ Factory.define('enrollment')
   .sequence('masterCourseId', (i) => `master-course-id-${i}`)
   .sequence('ccxId', (i) => `ccx-course-${i}`)
   .sequence('ccxName', (i) => `ccx name ${i}`)
-  .sequence('ccxCoachEmail', (i) => `coach${i}@example.com`)
+  .sequence('ccxAdminEmail', (i) => `admin${i}@example.com`)
   .sequence('learnerEmail', (i) => `lerner${i}@example.com`)
   .sequence('remainingCourseAccessDuration', (i) => {
     if (i === 1) { return 0; } if (i === 2) { return 60; } return 180;
