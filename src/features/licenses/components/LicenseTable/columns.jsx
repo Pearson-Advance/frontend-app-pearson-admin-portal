@@ -2,9 +2,9 @@
 import {
   IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import { BookOpen } from '@edx/paragon/icons';
+import { BookOpen, Edit } from '@edx/paragon/icons';
 
-export const getColumns = ({ handleSowDetails }) => [
+export const getColumns = ({ handleSowDetails, handleOpenModal }) => [
   {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
@@ -40,16 +40,30 @@ export const getColumns = ({ handleSowDetails }) => [
     disableFilters: true,
     disableSortBy: true,
     Cell: ({ row }) => (
+      <>
       <OverlayTrigger
         placement="top"
         overlay={<Tooltip variant="light">View details</Tooltip>}
       >
         <IconButton
-          alt="Edit"
+          alt="View"
           iconAs={BookOpen}
           onClick={() => handleSowDetails(row.values.id)}
         />
       </OverlayTrigger>
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip variant="light">Edit</Tooltip>}
+      >
+        <IconButton
+          alt="Edit"
+          iconAs={Edit}
+          onClick={() => {
+            handleOpenModal(row.values.purchasedSeats);
+          }}
+        />
+      </OverlayTrigger>
+      </>
     ),
   },
 ];

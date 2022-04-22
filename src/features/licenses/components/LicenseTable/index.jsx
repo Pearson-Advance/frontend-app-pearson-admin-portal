@@ -7,7 +7,7 @@ import { PersistController } from 'features/shared/components/PersistController'
 import { DataTable, TextFilter } from '@edx/paragon';
 import { getColumns } from './columns';
 
-const LicenseTable = ({ data }) => {
+const LicenseTable = ({ data, handleOpenModal }) => {
   const history = useHistory();
   const {
     pageSize, pageIndex, filters, sortBy,
@@ -17,7 +17,7 @@ const LicenseTable = ({ data }) => {
     history.push(`/licenses/${licenseId}`);
   };
 
-  const columns = useMemo(() => getColumns({ handleSowDetails }), []);
+  const columns = useMemo(() => getColumns({ handleSowDetails, handleOpenModal }), []);
 
   return (
     <DataTable

@@ -73,7 +73,7 @@ const LicensesPage = () => {
       <ActionRow className="pb-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add license</Button>
       </ActionRow>
-      <LicenseTable data={data} />
+      <LicenseTable data={data} handleOpenModal={handleOpenModal} />
     </Container>
   );
 };

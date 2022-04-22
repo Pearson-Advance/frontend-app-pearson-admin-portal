@@ -17,6 +17,11 @@ const licenseSlice = createSlice({
       errors: {},
       order: {},
     },
+    Orderform: {
+      isOpen: false,
+      errors: {},
+      order: {},
+    },
   },
   reducers: {
     fetchLicensesRequest: (state) => {
@@ -68,7 +73,6 @@ const licenseSlice = createSlice({
       state.status = RequestStatus.FAILED;
     },
     openLicenseModal: (state, { payload }) => {
-      // When there is a payload, it opens the Edit modal.
       state.form = {
         ...state.form,
         isOpen: true,
@@ -82,19 +86,33 @@ const licenseSlice = createSlice({
         errors: {},
       };
     },
+    openLicenseOrderModal: (state, { payload }) => {
+      state.Orderform = {
+        ...state.Orderform,
+        isOpen: true,
+        order: payload,
+      };
+    },
+    closeLicenseOrderModal: (state) => {
+      state.Orderform = {
+        ...state.Orderform,
+        isOpen: false,
+        errors: {},
+      };
+    },
     postLicenseOrderSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.ordersData = [payload, ...state.ordersData];
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: {},
         isOpen: false,
       };
     },
     postLicenseOrderFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: payload,
         isOpen: true,
       };
@@ -102,16 +120,16 @@ const licenseSlice = createSlice({
     patchLicenseOrderSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.ordersData = [payload, ...state.ordersData];
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: {},
         isOpen: false,
       };
     },
     patchLicenseOrderFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: payload,
         isOpen: true,
       };
@@ -138,6 +156,8 @@ export const {
   fetchEligibleCoursesFailed,
   openLicenseModal,
   closeLicenseModal,
+  openLicenseOrderModal,
+  closeLicenseOrderModal,
   postLicenseOrderSuccess,
   postLicenseOrderFailed,
   patchLicenseOrderSuccess,
