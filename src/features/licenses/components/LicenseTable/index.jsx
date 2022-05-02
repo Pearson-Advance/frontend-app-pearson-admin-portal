@@ -1,23 +1,31 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 
 import { PersistController } from 'features/shared/components/PersistController';
 import { DataTable, TextFilter } from '@edx/paragon';
 import { getColumns } from './columns';
+import { openLicenseModal } from '../../data/slices';
 
-const LicenseTable = ({ data, handleOpenModal }) => {
+const LicenseTable = ({ data }) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const {
     pageSize, pageIndex, filters, sortBy,
   } = useSelector(state => state.page.dataTable);
 
-  const handleSowDetails = (licenseId) => {
+  const handleShowDetails = (licenseId) => {
     history.push(`/licenses/${licenseId}`);
   };
 
-  const columns = useMemo(() => getColumns({ handleSowDetails, handleOpenModal }), []);
+  const handleEditModal = (id, institution, courses, status) => {
+    dispatch(openLicenseModal({
+      id, institution, courses, status,
+    }));
+  };
+
+  const columns = getColumns({ handleShowDetails, handleEditModal });
 
   return (
     <DataTable
@@ -27,7 +35,7 @@ const LicenseTable = ({ data, handleOpenModal }) => {
       showFiltersInSidebar
       defaultColumnValues={{ Filter: TextFilter }}
       initialState={{
-        pageSize, pageIndex, filters: JSON.parse(filters), sortBy,
+        pageSize, pageIndex, filters: JSON.parse(filters), sortBy, hiddenColumns: ['Courses'],
       }}
       itemCount={data.length}
       data={data}

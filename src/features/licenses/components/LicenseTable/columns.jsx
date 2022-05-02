@@ -4,7 +4,7 @@ import {
 } from '@edx/paragon';
 import { BookOpen, Edit } from '@edx/paragon/icons';
 
-export const getColumns = ({ handleSowDetails, handleOpenModal }) => [
+export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
@@ -16,6 +16,11 @@ export const getColumns = ({ handleSowDetails, handleOpenModal }) => [
       courses.map(course => `${course.id} - ${course.displayName}`).join('; ')
     ),
     filter: 'text',
+    disableSortBy: true,
+  },
+  {
+    Header: 'Courses',
+    accessor: ({ courses }) => courses.map(course => course.id),
     disableSortBy: true,
   },
   {
@@ -41,28 +46,28 @@ export const getColumns = ({ handleSowDetails, handleOpenModal }) => [
     disableSortBy: true,
     Cell: ({ row }) => (
       <>
-      <OverlayTrigger
-        placement="top"
-        overlay={<Tooltip variant="light">View details</Tooltip>}
-      >
-        <IconButton
-          alt="View"
-          iconAs={BookOpen}
-          onClick={() => handleSowDetails(row.values.id)}
-        />
-      </OverlayTrigger>
-      <OverlayTrigger
-        placement="top"
-        overlay={<Tooltip variant="light">Edit</Tooltip>}
-      >
-        <IconButton
-          alt="Edit"
-          iconAs={Edit}
-          onClick={() => {
-            handleOpenModal(row.values.purchasedSeats);
-          }}
-        />
-      </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip variant="light">View details</Tooltip>}
+        >
+          <IconButton
+            alt="View"
+            iconAs={BookOpen}
+            onClick={() => handleShowDetails(row.values.id)}
+          />
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip variant="light">Edit</Tooltip>}
+        >
+          <IconButton
+            alt="Edit"
+            iconAs={Edit}
+            onClick={() => {
+              handleEditModal(row.values.id, row.values.Institution, row.values.Courses, row.values.status);
+            }}
+          />
+        </OverlayTrigger>
       </>
     ),
   },

@@ -15,7 +15,7 @@ const licenseSlice = createSlice({
     form: {
       isOpen: false,
       errors: {},
-      order: {},
+      license: {},
     },
     Orderform: {
       isOpen: false,
@@ -73,10 +73,38 @@ const licenseSlice = createSlice({
       state.status = RequestStatus.FAILED;
     },
     openLicenseModal: (state, { payload }) => {
+      if (payload) {
+        // When there is a payload, it opens the Edit modal.
+        state.form = {
+          ...state.form,
+          license: payload,
+          isOpen: true,
+        };
+      } else {
+        state.form = {
+          ...state.form,
+          isOpen: true,
+          license: {},
+        };
+      }
+    },
+    patchLicenseSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? payload : content),
+      );
       state.form = {
         ...state.form,
+        errors: {},
+        isOpen: false,
+      };
+    },
+    patchLicenseFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        ...state.form,
+        errors: payload,
         isOpen: true,
-        order: payload,
       };
     },
     closeLicenseModal: (state) => {
@@ -151,6 +179,8 @@ export const {
   fetchLicenseFailed,
   postLicenseSuccess,
   postLicenseFailed,
+  patchLicenseSuccess,
+  patchLicenseFailed,
   fetchEligibleCoursesRequest,
   fetchEligibleCoursesSuccess,
   fetchEligibleCoursesFailed,

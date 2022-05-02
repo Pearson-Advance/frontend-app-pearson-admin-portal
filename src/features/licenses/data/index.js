@@ -1,4 +1,4 @@
 export { reducer } from './slices';
 export {
-  fetchLicenses, createLicense, fetchEligibleCourses, createLicenseOrder, editLicenseOrder,
+  fetchLicenses, createLicense, editLicense, fetchEligibleCourses, createLicenseOrder, editLicenseOrder,
 } from './thunks';

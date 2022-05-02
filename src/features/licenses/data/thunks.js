@@ -2,7 +2,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
   getLicenses, getLicenseById, postLicense, getEligibleCourses,
-  postLicenseOrder, updateLicenseOrder,
+  postLicenseOrder, updateLicenseOrder, updateLicense,
 } from './api';
 import {
   fetchLicensesRequest,
@@ -13,6 +13,8 @@ import {
   fetchLicenseFailed,
   postLicenseSuccess,
   postLicenseFailed,
+  patchLicenseSuccess,
+  patchLicenseFailed,
   fetchEligibleCoursesRequest,
   fetchEligibleCoursesSuccess,
   fetchEligibleCoursesFailed,
@@ -73,6 +75,26 @@ export function createLicense(institution, courses, courseAccessDuration, status
       );
     } catch (error) {
       dispatch(postLicenseFailed(camelCaseObject(error.response.data)));
+      logError(error);
+    }
+  };
+}
+
+/**
+ * Edit License.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export function editLicense(licenseId, status, courses) {
+  return async (dispatch) => {
+    try {
+      const response = await updateLicense(
+        licenseId,
+        status,
+        courses,
+      );
+      dispatch(patchLicenseSuccess(camelCaseObject(response.data)));
+    } catch (error) {
+      dispatch(patchLicenseFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
   };

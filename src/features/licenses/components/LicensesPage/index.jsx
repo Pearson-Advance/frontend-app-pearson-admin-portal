@@ -9,8 +9,11 @@ import { changeTab } from 'features/shared/data/slices';
 import { TabIndex } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
-import { fetchLicenses, createLicense, fetchEligibleCourses } from 'features/licenses/data';
+import {
+  fetchLicenses, createLicense, editLicense, fetchEligibleCourses,
+} from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
+import { has } from 'lodash';
 
 import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
 
@@ -23,10 +26,10 @@ const initialFormValues = {
 
 const LicensesPage = () => {
   const dispatch = useDispatch();
-  const { form } = useSelector(state => state.licenses);
-  const { selectedInstitution } = useSelector(state => state.page.globalFilters);
-  const { data } = useSelector(state => state.licenses);
   const [fields, setFields] = useState(initialFormValues);
+  const { selectedInstitution } = useSelector(state => state.page.globalFilters);
+  const { data, form } = useSelector(state => state.licenses);
+  const create = !has(form.license, 'id');
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
@@ -34,6 +37,17 @@ const LicensesPage = () => {
     dispatch(fetchInstitutions());
     dispatch(fetchEligibleCourses());
   }, [dispatch, selectedInstitution]);
+
+  useEffect(() => {
+    if (!create) {
+      setFields({
+        status: form.license.status,
+        courses: form.license.courses,
+        license: form.license.id,
+        institution: form.license.institution,
+      });
+    }
+  }, [form]);
 
   const handleCloseModal = () => {
     setFields(initialFormValues);
@@ -46,25 +60,37 @@ const LicensesPage = () => {
   };
 
   const handleSubmit = () => {
-    dispatch(
-      createLicense(
-        parseInt(fields.institution, 10),
-        fields.courses,
-        fields.courseAccessDuration,
-        fields.status,
-      ),
-    );
+    if (create) {
+      dispatch(
+        createLicense(
+          parseInt(fields.institution, 10),
+          fields.courses,
+          fields.courseAccessDuration,
+          fields.status,
+        ),
+      );
+    } else {
+      dispatch(
+        editLicense(
+          parseInt(fields.license, 10),
+          fields.status,
+          fields.courses,
+        ),
+      );
+    }
   };
 
   return (
     <Container className="pr-6 pl-6 pt-4 pb-4">
       <Modal
-        title="Add license"
+        title={!create ? `Edit license for ${fields.institution} Institution:` : 'Add license:  '}
         isOpen={form.isOpen}
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
       >
         <LicenseForm
+          created={create}
+          courses_selected={[]}
           fields={fields}
           setFields={setFields}
           errors={form.errors}
@@ -73,7 +99,7 @@ const LicensesPage = () => {
       <ActionRow className="pb-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add license</Button>
       </ActionRow>
-      <LicenseTable data={data} handleOpenModal={handleOpenModal} />
+      <LicenseTable data={data} />
     </Container>
   );
 };
