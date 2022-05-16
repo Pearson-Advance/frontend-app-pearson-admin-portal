@@ -15,6 +15,11 @@ const licenseSlice = createSlice({
     form: {
       isOpen: false,
       errors: {},
+      license: {},
+    },
+    Orderform: {
+      isOpen: false,
+      errors: {},
       order: {},
     },
   },
@@ -68,11 +73,38 @@ const licenseSlice = createSlice({
       state.status = RequestStatus.FAILED;
     },
     openLicenseModal: (state, { payload }) => {
-      // When there is a payload, it opens the Edit modal.
+      if (payload) {
+        // When there is a payload, it opens the Edit modal.
+        state.form = {
+          ...state.form,
+          license: payload,
+          isOpen: true,
+        };
+      } else {
+        state.form = {
+          ...state.form,
+          isOpen: true,
+          license: {},
+        };
+      }
+    },
+    patchLicenseSuccess: (state, { payload }) => {
+      state.status = RequestStatus.SUCCESSFUL;
+      state.data = state.data.map(
+        (content) => (content.id === payload.id ? payload : content),
+      );
       state.form = {
         ...state.form,
+        errors: {},
+        isOpen: false,
+      };
+    },
+    patchLicenseFailed: (state, { payload }) => {
+      state.status = RequestStatus.FAILED;
+      state.form = {
+        ...state.form,
+        errors: payload,
         isOpen: true,
-        order: payload,
       };
     },
     closeLicenseModal: (state) => {
@@ -82,19 +114,33 @@ const licenseSlice = createSlice({
         errors: {},
       };
     },
+    openLicenseOrderModal: (state, { payload }) => {
+      state.Orderform = {
+        ...state.Orderform,
+        isOpen: true,
+        order: payload,
+      };
+    },
+    closeLicenseOrderModal: (state) => {
+      state.Orderform = {
+        ...state.Orderform,
+        isOpen: false,
+        errors: {},
+      };
+    },
     postLicenseOrderSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.ordersData = [payload, ...state.ordersData];
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: {},
         isOpen: false,
       };
     },
     postLicenseOrderFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: payload,
         isOpen: true,
       };
@@ -102,16 +148,16 @@ const licenseSlice = createSlice({
     patchLicenseOrderSuccess: (state, { payload }) => {
       state.status = RequestStatus.SUCCESSFUL;
       state.ordersData = [payload, ...state.ordersData];
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: {},
         isOpen: false,
       };
     },
     patchLicenseOrderFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
-      state.form = {
-        ...state.form,
+      state.Orderform = {
+        ...state.Orderform,
         errors: payload,
         isOpen: true,
       };
@@ -133,11 +179,15 @@ export const {
   fetchLicenseFailed,
   postLicenseSuccess,
   postLicenseFailed,
+  patchLicenseSuccess,
+  patchLicenseFailed,
   fetchEligibleCoursesRequest,
   fetchEligibleCoursesSuccess,
   fetchEligibleCoursesFailed,
   openLicenseModal,
   closeLicenseModal,
+  openLicenseOrderModal,
+  closeLicenseOrderModal,
   postLicenseOrderSuccess,
   postLicenseOrderFailed,
   patchLicenseOrderSuccess,

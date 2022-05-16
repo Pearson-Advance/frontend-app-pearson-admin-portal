@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useHistory, useParams } from 'react-router';
 import { Modal } from 'features/shared/components/Modal';
-import { openLicenseModal, closeLicenseModal, clearLicenseOrder } from 'features/licenses/data/slices';
+import { openLicenseOrderModal, closeLicenseOrderModal, clearLicenseOrder } from 'features/licenses/data/slices';
 import { createLicenseOrder, fetchLicensebyId, editLicenseOrder } from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
@@ -27,7 +27,7 @@ export const LicenseDetail = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { id } = useParams();
-  const { ordersData, form, licenseById } = useSelector(state => state.licenses);
+  const { ordersData, Orderform, licenseById } = useSelector(state => state.licenses);
   const [fields, setFields] = useState(initialFormValues);
 
   const handleGoBackClick = () => {
@@ -36,21 +36,21 @@ export const LicenseDetail = () => {
 
   const handleCloseModal = () => {
     setFields(initialFormValues);
-    dispatch(closeLicenseModal());
+    dispatch(closeLicenseOrderModal());
   };
 
   const handleOpenModal = (orderId, orderReference = null, purchasedSeats = null, active = null) => {
     setFields(initialFormValues);
     if (orderReference != null) {
-      dispatch(openLicenseModal({
+      dispatch(openLicenseOrderModal({
         orderId, orderReference, purchasedSeats, active,
       }));
     } else {
-      dispatch(openLicenseModal());
+      dispatch(openLicenseOrderModal());
     }
   };
 
-  const create = !has(form.order, 'orderId');
+  const create = !has(Orderform.order, 'orderId');
 
   const handleSubmit = () => {
     if (create) {
@@ -66,7 +66,7 @@ export const LicenseDetail = () => {
     } else {
       dispatch(
         editLicenseOrder(
-          form.order.orderId,
+          Orderform.order.orderId,
           fields.orderReference,
           fields.purchasedSeats,
         ),
@@ -77,11 +77,11 @@ export const LicenseDetail = () => {
   useEffect(() => {
     if (!create) {
       setFields({
-        orderReference: form.order.orderReference,
-        purchasedSeats: form.order.purchasedSeats,
+        orderReference: Orderform.order.orderReference,
+        purchasedSeats: Orderform.order.purchasedSeats,
       });
     }
-  }, [form]);
+  }, [Orderform]);
 
   useEffect(() => {
     dispatch(clearLicenseOrder());
@@ -147,8 +147,8 @@ export const LicenseDetail = () => {
                   />
                   <Container size="xl">
                     <Modal
-                      title={create ? 'Add order:' : `Edit order: ${form.order.orderReference}`}
-                      isOpen={form.isOpen}
+                      title={create ? 'Add order:' : `Edit order: ${Orderform.order.orderReference}`}
+                      isOpen={Orderform.isOpen}
                       handleCloseModal={handleCloseModal}
                       handlePrimaryAction={handleSubmit}
                     >
@@ -156,7 +156,7 @@ export const LicenseDetail = () => {
                         id={licenseById}
                         fields={fields}
                         setFields={setFields}
-                        errors={form.errors}
+                        errors={Orderform.errors}
                       />
                     </Modal>
                   </Container>

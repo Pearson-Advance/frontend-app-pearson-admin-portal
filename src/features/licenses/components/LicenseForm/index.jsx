@@ -7,7 +7,9 @@ import { has } from 'lodash';
 import { WarningFilled } from '@edx/paragon/icons';
 import Select from 'react-select';
 
-export const LicenseForm = ({ fields, setFields, errors }) => {
+export const LicenseForm = ({
+  created, fields, setFields, errors,
+}) => {
   const data = useSelector(activeInstitutions);
   const { eligibleCourses } = useSelector(state => state.licenses);
 
@@ -37,24 +39,28 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
           </PageBanner>
         </Form.Group>
         )}
-      <Form.Group>
-        <Form.Control
-          name="institution"
-          floatingLabel="Institution"
-          as="select"
-          required
-          isInvalid={has(errors, 'institution') && has(errors.institution, 'id')}
-          onChange={handleInputChange}
-        >
-          <option value="">Choose...</option>
-          {data.map(institution => <option key={`institution-${institution.id}`} value={institution.id}> {institution.name} </option>)}
-        </Form.Control>
-        {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
-      </Form.Group>
+      {created
+        && (
+        <Form.Group>
+          <Form.Control
+            name="institution"
+            floatingLabel="Institution"
+            as="select"
+            required
+            isInvalid={has(errors, 'institution') && has(errors.institution, 'id')}
+            onChange={handleInputChange}
+          >
+            <option value="">Choose...</option>
+            {data.map(institution => <option key={`institution-${institution.id}`} value={institution.id}> {institution.name} </option>)}
+          </Form.Control>
+          {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
+        </Form.Group>
+        )}
       <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
         <Select
           isMulti
           options={eligibleCourses}
+          value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
           name="courses"
           className="basic-multi-select"
           placeholder="Select Master Courses..."
@@ -64,21 +70,24 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
         {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
       </Form.Group>
       <br />
-      <Form.Group>
-        <Form.Control
-          name="courseAccessDuration"
-          floatingLabel="Course access duration"
-          value={fields.courseAccessDuration}
-          onChange={handleInputChange}
-        />
-        {errors.courseAccessDuration && <Form.Control.Feedback type="invalid">{errors.courseAccessDuration}</Form.Control.Feedback>}
-      </Form.Group>
+      {created
+        && (
+        <Form.Group>
+          <Form.Control
+            name="courseAccessDuration"
+            floatingLabel="Course access duration"
+            value={fields.courseAccessDuration}
+            onChange={handleInputChange}
+          />
+          {errors.courseAccessDuration && <Form.Control.Feedback type="invalid">{errors.courseAccessDuration}</Form.Control.Feedback>}
+        </Form.Group>
+        )}
       <Form.Group>
         <Form.Control
           as="select"
           name="status"
           floatingLabel="Status"
-          defaultValue="active"
+          value={fields.status}
           isInvalid={Object.prototype.hasOwnProperty.call(errors, 'status')}
           onChange={handleInputChange}
         >
@@ -93,6 +102,7 @@ export const LicenseForm = ({ fields, setFields, errors }) => {
 };
 
 LicenseForm.propTypes = {
+  created: PropTypes.bool.isRequired,
   fields: PropTypes.shape({
     institution: PropTypes.string,
     courses: PropTypes.array,

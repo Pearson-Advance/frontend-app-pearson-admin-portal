@@ -31,6 +31,16 @@ export function postLicense(institution, courses, courseAccessDuration, status) 
   );
 }
 
+export function updateLicense(licenseId, status, courses) {
+  return getAuthenticatedHttpClient().patch(
+    `${endpoint}${licenseId}/`,
+    snakeCaseObject({
+      status,
+      courses,
+    }),
+  );
+}
+
 export function getEligibleCourses(url = eligibleCoursesEndpoint) {
   return getAuthenticatedHttpClient().get(url);
 }
