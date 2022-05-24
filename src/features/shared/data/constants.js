@@ -35,6 +35,7 @@ export const EnrollmentStatus = {
   ACTIVE: 'Active',
   INACTIVE: 'Inactive',
   PENDING: 'Pending',
+  EXPIRED: 'Expired',
 };
 
 /**

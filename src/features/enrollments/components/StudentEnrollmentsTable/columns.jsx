@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 
+import { EnrollmentStatus } from 'features/shared/data/constants';
 import { Badge, Button } from '@edx/paragon';
 import React from 'react';
 
@@ -43,7 +44,13 @@ const getColumns = props => [
       const value = row.values.status;
       let variant = 'success';
 
-      if (value === 'Pending') { variant = 'warning'; } else if (value === 'Inactive') { variant = 'danger'; }
+      if (value === EnrollmentStatus.PENDING) {
+        variant = 'warning';
+      } else if (value === EnrollmentStatus.INACTIVE) {
+        variant = 'danger';
+      } else if (value === EnrollmentStatus.EXPIRED) {
+        variant = 'light';
+      }
 
       return <Badge variant={variant}>{value}</Badge>;
     },
@@ -68,15 +75,19 @@ const getColumns = props => [
       let variant = 'primary';
       let action = 'Enable';
 
+      if (value.status === EnrollmentStatus.EXPIRED) {
+        return null;
+      }
+
       switch (value.status) {
-        case 'Active':
+        case EnrollmentStatus.ACTIVE:
           action = 'Disable';
           break;
-        case 'Pending':
+        case EnrollmentStatus.PENDING:
           variant = 'danger';
           action = 'Revoke';
           break;
-        case 'Inactive':
+        case EnrollmentStatus.INACTIVE:
           action = 'Enable';
           break;
         default:
