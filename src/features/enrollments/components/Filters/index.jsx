@@ -114,6 +114,7 @@ export const Filters = props => {
             <option value={EnrollmentStatus.ACTIVE}>{EnrollmentStatus.ACTIVE}</option>
             <option value={EnrollmentStatus.INACTIVE}>{EnrollmentStatus.INACTIVE}</option>
             <option value={EnrollmentStatus.PENDING}>{EnrollmentStatus.PENDING}</option>
+            <option value={EnrollmentStatus.EXPIRED}>{EnrollmentStatus.EXPIRED}</option>
           </Form.Control>
         </Form.Group>
         <OverlayTrigger
