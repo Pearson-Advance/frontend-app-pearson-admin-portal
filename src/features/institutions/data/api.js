@@ -2,9 +2,10 @@ import { snakeCaseObject } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const institutionURL = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/institutions/`;
+const institutionDefaultOrdering = 'name';
 
-export function getInstitutions(selectedInstitution = null) {
-  const params = {};
+export function getInstitutions(selectedInstitution = null, ordering = institutionDefaultOrdering) {
+  const params = { ordering };
 
   if (selectedInstitution) {
     params.id = selectedInstitution;
