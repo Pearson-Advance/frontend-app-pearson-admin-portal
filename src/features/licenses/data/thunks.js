@@ -104,13 +104,13 @@ export function editLicense(licenseId, status, courses) {
  * Fetches all license managed courses.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function fetchEligibleCourses(url) {
+export function fetchEligibleCourses(params) {
   return async (dispatch) => {
     try {
       dispatch(fetchEligibleCoursesRequest());
       dispatch(
         fetchEligibleCoursesSuccess(
-          camelCaseObject((await getEligibleCourses(url)).data),
+          camelCaseObject((await getEligibleCourses(params)).data),
         ),
       );
     } catch (error) {

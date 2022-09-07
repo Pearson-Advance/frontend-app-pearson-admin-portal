@@ -41,8 +41,11 @@ export function updateLicense(licenseId, status, courses) {
   );
 }
 
-export function getEligibleCourses(url = eligibleCoursesEndpoint) {
-  return getAuthenticatedHttpClient().get(url);
+export function getEligibleCourses(params) {
+  return getAuthenticatedHttpClient().get(
+    eligibleCoursesEndpoint,
+    { params: { ...params } },
+  );
 }
 
 export function postLicenseOrder(license, orderReference, purchasedSeats, active = true) {
