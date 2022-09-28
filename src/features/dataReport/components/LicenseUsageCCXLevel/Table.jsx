@@ -1,6 +1,11 @@
-import { DataTable } from '@edx/paragon';
+import {
+  DataTable, IconButton, OverlayTrigger, Tooltip,
+} from '@edx/paragon';
+import { Launch } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+const getCcxInstructorUrl = (ccxId) => `${process.env.LMS_BASE_URL}/courses/${ccxId}/instructor`;
 
 export const Table = ({ data, count }) => {
   const columns = [
@@ -32,7 +37,30 @@ export const Table = ({ data, count }) => {
       Header: 'Total Enrolled',
       accessor: 'totalEnrolled',
     },
+    {
+      Header: 'Actions',
+      accessor: 'id',
+      disableFilters: true,
+      disableSortBy: true,
+      Cell: ({ row }) => ( // eslint-disable-line react/prop-types
+        <>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip variant="light">Go to CCX instructor dashboard</Tooltip>}
+          >
+            <IconButton
+              alt="Go to instructor dashboard"
+              iconAs={Launch}
+              onClick={() => {
+                window.open(getCcxInstructorUrl(row.values.ccxId), '_blank', 'noopener, noreferrer'); // eslint-disable-line react/prop-types
+              }}
+            />
+          </OverlayTrigger>
+        </>
+      ),
+    },
   ];
+
   return (
     <DataTable
       itemCount={count}
