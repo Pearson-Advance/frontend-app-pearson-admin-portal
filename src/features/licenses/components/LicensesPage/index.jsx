@@ -10,7 +10,7 @@ import { TabIndex } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import {
-  fetchLicenses, createLicense, editLicense, fetchEligibleCourses,
+  fetchLicenses, createLicense, editLicense,
 } from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
 import { has } from 'lodash';
@@ -35,7 +35,6 @@ const LicensesPage = () => {
     dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicenses(selectedInstitution));
     dispatch(fetchInstitutions());
-    dispatch(fetchEligibleCourses());
   }, [dispatch, selectedInstitution]);
 
   useEffect(() => {

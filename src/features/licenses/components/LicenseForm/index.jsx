@@ -1,17 +1,24 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Form, Icon, PageBanner } from '@edx/paragon';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  Form, Icon, PageBanner, Spinner,
+} from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { activeInstitutions } from 'features/institutions/data/selector';
 import { has } from 'lodash';
 import { WarningFilled } from '@edx/paragon/icons';
+import { RequestStatus } from 'features/shared/data/constants';
 import Select from 'react-select';
+import { fetchEligibleCourses } from 'features/licenses/data';
 
 export const LicenseForm = ({
   created, fields, setFields, errors,
 }) => {
+  const dispatch = useDispatch();
   const data = useSelector(activeInstitutions);
-  const { eligibleCourses } = useSelector(state => state.licenses);
+  const { eligibleCourses, status } = useSelector(state => state.licenses);
+  const licenseBeingEdited = useSelector(state => state.licenses.form.license);
+  const isInstitutionSelected = !isNaN(fields.institution) && fields.institution !== ''; // eslint-disable-line no-restricted-globals
 
   const handleInputChange = (e) => {
     setFields({
@@ -26,6 +33,24 @@ export const LicenseForm = ({
       courses: selected.map(course => (course.value)),
     });
   };
+
+  const handleFetchEligibleCourses = () => {
+    const params = {};
+
+    if (!created) {
+      params.license_id = licenseBeingEdited.id;
+    } else if (isInstitutionSelected) {
+      params.institution_id = fields.institution;
+    } else {
+      return;
+    }
+
+    dispatch(fetchEligibleCourses(params));
+  };
+
+  useEffect(() => {
+    handleFetchEligibleCourses();
+  }, [fields.institution, created]);
 
   return (
     <>
@@ -56,19 +81,28 @@ export const LicenseForm = ({
           {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
         </Form.Group>
         )}
-      <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
-        <Select
-          isMulti
-          options={eligibleCourses}
-          value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
-          name="courses"
-          className="basic-multi-select"
-          placeholder="Select Master Courses..."
-          minMenuHeight={400}
-          onChange={handleSelectCourseChange}
-        />
-        {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
-      </Form.Group>
+      {(isInstitutionSelected || licenseBeingEdited.id)
+        && (
+        <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
+          {status !== RequestStatus.IN_PROGRESS
+            ? (
+              <Select
+                isMulti
+                options={eligibleCourses}
+                value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
+                name="courses"
+                className="basic-multi-select"
+                placeholder="Select Master Courses..."
+                maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
+                onChange={handleSelectCourseChange}
+              />
+            )
+            : (
+              <Spinner animation="border" className="mie-3" screenReaderText="loading" />
+            )}
+          {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
+        </Form.Group>
+        )}
       <br />
       {created
         && (
