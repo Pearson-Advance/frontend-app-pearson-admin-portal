@@ -1,13 +1,25 @@
 import {
   DataTable, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
-import { Launch } from '@edx/paragon/icons';
+import { Launch, Share } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 
-const getCcxInstructorUrl = (ccxId) => `${process.env.LMS_BASE_URL}/courses/${ccxId}/instructor`;
+const getCcxUrl = (ccxId) => `${process.env.LMS_BASE_URL}/courses/${ccxId}`;
+const getCcxInstructorUrl = (ccxId) => `${getCcxUrl(ccxId)}/instructor`;
 
 export const Table = ({ data, count }) => {
+  const [isCCXUrlCopied, setisCCXUrlCopied] = useState(false);
+
+  function openCcxInstructorUrl(ccxId) {
+    window.open(getCcxInstructorUrl(ccxId), '_blank', 'noopener, noreferrer');
+  }
+
+  function copyCcxUrl(ccxId) {
+    navigator.clipboard.writeText(getCcxUrl(ccxId))
+      .then(setisCCXUrlCopied(true));
+  }
+
   const columns = [
     {
       Header: 'Institution',
@@ -51,9 +63,18 @@ export const Table = ({ data, count }) => {
             <IconButton
               alt="Go to instructor dashboard"
               iconAs={Launch}
-              onClick={() => {
-                window.open(getCcxInstructorUrl(row.values.ccxId), '_blank', 'noopener, noreferrer'); // eslint-disable-line react/prop-types
-              }}
+              onClick={() => { openCcxInstructorUrl(row.values.ccxId); }} // eslint-disable-line react/prop-types
+            />
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip variant="light">{isCCXUrlCopied ? 'CCX URL Copied!' : 'Copy CCX URL'}</Tooltip>}
+            onExited={() => { setisCCXUrlCopied(false); }}
+          >
+            <IconButton
+              alt="Copy CCX URL"
+              iconAs={Share}
+              onClick={() => { copyCcxUrl(row.values.ccxId); }} // eslint-disable-line react/prop-types
             />
           </OverlayTrigger>
         </>
