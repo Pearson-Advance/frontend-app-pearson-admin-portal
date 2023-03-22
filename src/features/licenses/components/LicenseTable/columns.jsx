@@ -13,7 +13,10 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   {
     Header: 'Master Courses',
     accessor: ({ courses }) => (
-      courses.map(course => `${course.id} - ${course.displayName}`).join('; ')
+      courses.map(course => `${course.id} - ${course.displayName}`).join('@')
+    ),
+    Cell: ({ row }) => (
+      row.values['Master Courses'].split('@').map(course => <p>{course}</p>)
     ),
     filter: 'text',
     disableSortBy: true,
