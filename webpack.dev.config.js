@@ -7,4 +7,12 @@ module.exports = createConfig('webpack-dev', {
       features: path.resolve(__dirname, 'src/features'),
     },
   },
+  // Hide runtime Errors for data-report view
+  devServer: {
+    client: {
+      overlay: {
+        runtimeErrors: false,
+      },
+    },
+  },
 });
