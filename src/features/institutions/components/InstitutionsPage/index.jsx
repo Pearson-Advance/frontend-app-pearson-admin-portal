@@ -70,7 +70,7 @@ const InstitutionsPage = () => {
         active: form.institution.active,
       });
     }
-  }, [form]);
+  }, [dispatch, create, form]);
 
   return (
     <Container size="xl">

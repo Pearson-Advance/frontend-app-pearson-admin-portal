@@ -34,7 +34,7 @@ export const DataReportPage = () => {
   useEffect(() => {
     if (pageTab !== TabIndex.DATA_REPORT) { dispatch(changeTab(TabIndex.DATA_REPORT)); }
     if (institutions.length === 0) { dispatch(fetchInstitutions()); }
-  }, [dispatch]);
+  }, [dispatch, pageTab, institutions.length]);
 
   return (
     <Container className="pt-3">

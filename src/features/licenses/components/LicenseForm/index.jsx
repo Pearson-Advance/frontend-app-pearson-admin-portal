@@ -50,6 +50,7 @@ export const LicenseForm = ({
 
   useEffect(() => {
     handleFetchEligibleCourses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.institution, created]);
 
   return (
@@ -139,7 +140,7 @@ LicenseForm.propTypes = {
   created: PropTypes.bool.isRequired,
   fields: PropTypes.shape({
     institution: PropTypes.string,
-    courses: PropTypes.array,
+    courses: PropTypes.instanceOf(Array),
     courseAccessDuration: PropTypes.number,
     status: PropTypes.string,
   }).isRequired,

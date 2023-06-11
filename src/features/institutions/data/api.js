@@ -1,7 +1,7 @@
-import { snakeCaseObject } from '@edx/frontend-platform';
+import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-const institutionURL = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/institutions/`;
+const institutionURL = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/institutions/`;
 const institutionDefaultOrdering = 'name';
 
 export function getInstitutions(selectedInstitution = null, ordering = institutionDefaultOrdering) {
@@ -11,12 +11,12 @@ export function getInstitutions(selectedInstitution = null, ordering = instituti
     params.id = selectedInstitution;
   }
 
-  return getAuthenticatedHttpClient().get(institutionURL, { params: { ...params } });
+  return getAuthenticatedHttpClient().get(institutionURL(), { params: { ...params } });
 }
 
 export function postInstitution(name, shortName, externalId, active = true) {
   return getAuthenticatedHttpClient().post(
-    institutionURL,
+    institutionURL(),
     snakeCaseObject({
       name, shortName, externalId, active,
     }),
@@ -25,7 +25,7 @@ export function postInstitution(name, shortName, externalId, active = true) {
 
 export function updateInstitution(id, name, shortName, externalId, active) {
   return getAuthenticatedHttpClient().patch(
-    `${institutionURL}${id}/`,
+    `${institutionURL()}${id}/`,
     snakeCaseObject({
       name, shortName, externalId, active,
     }),
