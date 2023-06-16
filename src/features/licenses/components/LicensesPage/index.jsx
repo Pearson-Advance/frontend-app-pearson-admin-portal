@@ -46,7 +46,7 @@ const LicensesPage = () => {
         institution: form.license.institution,
       });
     }
-  }, [form]);
+  }, [create, form]);
 
   const handleCloseModal = () => {
     setFields(initialFormValues);

@@ -61,7 +61,7 @@ Modal.propTypes = {
 };
 
 Modal.defaultProps = {
-  children: (<></>),
+  children: null,
   variant: 'default',
   size: 'md',
 };

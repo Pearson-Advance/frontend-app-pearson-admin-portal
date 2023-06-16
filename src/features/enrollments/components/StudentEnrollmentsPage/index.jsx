@@ -47,7 +47,7 @@ const StudentEnrollmentsPage = () => {
   const enrollmentData = new FormData();
   enrollmentData.append('identifiers', selectedRow.learnerEmail);
 
-  const COLUMNS = useMemo(() => getColumns({ open, setRow }), []);
+  const COLUMNS = useMemo(() => getColumns({ open, setRow }), [open]);
 
   let status = '';
 
@@ -98,12 +98,17 @@ const StudentEnrollmentsPage = () => {
   };
 
   const handleAction = () => {
-    dispatch(updateEnrollmentAction(enrollmentData,
-      {
-        ...filters,
-        ordering: getOrdering(sortBy),
-        page: requestResponse.currentPage,
-      }, selectedRow.ccxId));
+    dispatch(
+      updateEnrollmentAction(
+        enrollmentData,
+        {
+          ...filters,
+          ordering: getOrdering(sortBy),
+          page: requestResponse.currentPage,
+        },
+        selectedRow.ccxId,
+      ),
+    );
     close();
   };
 
@@ -116,7 +121,7 @@ const StudentEnrollmentsPage = () => {
     }));
     dispatch(fetchInstitutions());
     dispatch(fetchEligibleCourses());
-  }, [dispatch, sortBy]);
+  }, [dispatch, sortBy, filters, pageTab]);
 
   return (
     <Container>

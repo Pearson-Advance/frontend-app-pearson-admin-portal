@@ -1,5 +1,5 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { snakeCaseObject } from '@edx/frontend-platform';
+import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
 
 function getLicenseUsageCCXLevel(filters) {
@@ -10,7 +10,7 @@ function getLicenseUsageCCXLevel(filters) {
   }
 
   return getAuthenticatedHttpClient().get(
-    `${process.env.COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage/`,
+    `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage/`,
     { params },
   );
 }
@@ -23,7 +23,7 @@ function getLicenseUsageMCLevel(filters) {
   }
 
   return getAuthenticatedHttpClient().get(
-    `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-usage/`,
+    `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-usage/`,
     { params },
   );
 }
@@ -36,7 +36,9 @@ function getExportLicenseUsageCCXLevel(filters) {
   }
 
   return getAuthenticatedHttpClient().get(
-    `${process.env.COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage-export/`, { params }, { responseType: 'blob' },
+    `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage-export/`,
+    { params },
+    { responseType: 'blob' },
   );
 }
 
@@ -48,7 +50,9 @@ function getExportLicenseUsageMCLevel(filters) {
   }
 
   return getAuthenticatedHttpClient().get(
-    `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-usage-export/`, { params }, { responseType: 'blob' },
+    `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-usage-export/`,
+    { params },
+    { responseType: 'blob' },
   );
 }
 

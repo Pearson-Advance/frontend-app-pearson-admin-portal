@@ -1,11 +1,12 @@
 import {
   DataTable, IconButton, OverlayTrigger, Tooltip,
 } from '@edx/paragon';
+import { getConfig } from '@edx/frontend-platform';
 import { Launch, Share } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-const getCcxUrl = (ccxId) => `${process.env.LMS_BASE_URL}/courses/${ccxId}`;
+const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getCcxUrl(ccxId)}/instructor`;
 
 export const Table = ({ data, count }) => {

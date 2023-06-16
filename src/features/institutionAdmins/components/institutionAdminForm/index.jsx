@@ -11,7 +11,7 @@ export const InstitutionAdminForm = ({ fields, setFields, errors }) => {
 
   useEffect(() => {
     dispatch(fetchInstitutions());
-  }, []);
+  }, [dispatch]);
 
   const handleInputChange = (e) => {
     setFields({

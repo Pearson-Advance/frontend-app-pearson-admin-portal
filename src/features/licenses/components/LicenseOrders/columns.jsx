@@ -35,7 +35,10 @@ export const getColumns = props => [
           iconAs={Edit}
           onClick={() => {
             props.handleOpenModal(
-              row.values.id, row.values.orderReference, row.values.purchasedSeats, row.values.active,
+              row.values.id,
+              row.values.orderReference,
+              row.values.purchasedSeats,
+              row.values.active,
             );
           }}
         />

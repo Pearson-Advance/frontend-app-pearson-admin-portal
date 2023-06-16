@@ -1,9 +1,9 @@
-import { snakeCaseObject } from '@edx/frontend-platform';
+import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
-const endpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
-const eligibleCoursesEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-eligible-courses/`;
-const ordersEndpoint = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
+const endpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license/`;
+const eligibleCoursesEndpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-eligible-courses/`;
+const ordersEndpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 
 export function getLicenses(selectedInstitution = null) {
   const params = {};
@@ -12,16 +12,16 @@ export function getLicenses(selectedInstitution = null) {
     params.institution_id = selectedInstitution;
   }
 
-  return getAuthenticatedHttpClient().get(endpoint, { params: { ...params } });
+  return getAuthenticatedHttpClient().get(endpoint(), { params: { ...params } });
 }
 
 export function getLicenseById(id) {
-  return getAuthenticatedHttpClient().get(`${endpoint}${id}/`);
+  return getAuthenticatedHttpClient().get(`${endpoint()}${id}/`);
 }
 
 export function postLicense(institution, courses, courseAccessDuration, status) {
   return getAuthenticatedHttpClient().post(
-    endpoint,
+    endpoint(),
     snakeCaseObject({
       institution: { id: institution },
       courses,
@@ -33,7 +33,7 @@ export function postLicense(institution, courses, courseAccessDuration, status) 
 
 export function updateLicense(licenseId, status, courses) {
   return getAuthenticatedHttpClient().patch(
-    `${endpoint}${licenseId}/`,
+    `${endpoint()}${licenseId}/`,
     snakeCaseObject({
       status,
       courses,
@@ -43,14 +43,14 @@ export function updateLicense(licenseId, status, courses) {
 
 export function getEligibleCourses(params) {
   return getAuthenticatedHttpClient().get(
-    eligibleCoursesEndpoint,
+    eligibleCoursesEndpoint(),
     { params: { ...params } },
   );
 }
 
 export function postLicenseOrder(license, orderReference, purchasedSeats, active = true) {
   return getAuthenticatedHttpClient().post(
-    ordersEndpoint,
+    ordersEndpoint(),
     snakeCaseObject({
       license, orderReference, purchasedSeats, active,
     }),
@@ -59,7 +59,7 @@ export function postLicenseOrder(license, orderReference, purchasedSeats, active
 
 export function updateLicenseOrder(orderId, orderReference, purchasedSeats) {
   return getAuthenticatedHttpClient().patch(
-    `${ordersEndpoint}${orderId}/`,
+    `${ordersEndpoint()}${orderId}/`,
     snakeCaseObject({
       orderReference,
       purchasedSeats,

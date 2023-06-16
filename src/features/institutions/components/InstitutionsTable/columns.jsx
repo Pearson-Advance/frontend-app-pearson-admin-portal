@@ -52,7 +52,11 @@ export const getColumns = props => [
           iconAs={Edit}
           onClick={() => {
             props.handleEditModal(
-              row.values.id, row.values.name, row.values.shortName, row.values.externalId, row.values.active,
+              row.values.id,
+              row.values.name,
+              row.values.shortName,
+              row.values.externalId,
+              row.values.active,
             );
           }}
         />

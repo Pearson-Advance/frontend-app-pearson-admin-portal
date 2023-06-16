@@ -81,16 +81,16 @@ export const LicenseDetail = () => {
         purchasedSeats: Orderform.order.purchasedSeats,
       });
     }
-  }, [Orderform]);
+  }, [Orderform, create]);
 
   useEffect(() => {
     dispatch(clearLicenseOrder());
-  }, [id]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicensebyId(id));
-  }, [id, ordersData]);
+  }, [dispatch, id, ordersData]);
 
   return (
     <Container size="xl" className="p-4">
