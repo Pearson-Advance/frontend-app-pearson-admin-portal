@@ -6,7 +6,7 @@ import { Launch, Share } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
-const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}${getConfig().LEARNING_MFE_PATH}/course/${ccxId}`;
+const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/learning/course/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}/instructor`;
 
 export const Table = ({ data, count }) => {
