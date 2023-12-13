@@ -13,7 +13,9 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   {
     Header: 'Master Courses',
     accessor: ({ courses }) => (
-      courses.map(course => `${course.id} - ${course.displayName}`).join('; ')
+      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+        {courses.map(course => <li key={course}>{`${course.id} - ${course.displayName}`}</li>)}
+      </ul>
     ),
     filter: 'text',
     disableSortBy: true,
