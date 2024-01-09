@@ -18,6 +18,7 @@ import { has } from 'lodash';
 import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
 
 const initialFormValues = {
+  licenseName: '',
   institution: '',
   courses: [],
   status: 'active',
@@ -40,6 +41,7 @@ const LicensesPage = () => {
   useEffect(() => {
     if (!create) {
       setFields({
+        licenseName: form.license.licenseName,
         status: form.license.status,
         courses: form.license.courses,
         license: form.license.id,
@@ -62,6 +64,7 @@ const LicensesPage = () => {
     if (create) {
       dispatch(
         createLicense(
+          fields.licenseName,
           parseInt(fields.institution, 10),
           fields.courses,
           fields.courseAccessDuration,
@@ -71,6 +74,7 @@ const LicensesPage = () => {
     } else {
       dispatch(
         editLicense(
+          fields.licenseName,
           parseInt(fields.license, 10),
           fields.status,
           fields.courses,

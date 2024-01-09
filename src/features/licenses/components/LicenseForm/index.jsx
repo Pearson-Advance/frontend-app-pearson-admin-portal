@@ -65,6 +65,16 @@ export const LicenseForm = ({
           </PageBanner>
         </Form.Group>
         )}
+      <Form.Group isInvalid={has(errors, 'licenseName')}>
+      <Form.Label>License Name</Form.Label>
+        <Form.Control
+          name="licenseName"
+          maxLength="64"
+          value={fields.licenseName}
+          onChange={handleInputChange}
+        />
+        {errors.licenseName && <Form.Control.Feedback type="invalid">{errors.licenseName}</Form.Control.Feedback>}
+      </Form.Group>
       {created
         && (
         <Form.Group>

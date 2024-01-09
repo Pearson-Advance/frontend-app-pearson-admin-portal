@@ -6,6 +6,11 @@ import { BookOpen, Edit } from '@edx/paragon/icons';
 
 export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   {
+    Header: 'License Name',
+    accessor: 'licenseName',
+    disableFilters: true,
+  },
+  {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
     disableFilters: true,
