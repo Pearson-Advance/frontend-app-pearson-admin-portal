@@ -40,6 +40,7 @@ describe('Licenses API tests', () => {
   test('Successfully complete a get request to the licenses endpoint', async () => {
     const expectedResponse = {
       data: {
+        licenseName: 'License Name',
         institution: {
           name: 'Training center 1',
         },
