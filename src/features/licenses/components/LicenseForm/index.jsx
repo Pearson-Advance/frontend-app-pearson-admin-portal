@@ -65,6 +65,16 @@ export const LicenseForm = ({
           </PageBanner>
         </Form.Group>
         )}
+      <Form.Group isInvalid={has(errors, 'licenseName')}>
+        <Form.Label>License Name</Form.Label>
+        <Form.Control
+          name="licenseName"
+          maxLength="255"
+          value={fields.licenseName}
+          onChange={handleInputChange}
+        />
+        {errors.licenseName && <Form.Control.Feedback type="invalid">{errors.licenseName}</Form.Control.Feedback>}
+      </Form.Group>
       {created
         && (
         <Form.Group>
@@ -139,6 +149,7 @@ export const LicenseForm = ({
 LicenseForm.propTypes = {
   created: PropTypes.bool.isRequired,
   fields: PropTypes.shape({
+    licenseName: PropTypes.string,
     institution: PropTypes.string,
     courses: PropTypes.instanceOf(Array),
     courseAccessDuration: PropTypes.number,
@@ -146,6 +157,7 @@ LicenseForm.propTypes = {
   }).isRequired,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({
+    licenseName: PropTypes.string,
     institution: PropTypes.shape({
       id: PropTypes.string,
     }),

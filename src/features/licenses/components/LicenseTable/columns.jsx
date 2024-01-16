@@ -6,6 +6,11 @@ import { BookOpen, Edit } from '@edx/paragon/icons';
 
 export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   {
+    Header: 'License Name',
+    accessor: 'licenseName',
+    disableFilters: true,
+  },
+  {
     Header: 'Institution',
     accessor: ({ institution }) => institution.name,
     disableFilters: true,
@@ -66,7 +71,13 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
             alt="Edit"
             iconAs={Edit}
             onClick={() => {
-              handleEditModal(row.values.id, row.values.Institution, row.values.Courses, row.values.status);
+              handleEditModal(
+                row.values.id,
+                row.values.licenseName,
+                row.values.Institution,
+                row.values.Courses,
+                row.values.status,
+              );
             }}
           />
         </OverlayTrigger>
