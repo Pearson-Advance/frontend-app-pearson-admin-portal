@@ -7,12 +7,10 @@ import PropTypes from 'prop-types';
 import { activeInstitutions } from 'features/institutions/data/selector';
 import { has } from 'lodash';
 import { WarningFilled } from '@edx/paragon/icons';
-import { RequestStatus } from 'features/shared/data/constants';
+import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
 import Select, { components } from 'react-select';
 import { fetchEligibleCourses } from 'features/licenses/data';
 import 'features/licenses/components/LicenseForm/index.scss';
-
-const maxLabelLength = 95;
 
 const CustomMultiValue = (props) => {
   const { label } = props.data;
@@ -124,7 +122,7 @@ export const LicenseForm = ({
         )}
       {(isInstitutionSelected || licenseBeingEdited.id)
         && (
-          <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
+          <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3 mr-2">
             {status !== RequestStatus.IN_PROGRESS
               ? (
                 <Select

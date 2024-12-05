@@ -47,3 +47,10 @@ export const DataReportTab = {
   CCX_LEVEL: 'CCXLevel',
   MC_LEVEL: 'MCLevel',
 };
+
+/**
+ * Constant for max length in text selector.
+ * @readonly
+ * @number
+ */
+export const maxLabelLength = 95;
