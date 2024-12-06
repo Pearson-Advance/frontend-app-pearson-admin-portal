@@ -3,12 +3,12 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const institutionAdminURL = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/institution-admin/`;
 
-export function getInstitutionAdmins(selectedInstitution = null) {
+export function getInstitutionAdmins(selectedInstitution = null, signal = null) {
   const params = {};
   if (selectedInstitution) {
     params.institution_id = selectedInstitution;
   }
-  return getAuthenticatedHttpClient().get(institutionAdminURL(), { params: { ...params } });
+  return getAuthenticatedHttpClient().get(institutionAdminURL(), { params: { ...params }, signal });
 }
 
 export function postInstitutionAdmin(institutionId, adminEmail) {

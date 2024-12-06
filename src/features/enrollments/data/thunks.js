@@ -15,12 +15,24 @@ import {
  * Fetches all student enrollments.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortStudentEnrollmentsController = null;
 function fetchStudentEnrollments(filters = null) {
   return async (dispatch) => {
+    if (abortStudentEnrollmentsController) {
+      abortStudentEnrollmentsController.abort();
+    }
+
+    abortStudentEnrollmentsController = new AbortController();
+    const { signal } = abortStudentEnrollmentsController;
+
     try {
       dispatch(fetchStudentEnrollmentsRequest());
-      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments(filters)).data)));
+      dispatch(fetchStudentEnrollmentsSuccess(camelCaseObject((await getStudentEnrollments(filters, signal)).data)));
     } catch (error) {
+      if (signal.aborted) {
+        logError('Student enrollments canceled!');
+      }
+
       dispatch(fetchStudentEnrollmentsFailed());
       logError(error);
     }

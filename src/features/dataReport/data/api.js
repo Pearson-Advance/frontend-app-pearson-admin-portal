@@ -2,7 +2,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
 
-function getLicenseUsageCCXLevel(filters) {
+function getLicenseUsageCCXLevel(filters, signal = null) {
   let params = {};
 
   if (filters) {
@@ -11,7 +11,7 @@ function getLicenseUsageCCXLevel(filters) {
 
   return getAuthenticatedHttpClient().get(
     `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/detailed-license-usage/`,
-    { params },
+    { params, signal },
   );
 }
 

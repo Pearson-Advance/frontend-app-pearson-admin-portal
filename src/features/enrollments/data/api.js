@@ -2,7 +2,7 @@ import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
 
-function getStudentEnrollments(filters = null) {
+function getStudentEnrollments(filters = null, signal = null) {
   let params = {};
 
   if (filters) {
@@ -11,7 +11,7 @@ function getStudentEnrollments(filters = null) {
 
   return getAuthenticatedHttpClient().get(
     `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/licensed-enrollments/`,
-    { params },
+    { params, signal },
   );
 }
 

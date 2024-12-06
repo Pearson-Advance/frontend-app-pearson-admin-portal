@@ -5,14 +5,14 @@ const endpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license/`;
 const eligibleCoursesEndpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-eligible-courses/`;
 const ordersEndpoint = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 
-export function getLicenses(selectedInstitution = null) {
+export function getLicenses(selectedInstitution = null, signal = null) {
   const params = {};
 
   if (selectedInstitution) {
     params.institution_id = selectedInstitution;
   }
 
-  return getAuthenticatedHttpClient().get(endpoint(), { params: { ...params } });
+  return getAuthenticatedHttpClient().get(endpoint(), { params: { ...params }, signal });
 }
 
 export function getLicenseById(id) {
