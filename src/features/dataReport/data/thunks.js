@@ -17,12 +17,25 @@ import {
  * Fetches all CCX level license usage data.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortLicenseUsageCCXLevelController = null;
 function fetchLicenseUsageCCXLevel(filters) {
   return async (dispatch) => {
+    if (abortLicenseUsageCCXLevelController) {
+      abortLicenseUsageCCXLevelController.abort();
+    }
+
+    abortLicenseUsageCCXLevelController = new AbortController();
+    const { signal } = abortLicenseUsageCCXLevelController;
+
     try {
       dispatch(fetchLicenseUsageRequest());
-      dispatch(fetchLicenseUsageCCXLevelSuccess(camelCaseObject((await getLicenseUsageCCXLevel(filters)).data)));
+      dispatch(fetchLicenseUsageCCXLevelSuccess(
+        camelCaseObject((await getLicenseUsageCCXLevel(filters, signal)).data),
+      ));
     } catch (error) {
+      if (signal.aborted) {
+        logError('License ccx canceled!');
+      }
       dispatch(fetchLicenseUsageFailed());
       logError(error);
     }

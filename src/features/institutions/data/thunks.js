@@ -16,12 +16,22 @@ import {
  * Fetches all the institutions.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortInstitutionController = null;
 export function fetchInstitutions(selectedInstitution) {
   return async (dispatch) => {
+    if (abortInstitutionController) {
+      abortInstitutionController.abort();
+    }
+
+    abortInstitutionController = new AbortController();
+    const { signal } = abortInstitutionController;
     try {
       dispatch(fetchInstitutionsRequest());
-      dispatch(fetchInstitutionsSuccess(camelCaseObject((await getInstitutions(selectedInstitution)).data)));
+      dispatch(fetchInstitutionsSuccess(camelCaseObject((await getInstitutions(selectedInstitution, signal)).data)));
     } catch (error) {
+      if (signal.aborted) {
+        logError('Institution canceled!');
+      }
       dispatch(fetchInstitutionsFailed());
       logError(error);
     }

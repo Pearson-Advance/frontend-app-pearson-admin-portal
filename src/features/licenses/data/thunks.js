@@ -28,12 +28,25 @@ import {
  * Fetches all licenses.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortLicensesController = null;
 export function fetchLicenses(selectedInstitution = null) {
   return async (dispatch) => {
+    if (abortLicensesController) {
+      abortLicensesController.abort();
+    }
+
+    abortLicensesController = new AbortController();
+    const { signal } = abortLicensesController;
+
     try {
       dispatch(fetchLicensesRequest());
-      dispatch(fetchLicensesSuccess(camelCaseObject((await getLicenses(selectedInstitution)).data)));
+      const response = await getLicenses(selectedInstitution, signal);
+      dispatch(fetchLicensesSuccess(camelCaseObject(response.data)));
     } catch (error) {
+      if (signal.aborted) {
+        logError('Licenses canceled!');
+      }
+
       dispatch(fetchLicensesFailed());
       logError(error);
     }

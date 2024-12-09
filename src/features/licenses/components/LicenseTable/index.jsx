@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { DataTable, TextFilter } from '@edx/paragon';
 
 import { PersistController } from 'features/shared/components/PersistController';
-import { DataTable, TextFilter } from '@edx/paragon';
+
 import { getColumns } from './columns';
 import { openLicenseModal } from '../../data/slices';
 
 const LicenseTable = ({ data }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
   const {
     pageSize, pageIndex, filters, sortBy,
   } = useSelector(state => state.page.dataTable);

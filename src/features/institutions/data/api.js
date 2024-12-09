@@ -2,16 +2,15 @@ import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 const institutionURL = () => `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/institutions/`;
-const institutionDefaultOrdering = 'name';
 
-export function getInstitutions(selectedInstitution = null, ordering = institutionDefaultOrdering) {
-  const params = { ordering };
+export function getInstitutions(selectedInstitution = null, signal = null) {
+  const params = { ordering: 'name' };
 
   if (selectedInstitution) {
     params.id = selectedInstitution;
   }
 
-  return getAuthenticatedHttpClient().get(institutionURL(), { params: { ...params } });
+  return getAuthenticatedHttpClient().get(institutionURL(), { params: { ...params }, signal });
 }
 
 export function postInstitution(name, shortName, externalId, active = true) {
