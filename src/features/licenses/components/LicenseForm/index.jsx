@@ -1,15 +1,42 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Icon, PageBanner, Spinner,
+  Form, Icon, PageBanner, Spinner, Tooltip, OverlayTrigger,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { activeInstitutions } from 'features/institutions/data/selector';
 import { has } from 'lodash';
 import { WarningFilled } from '@edx/paragon/icons';
-import { RequestStatus } from 'features/shared/data/constants';
-import Select from 'react-select';
+import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
+import Select, { components } from 'react-select';
 import { fetchEligibleCourses } from 'features/licenses/data';
+import 'features/licenses/components/LicenseForm/index.scss';
+
+const CustomMultiValue = (props) => {
+  const { label } = props.data;
+
+  if (label.length > maxLabelLength) {
+    return (
+      <OverlayTrigger
+        key="top"
+        placement="top"
+        overlay={(
+          <Tooltip>
+            {label}
+          </Tooltip>
+        )}
+      >
+        <span className="custom-container-selector">
+          <components.MultiValueContainer {...props} />
+        </span>
+      </OverlayTrigger>
+    );
+  }
+
+  return (
+    <components.MultiValueContainer {...props} />
+  );
+};
 
 export const LicenseForm = ({
   created, fields, setFields, errors,
@@ -50,20 +77,20 @@ export const LicenseForm = ({
 
   useEffect(() => {
     handleFetchEligibleCourses();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.institution, created]);
 
   return (
     <>
       {has(errors, 'nonFieldErrors')
         && (
-        <Form.Group>
-          <PageBanner
-            variant="warning"
-          >
-            <Icon src={WarningFilled} className="mr-2" /> {errors.nonFieldErrors}
-          </PageBanner>
-        </Form.Group>
+          <Form.Group>
+            <PageBanner
+              variant="warning"
+            >
+              <Icon src={WarningFilled} className="mr-2" /> {errors.nonFieldErrors}
+            </PageBanner>
+          </Form.Group>
         )}
       <Form.Group isInvalid={has(errors, 'licenseName')}>
         <Form.Label>License Name</Form.Label>
@@ -77,55 +104,57 @@ export const LicenseForm = ({
       </Form.Group>
       {created
         && (
-        <Form.Group>
-          <Form.Control
-            name="institution"
-            floatingLabel="Institution"
-            as="select"
-            required
-            isInvalid={has(errors, 'institution') && has(errors.institution, 'id')}
-            onChange={handleInputChange}
-          >
-            <option value="">Choose...</option>
-            {data.map(institution => <option key={`institution-${institution.id}`} value={institution.id}> {institution.name} </option>)}
-          </Form.Control>
-          {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
-        </Form.Group>
+          <Form.Group>
+            <Form.Control
+              name="institution"
+              floatingLabel="Institution"
+              as="select"
+              required
+              isInvalid={has(errors, 'institution') && has(errors.institution, 'id')}
+              onChange={handleInputChange}
+              data-testid="institution-select"
+            >
+              <option value="">Choose...</option>
+              {data.map(institution => <option key={`institution-${institution.id}`} value={institution.id}> {institution.name} </option>)}
+            </Form.Control>
+            {errors.institution && errors.institution.id && <Form.Control.Feedback type="invalid">{errors.institution.id}</Form.Control.Feedback>}
+          </Form.Group>
         )}
       {(isInstitutionSelected || licenseBeingEdited.id)
         && (
-        <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3">
-          {status !== RequestStatus.IN_PROGRESS
-            ? (
-              <Select
-                isMulti
-                options={eligibleCourses}
-                value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
-                name="courses"
-                className="basic-multi-select"
-                placeholder="Select Master Courses..."
-                maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
-                onChange={handleSelectCourseChange}
-              />
-            )
-            : (
-              <Spinner animation="border" className="mie-3" screenReaderText="loading" />
-            )}
-          {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
-        </Form.Group>
+          <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3 mr-2">
+            {status !== RequestStatus.IN_PROGRESS
+              ? (
+                <Select
+                  isMulti
+                  options={eligibleCourses}
+                  value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
+                  name="courses"
+                  className="basic-multi-select"
+                  placeholder="Select Master Courses..."
+                  maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
+                  onChange={handleSelectCourseChange}
+                  components={{ MultiValueContainer: CustomMultiValue }}
+                />
+              )
+              : (
+                <Spinner animation="border" className="mie-3" screenReaderText="loading" />
+              )}
+            {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
+          </Form.Group>
         )}
       <br />
       {created
         && (
-        <Form.Group>
-          <Form.Control
-            name="courseAccessDuration"
-            floatingLabel="Course access duration"
-            value={fields.courseAccessDuration}
-            onChange={handleInputChange}
-          />
-          {errors.courseAccessDuration && <Form.Control.Feedback type="invalid">{errors.courseAccessDuration}</Form.Control.Feedback>}
-        </Form.Group>
+          <Form.Group>
+            <Form.Control
+              name="courseAccessDuration"
+              floatingLabel="Course access duration"
+              value={fields.courseAccessDuration}
+              onChange={handleInputChange}
+            />
+            {errors.courseAccessDuration && <Form.Control.Feedback type="invalid">{errors.courseAccessDuration}</Form.Control.Feedback>}
+          </Form.Group>
         )}
       <Form.Group>
         <Form.Control
@@ -167,5 +196,12 @@ LicenseForm.propTypes = {
     courseAccessDuration: PropTypes.number,
     status: PropTypes.string,
     nonFieldErrors: PropTypes.string,
+  }).isRequired,
+};
+
+CustomMultiValue.propTypes = {
+  data: PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    value: PropTypes.string.isRequired,
   }).isRequired,
 };

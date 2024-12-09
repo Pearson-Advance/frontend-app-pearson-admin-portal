@@ -90,6 +90,7 @@ const LicensesPage = () => {
         isOpen={form.isOpen}
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
+        size="lg"
       >
         <LicenseForm
           created={create}
