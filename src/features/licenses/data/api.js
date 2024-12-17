@@ -68,3 +68,17 @@ export function updateLicenseOrder(orderId, orderReference, purchasedSeats) {
     }),
   );
 }
+
+/**
+ * Get catalogs.
+ * @param {object} - [params] - Optional parameters
+ * @param {number} - [params.page] - The page number for page pagination.
+ * @returns {Promise} - A promise that resolves with the response of the GET request.
+ */
+
+export function getCatalogs(params) {
+  return getAuthenticatedHttpClient().get(
+    `${getConfig().CATALOG_PLUGIN_API_BASE_URL}/flexible-catalogs/`,
+    { params },
+  );
+}
