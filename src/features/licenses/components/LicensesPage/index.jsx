@@ -23,6 +23,7 @@ const initialFormValues = {
   courses: [],
   status: 'active',
   courseAccessDuration: 180,
+  catalogs: [],
 };
 
 const LicensesPage = () => {
@@ -46,6 +47,7 @@ const LicensesPage = () => {
         courses: form.license.courses,
         license: form.license.id,
         institution: form.license.institution,
+        catalogs: form.license.catalogs || [],
       });
     }
   }, [create, form]);

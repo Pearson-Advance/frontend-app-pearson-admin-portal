@@ -2,7 +2,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
   getLicenses, getLicenseById, postLicense, getEligibleCourses,
-  postLicenseOrder, updateLicenseOrder, updateLicense,
+  postLicenseOrder, updateLicenseOrder, updateLicense, getCatalogs,
 } from './api';
 import {
   fetchLicensesRequest,
@@ -22,7 +22,10 @@ import {
   postLicenseOrderFailed,
   patchLicenseOrderSuccess,
   patchLicenseOrderFailed,
+  updateCatalogs,
+  updateCatalogsRequestStatus,
 } from './slices';
+import { RequestStatus } from '../../shared/data/constants';
 
 /**
  * Fetches all licenses.
@@ -172,5 +175,39 @@ export function editLicenseOrder(orderId, orderReference, purchasedSeats) {
       dispatch(patchLicenseOrderFailed(camelCaseObject(error.response.data)));
       logError(error);
     }
+  };
+}
+
+/**
+ * Fetch all catalogs.
+ * @returns {(function(*): Promise<void>)|*}
+ */
+export function fetchCatalogs() {
+  return async (dispatch) => {
+    dispatch(updateCatalogsRequestStatus(RequestStatus.IN_PROGRESS));
+
+    let page = 1;
+    const fetchAllPages = async () => {
+      try {
+        const response = await getCatalogs({ page });
+        const { results, next: existNextPage } = response.data;
+        dispatch(updateCatalogs(results));
+
+        if (existNextPage) {
+          page += 1;
+          // eslint-disable-next-line no-promise-executor-return
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          return fetchAllPages();
+        }
+
+        dispatch(updateCatalogsRequestStatus(RequestStatus.SUCCESSFUL));
+        return results;
+      } catch (error) {
+        dispatch(updateCatalogsRequestStatus(RequestStatus.FAILED));
+        return logError(error);
+      }
+    };
+
+    return fetchAllPages();
   };
 }

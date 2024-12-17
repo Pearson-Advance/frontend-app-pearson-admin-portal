@@ -1,11 +1,15 @@
 import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { getLicenses, getLicenseById, updateLicenseOrder } from 'features/licenses/data/api';
+import {
+  getLicenses, getLicenseById, updateLicenseOrder, getCatalogs,
+} from 'features/licenses/data/api';
 import { snakeCaseObject } from '@edx/frontend-platform';
 
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
 const licensesOrdersApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
+const catalogsApiUrl = `${process.env.CATALOG_PLUGIN_API_BASE_URL}/flexible-catalogs/`;
+
 let axiosMock = null;
 
 describe('Licenses API tests', () => {
@@ -72,6 +76,29 @@ describe('Licenses API tests', () => {
     axiosMock.onPatch(`${licensesOrdersApiUrl}1/`).reply(200, expectedResponse);
 
     const response = await updateLicenseOrder(1, 'TEST04', 300);
+
+    expect(response.data).toEqual(expectedResponse);
+  });
+
+  test('Successfully complete fetch catalogs', async () => {
+    const expectedResponse = {
+      data: {
+        next: null,
+        previous: null,
+        count: 2,
+        results: [
+          {
+            id: '123',
+            slug: 'full',
+            name: 'full catalog',
+          },
+        ],
+      },
+    };
+
+    axiosMock.onGet(`${catalogsApiUrl}`).reply(200, { ...expectedResponse });
+
+    const response = await getCatalogs();
 
     expect(response.data).toEqual(expectedResponse);
   });

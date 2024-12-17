@@ -7,6 +7,12 @@ jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
 }));
 
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn(() => ({
+    SHOW_CATALOG_SELECTOR: true,
+  })),
+}));
+
 const mockStore = {
   institutions: {
     data: [{
@@ -28,6 +34,14 @@ const mockStore = {
         ],
       },
     },
+    catalogs: {
+      data: [
+        {
+          value: '123',
+          label: 'full catalog',
+        },
+      ],
+    },
   },
 };
 
@@ -37,6 +51,7 @@ const initialFormValues = {
   courses: [],
   status: 'active',
   courseAccessDuration: 180,
+  catalogs: [],
 };
 
 describe('LicenseForm component', () => {
@@ -55,6 +70,7 @@ describe('LicenseForm component', () => {
     expect(getByText('Institution 1')).toBeInTheDocument();
     expect(getByText('Course access duration')).toBeInTheDocument();
     expect(getByText('Status')).toBeInTheDocument();
+    expect(getByText('Select Catalog')).toBeInTheDocument();
   });
 
   test('Edit mode', () => {

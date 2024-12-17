@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { getConfig } from '@edx/frontend-platform';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Form, Icon, PageBanner, Spinner, Tooltip, OverlayTrigger,
@@ -9,7 +10,7 @@ import { has } from 'lodash';
 import { WarningFilled } from '@edx/paragon/icons';
 import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
 import Select, { components } from 'react-select';
-import { fetchEligibleCourses } from 'features/licenses/data';
+import { fetchEligibleCourses, fetchCatalogs } from 'features/licenses/data';
 import 'features/licenses/components/LicenseForm/index.scss';
 
 const CustomMultiValue = (props) => {
@@ -43,9 +44,12 @@ export const LicenseForm = ({
 }) => {
   const dispatch = useDispatch();
   const data = useSelector(activeInstitutions);
-  const { eligibleCourses, status } = useSelector(state => state.licenses);
+  const { eligibleCourses, status, catalogs } = useSelector(state => state.licenses);
+  const { data: catalogsList, status: catalogStatus } = catalogs;
   const licenseBeingEdited = useSelector(state => state.licenses.form.license);
   const isInstitutionSelected = !isNaN(fields.institution) && fields.institution !== ''; // eslint-disable-line no-restricted-globals
+  // Temporary feature flag
+  const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
 
   const handleInputChange = (e) => {
     setFields({
@@ -77,6 +81,7 @@ export const LicenseForm = ({
 
   useEffect(() => {
     handleFetchEligibleCourses();
+    dispatch(fetchCatalogs());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.institution, created]);
 
@@ -143,6 +148,29 @@ export const LicenseForm = ({
             {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
           </Form.Group>
         )}
+      {showCatalogSelector && (
+        <Form.Group className="mb-3 mr-2">
+          {catalogStatus !== RequestStatus.IN_PROGRESS
+            ? (
+              <Select
+                isMulti
+                options={catalogsList}
+                value={catalogsList.filter(catalog => fields.catalogs.includes(catalog.value))}
+                name="catalogs"
+                className="basic-multi-select"
+                placeholder="Select Catalog"
+                onChange={option => setFields({
+                  ...fields,
+                  catalogs: option.map(catalog => (catalog.value)),
+                })}
+                components={{ MultiValueContainer: CustomMultiValue }}
+              />
+            )
+            : (
+              <Spinner animation="border" className="mie-3" screenReaderText="loading" />
+            )}
+        </Form.Group>
+      )}
       <br />
       {created
         && (
@@ -183,6 +211,7 @@ LicenseForm.propTypes = {
     courses: PropTypes.instanceOf(Array),
     courseAccessDuration: PropTypes.number,
     status: PropTypes.string,
+    catalogs: PropTypes.instanceOf(Array),
   }).isRequired,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({

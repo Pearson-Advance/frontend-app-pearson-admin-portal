@@ -6,7 +6,7 @@ import { executeThunk } from 'test-utils';
 import { initializeStore } from 'store';
 
 import 'features/licenses/data/__factories__';
-import { fetchLicenses } from '../thunks';
+import { fetchLicenses, fetchCatalogs } from '../thunks';
 
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
 let axiosMock;
@@ -93,5 +93,46 @@ describe('Licenses data layer tests', () => {
 
     expect(store.getState().licenses.status)
       .toEqual('failed');
+  });
+
+  test('Should fetch multiple pages of catalogs', async () => {
+    const catalogApiUrl = `${process.env.CATALOG_PLUGIN_API_BASE_URL}/flexible-catalogs/`;
+
+    const mockResponsePage1 = {
+      count: 2,
+      num_pages: 2,
+      next: '/flexible-catalogs/?page=2',
+      current_page: 1,
+      results: [
+        {
+          id: '1',
+          slug: 'full',
+          name: 'full catalog',
+        },
+      ],
+    };
+
+    const mockResponsePage2 = {
+      count: 2,
+      num_pages: 2,
+      next: null,
+      current_page: 2,
+      results: [
+        {
+          id: '2',
+          slug: 'demo',
+          name: 'demo catalog',
+        },
+      ],
+    };
+
+    axiosMock.onGet(catalogApiUrl).replyOnce(200, mockResponsePage1);
+    axiosMock.onGet(catalogApiUrl).replyOnce(200, mockResponsePage2);
+
+    await executeThunk(fetchCatalogs(), store.dispatch, store.getState);
+
+    expect(store.getState().licenses.catalogs.status).toEqual('successful');
+
+    expect(axiosMock.history.get.length).toBe(2);
   });
 });

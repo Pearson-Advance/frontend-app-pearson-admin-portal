@@ -22,6 +22,11 @@ const licenseSlice = createSlice({
       errors: {},
       order: {},
     },
+    catalogs: {
+      data: [],
+      status: RequestStatus.INITIAL,
+      errors: {},
+    },
   },
   reducers: {
     fetchLicensesRequest: (state) => {
@@ -167,6 +172,12 @@ const licenseSlice = createSlice({
         state.licenseById.licenseOrder = [];
       }
     },
+    updateCatalogs: (state, { payload }) => {
+      state.catalogs.data = payload.map(catalog => ({ value: catalog.id, label: catalog.name }));
+    },
+    updateCatalogsRequestStatus: (state, { payload }) => {
+      state.catalogs.status = payload;
+    },
   },
 });
 
@@ -193,6 +204,8 @@ export const {
   patchLicenseOrderSuccess,
   patchLicenseOrderFailed,
   clearLicenseOrder,
+  updateCatalogs,
+  updateCatalogsRequestStatus,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;
