@@ -71,6 +71,7 @@ const LicensesPage = () => {
           fields.courses,
           fields.courseAccessDuration,
           fields.status,
+          fields.catalogs,
         ),
       );
     } else {

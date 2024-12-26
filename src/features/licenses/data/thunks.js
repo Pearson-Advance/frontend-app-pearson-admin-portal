@@ -74,7 +74,7 @@ export function fetchLicensebyId(id) {
 /** Post License creation.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function createLicense(licenseName, institution, courses, courseAccessDuration, status) {
+export function createLicense(licenseName, institution, courses, courseAccessDuration, status, catalogs) {
   return async (dispatch) => {
     try {
       dispatch(
@@ -86,6 +86,7 @@ export function createLicense(licenseName, institution, courses, courseAccessDur
               courses,
               courseAccessDuration,
               status,
+              catalogs,
             )).data,
           ),
         ),
