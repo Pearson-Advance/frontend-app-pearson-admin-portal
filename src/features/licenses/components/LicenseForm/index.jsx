@@ -1,16 +1,23 @@
-import React, { useEffect } from 'react';
-import { getConfig } from '@edx/frontend-platform';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Icon, PageBanner, Spinner, Tooltip, OverlayTrigger,
+  Form,
+  Icon,
+  PageBanner,
+  Spinner,
+  Tooltip,
+  OverlayTrigger,
 } from '@edx/paragon';
-import PropTypes from 'prop-types';
-import { activeInstitutions } from 'features/institutions/data/selector';
 import { has } from 'lodash';
-import { WarningFilled } from '@edx/paragon/icons';
-import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
+import PropTypes from 'prop-types';
 import Select, { components } from 'react-select';
+import { getConfig } from '@edx/frontend-platform';
+import { WarningFilled } from '@edx/paragon/icons';
+
 import { fetchEligibleCourses, fetchCatalogs } from 'features/licenses/data';
+import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
+import { activeInstitutions } from 'features/institutions/data/selector';
+
 import 'features/licenses/components/LicenseForm/index.scss';
 
 const CustomMultiValue = (props) => {
@@ -39,16 +46,25 @@ const CustomMultiValue = (props) => {
   );
 };
 
+const selectorOptions = {
+  courses: 'courses',
+  catalogs: 'catalogs',
+};
+
 export const LicenseForm = ({
   created, fields, setFields, errors,
 }) => {
   const dispatch = useDispatch();
   const data = useSelector(activeInstitutions);
-  const { eligibleCourses, status, catalogs } = useSelector(state => state.licenses);
+  const { eligibleCourses, status: courseStatus, catalogs } = useSelector(state => state.licenses);
   const { data: catalogsList, status: catalogStatus } = catalogs;
   const licenseBeingEdited = useSelector(state => state.licenses.form.license);
-  const isInstitutionSelected = !isNaN(fields.institution) && fields.institution !== ''; // eslint-disable-line no-restricted-globals
-  // Temporary feature flag
+  const isInstitutionSelected = !Number.isNaN(fields.institution) && fields.institution !== '';
+
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedCatalogs, setSelectedCatalogs] = useState([]);
+  const [optionSelection, setOptionSelection] = useState(created ? selectorOptions.courses : '');
+
   const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
 
   const handleInputChange = (e) => {
@@ -56,6 +72,23 @@ export const LicenseForm = ({
       ...fields,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleOptionChange = (option) => {
+    const resetFields = {
+      courses: () => {
+        setSelectedCatalogs([]);
+        setFields({ ...fields, catalogs: [] });
+      },
+      catalogs: () => {
+        setSelectedCourses([]);
+        setFields({ ...fields, courses: [] });
+      },
+    };
+
+    resetFields[option]?.();
+
+    setOptionSelection(option);
   };
 
   const handleSelectCourseChange = (selected) => {
@@ -81,9 +114,20 @@ export const LicenseForm = ({
 
   useEffect(() => {
     handleFetchEligibleCourses();
-    dispatch(fetchCatalogs());
+
+    if (showCatalogSelector) {
+      dispatch(fetchCatalogs());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.institution, created]);
+
+  useEffect(() => {
+    const filteredCourses = eligibleCourses.filter(course => fields.courses.includes(course.value));
+    const filteredCatalogs = catalogsList.filter(catalog => fields.catalogs.includes(catalog.value));
+
+    setSelectedCourses(filteredCourses);
+    setSelectedCatalogs(filteredCatalogs);
+  }, [fields.courses, fields.catalogs, eligibleCourses, catalogsList]);
 
   return (
     <>
@@ -127,50 +171,63 @@ export const LicenseForm = ({
         )}
       {(isInstitutionSelected || licenseBeingEdited.id)
         && (
-          <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3 mr-2">
-            {status !== RequestStatus.IN_PROGRESS
-              ? (
-                <Select
-                  isMulti
-                  options={eligibleCourses}
-                  value={eligibleCourses.filter(course => fields.courses.includes(course.value))}
-                  name="courses"
-                  className="basic-multi-select"
-                  placeholder="Select Master Courses..."
-                  maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
-                  onChange={handleSelectCourseChange}
-                  components={{ MultiValueContainer: CustomMultiValue }}
-                />
-              )
-              : (
-                <Spinner animation="border" className="mie-3" screenReaderText="loading" />
-              )}
-            {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
-          </Form.Group>
-        )}
-      {showCatalogSelector && (
-        <Form.Group className="mb-3 mr-2">
-          {catalogStatus !== RequestStatus.IN_PROGRESS
-            ? (
-              <Select
-                isMulti
-                options={catalogsList}
-                value={catalogsList.filter(catalog => fields.catalogs.includes(catalog.value))}
-                name="catalogs"
-                className="basic-multi-select"
-                placeholder="Select Catalog"
-                onChange={option => setFields({
-                  ...fields,
-                  catalogs: option.map(catalog => (catalog.value)),
-                })}
-                components={{ MultiValueContainer: CustomMultiValue }}
-              />
+          <>
+            {
+            (created && showCatalogSelector) && (
+              <Form.Group>
+                <Form.RadioSet
+                  name="option-selector"
+                  onChange={(e) => handleOptionChange(e.target.value)}
+                  defaultValue={optionSelection}
+                  isInline
+                >
+                  <Form.Radio value="courses">Master Courses</Form.Radio>
+                  <Form.Radio value="catalogs">Catalogs</Form.Radio>
+                </Form.RadioSet>
+              </Form.Group>
             )
-            : (
-              <Spinner animation="border" className="mie-3" screenReaderText="loading" />
-            )}
-        </Form.Group>
-      )}
+            }
+            <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3 mr-2">
+              {courseStatus !== RequestStatus.IN_PROGRESS || catalogStatus !== RequestStatus.IN_PROGRESS
+                ? (
+                  <>
+                    {(selectedCourses.length > 0 || optionSelection === selectorOptions.courses) && (
+                    <Select
+                      isMulti
+                      options={eligibleCourses}
+                      value={selectedCourses}
+                      name="courses"
+                      className="basic-multi-select mb-3"
+                      placeholder="Select Master Courses..."
+                      maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
+                      onChange={handleSelectCourseChange}
+                      components={{ MultiValueContainer: CustomMultiValue }}
+                    />
+                    )}
+                    {(selectedCatalogs.length > 0 || optionSelection === selectorOptions.catalogs) && (
+                    <Select
+                      isMulti
+                      options={catalogsList}
+                      value={selectedCatalogs}
+                      name="catalogs"
+                      className="basic-multi-select"
+                      placeholder="Select Catalog"
+                      onChange={option => setFields({
+                        ...fields,
+                        catalogs: option.map(catalog => (catalog.value)),
+                      })}
+                      components={{ MultiValueContainer: CustomMultiValue }}
+                    />
+                    )}
+                  </>
+                )
+                : (
+                  <Spinner animation="border" className="mie-3" screenReaderText="loading" />
+                )}
+              {errors.courses && errors.courses.id && <Form.Control.Feedback type="invalid">{errors.courses.id}</Form.Control.Feedback>}
+            </Form.Group>
+          </>
+        )}
       <br />
       {created
         && (

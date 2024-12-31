@@ -19,7 +19,7 @@ export function getLicenseById(id) {
   return getAuthenticatedHttpClient().get(`${endpoint()}${id}/`);
 }
 
-export function postLicense(licenseName, institution, courses, courseAccessDuration, status) {
+export function postLicense(licenseName, institution, courses, courseAccessDuration, status, catalogs) {
   return getAuthenticatedHttpClient().post(
     endpoint(),
     snakeCaseObject({
@@ -28,6 +28,7 @@ export function postLicense(licenseName, institution, courses, courseAccessDurat
       courses,
       courseAccessDuration,
       status,
+      catalogs,
     }),
   );
 }
