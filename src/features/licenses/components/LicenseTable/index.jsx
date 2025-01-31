@@ -21,9 +21,9 @@ const LicenseTable = ({ data }) => {
     history.push(`/licenses/${licenseId}`);
   };
 
-  const handleEditModal = (id, licenseName, institution, courses, status) => {
+  const handleEditModal = (id, licenseName, institution, courses, status, catalogs) => {
     dispatch(openLicenseModal({
-      id, licenseName, institution, courses, status,
+      id, licenseName, institution, courses, status, catalogs,
     }));
   };
 
