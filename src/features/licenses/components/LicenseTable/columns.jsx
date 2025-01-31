@@ -77,6 +77,7 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
                 row.values.Institution,
                 row.values.Courses,
                 row.values.status,
+                row.original.catalogs,
               );
             }}
           />

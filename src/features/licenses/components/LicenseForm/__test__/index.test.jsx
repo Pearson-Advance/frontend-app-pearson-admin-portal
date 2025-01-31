@@ -121,4 +121,28 @@ describe('LicenseForm component', () => {
     // Ensure that the selected course is displayed
     expect(getByText('master course v1')).toBeInTheDocument();
   });
+
+  test('Edit mode with catalog', () => {
+    const formValues = {
+      licenseName: 'Demo License',
+      institution: '2',
+      courses: [],
+      status: 'active',
+      courseAccessDuration: 180,
+      catalogs: ['123'],
+    };
+
+    const { getByText } = renderWithProviders(
+      <LicenseForm
+        created={false}
+        errors={{}}
+        setFields={() => {}}
+        fields={formValues}
+      />,
+      { preloadedState: mockStore },
+    );
+
+    // Ensure that the selected catalog is displayed
+    expect(getByText('full catalog')).toBeInTheDocument();
+  });
 });

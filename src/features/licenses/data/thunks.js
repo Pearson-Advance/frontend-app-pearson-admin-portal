@@ -102,7 +102,7 @@ export function createLicense(licenseName, institution, courses, courseAccessDur
  * Edit License.
  * @returns {(function(*): Promise<void>)|*}
  */
-export function editLicense(licenseName, licenseId, status, courses) {
+export function editLicense(licenseName, licenseId, status, courses, catalogs) {
   return async (dispatch) => {
     try {
       const response = await updateLicense(
@@ -110,6 +110,7 @@ export function editLicense(licenseName, licenseId, status, courses) {
         licenseId,
         status,
         courses,
+        catalogs,
       );
       dispatch(patchLicenseSuccess(camelCaseObject(response.data)));
     } catch (error) {

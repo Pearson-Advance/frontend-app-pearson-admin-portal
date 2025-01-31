@@ -33,13 +33,14 @@ export function postLicense(licenseName, institution, courses, courseAccessDurat
   );
 }
 
-export function updateLicense(licenseName, licenseId, status, courses) {
+export function updateLicense(licenseName, licenseId, status, courses, catalogs) {
   return getAuthenticatedHttpClient().patch(
     `${endpoint()}${licenseId}/`,
     snakeCaseObject({
       licenseName,
       status,
       courses,
+      catalogs,
     }),
   );
 }

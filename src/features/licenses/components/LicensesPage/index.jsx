@@ -81,6 +81,7 @@ const LicensesPage = () => {
           parseInt(fields.license, 10),
           fields.status,
           fields.courses,
+          fields.catalogs,
         ),
       );
     }
