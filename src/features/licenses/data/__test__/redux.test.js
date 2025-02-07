@@ -55,6 +55,7 @@ describe('Licenses data layer tests', () => {
         purchasedSeats: 1,
         status: 'active',
         licenseOrder: [],
+        licenseType: 'courses',
       },
       {
         courses: [
@@ -73,6 +74,7 @@ describe('Licenses data layer tests', () => {
         purchasedSeats: 2,
         status: 'active',
         licenseOrder: [],
+        licenseType: 'courses',
       }]);
 
     expect(store.getState().licenses.status)
