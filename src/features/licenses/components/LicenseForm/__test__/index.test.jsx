@@ -3,6 +3,7 @@ import { renderWithProviders } from 'test-utils';
 
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import { fireEvent, waitFor } from '@testing-library/react';
+import { LicenseTypes } from 'features/shared/data/constants';
 
 jest.mock('@edx/frontend-platform/logging', () => ({
   logError: jest.fn(),
@@ -103,6 +104,7 @@ describe('LicenseForm component', () => {
       status: 'active',
       courseAccessDuration: 180,
       catalogs: [],
+      licenseType: LicenseTypes.COURSES,
     };
 
     const { getByText, getByDisplayValue } = renderWithProviders(
@@ -119,6 +121,7 @@ describe('LicenseForm component', () => {
     expect(getByDisplayValue('Demo License')).toBeInTheDocument();
 
     // Ensure that the selected course is displayed
+    expect(getByText('Master Courses')).toBeInTheDocument();
     expect(getByText('master course v1')).toBeInTheDocument();
   });
 
@@ -130,6 +133,7 @@ describe('LicenseForm component', () => {
       status: 'active',
       courseAccessDuration: 180,
       catalogs: ['123'],
+      licenseType: LicenseTypes.CATALOG,
     };
 
     const { getByText } = renderWithProviders(
@@ -143,6 +147,7 @@ describe('LicenseForm component', () => {
     );
 
     // Ensure that the selected catalog is displayed
+    expect(getByText('Catalogs')).toBeInTheDocument();
     expect(getByText('full catalog')).toBeInTheDocument();
   });
 });

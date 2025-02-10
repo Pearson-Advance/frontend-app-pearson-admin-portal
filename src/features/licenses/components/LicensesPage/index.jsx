@@ -7,7 +7,7 @@ import {
 } from '@edx/paragon';
 import { LicenseTable } from 'features/licenses/components/LicenseTable';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex } from 'features/shared/data/constants';
+import { TabIndex, LicenseTypes } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import {
@@ -25,6 +25,7 @@ const initialFormValues = {
   status: 'active',
   courseAccessDuration: 180,
   catalogs: [],
+  licenseType: LicenseTypes.COURSES,
 };
 
 const LicensesPage = () => {
@@ -54,6 +55,7 @@ const LicensesPage = () => {
         license: form.license.id,
         institution: form.license.institution,
         catalogs: form.license.catalogs || [],
+        licenseType: form.license.licenseType,
       });
     }
   }, [create, form]);
@@ -70,25 +72,29 @@ const LicensesPage = () => {
 
   const handleSubmit = () => {
     if (create) {
+      const newLicenseData = {
+        licenseName: fields.licenseName,
+        institution: parseInt(fields.institution, 10),
+        courses: fields.courses,
+        courseAccessDuration: fields.courseAccessDuration,
+        status: fields.status,
+        catalogs: fields.catalogs,
+        licenseType: fields.licenseType,
+      };
       dispatch(
-        createLicense(
-          fields.licenseName,
-          parseInt(fields.institution, 10),
-          fields.courses,
-          fields.courseAccessDuration,
-          fields.status,
-          fields.catalogs,
-        ),
+        createLicense(newLicenseData),
       );
     } else {
+      const editData = {
+        licenseName: fields.licenseName,
+        licenseId: parseInt(fields.license, 10),
+        status: fields.status,
+        courses: fields.courses,
+        catalogs: fields.catalogs,
+        licenseType: fields.licenseType,
+      };
       dispatch(
-        editLicense(
-          fields.licenseName,
-          parseInt(fields.license, 10),
-          fields.status,
-          fields.courses,
-          fields.catalogs,
-        ),
+        editLicense(editData),
       );
     }
   };

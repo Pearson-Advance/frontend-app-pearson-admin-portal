@@ -19,29 +19,21 @@ export function getLicenseById(id) {
   return getAuthenticatedHttpClient().get(`${endpoint()}${id}/`);
 }
 
-export function postLicense(licenseName, institution, courses, courseAccessDuration, status, catalogs) {
+export function postLicense(newLicenseData) {
   return getAuthenticatedHttpClient().post(
     endpoint(),
     snakeCaseObject({
-      licenseName,
-      institution: { id: institution },
-      courses,
-      courseAccessDuration,
-      status,
-      catalogs,
+      ...newLicenseData,
+      institution: { id: newLicenseData.institution },
     }),
   );
 }
 
-export function updateLicense(licenseName, licenseId, status, courses, catalogs) {
+export function updateLicense(editData) {
+  const { licenseId } = editData;
   return getAuthenticatedHttpClient().patch(
     `${endpoint()}${licenseId}/`,
-    snakeCaseObject({
-      licenseName,
-      status,
-      courses,
-      catalogs,
-    }),
+    snakeCaseObject(editData),
   );
 }
 
