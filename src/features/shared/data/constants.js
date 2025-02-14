@@ -55,3 +55,13 @@ export const DataReportTab = {
  * @number
  */
 export const maxLabelLength = 95;
+
+/**
+ * Enum for license types.
+ * @readonly
+ * @enum {string}
+ */
+export const LicenseTypes = {
+  COURSES: 'courses',
+  CATALOG: 'catalog',
+};

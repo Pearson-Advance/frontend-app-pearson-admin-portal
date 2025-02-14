@@ -19,7 +19,8 @@ Factory.define('license')
   .sequence('purchasedSeats', (i) => i)
   .sequence('courseAccessDuration', (i) => i * 10)
   .attr('status', 'active')
-  .attr('licenseOrder', () => []);
+  .attr('licenseOrder', () => [])
+  .attr('licenseType', 'courses');
 
 Factory.define('licenseOrder')
   .sequence('id')

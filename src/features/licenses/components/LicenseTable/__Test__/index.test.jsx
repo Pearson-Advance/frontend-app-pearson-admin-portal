@@ -27,6 +27,9 @@ describe('Unit tests for Licenses data table.', () => {
           data,
           pageSize: 10,
           pageIndex: 0,
+          catalogs: {
+            data: [],
+          },
         },
       })}
       >
@@ -41,5 +44,30 @@ describe('Unit tests for Licenses data table.', () => {
     expect(component.container).toHaveTextContent('course-v1:PX+02+2021');
     expect(component.container).not.toHaveTextContent('No results found');
     expect(tableRows).toHaveLength(3);
+  });
+
+  test('render LicensesTable with catalog', () => {
+    const data = Factory.build('license', { licenseType: 'catalog', catalogs: ['catalog1'] });
+    const component = render(
+      <Provider store={initializeStore({
+        licenses: {
+          status: RequestStatus.IN_PROGRESS,
+          data: [data],
+          pageSize: 10,
+          pageIndex: 0,
+          catalogs: {
+            data: [{
+              value: 'catalog1',
+              label: 'demo catalog',
+            }],
+          },
+        },
+      })}
+      >
+        <LicenseTable data={[data]} />
+      </Provider>,
+    );
+
+    expect(component.container).toHaveTextContent('demo catalog');
   });
 });

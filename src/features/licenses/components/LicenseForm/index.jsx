@@ -14,7 +14,7 @@ import Select, { components } from 'react-select';
 import { getConfig } from '@edx/frontend-platform';
 import { WarningFilled } from '@edx/paragon/icons';
 
-import { fetchEligibleCourses, fetchCatalogs } from 'features/licenses/data';
+import { fetchEligibleCourses } from 'features/licenses/data';
 import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
 import { activeInstitutions } from 'features/institutions/data/selector';
 
@@ -114,10 +114,6 @@ export const LicenseForm = ({
 
   useEffect(() => {
     handleFetchEligibleCourses();
-
-    if (showCatalogSelector) {
-      dispatch(fetchCatalogs());
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fields.institution, created]);
 

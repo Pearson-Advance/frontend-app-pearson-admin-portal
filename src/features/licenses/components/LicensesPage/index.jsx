@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getConfig } from '@edx/frontend-platform';
 import { Add } from '@edx/paragon/icons';
 import {
   Container, ActionRow, Button,
@@ -10,7 +11,7 @@ import { TabIndex } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import {
-  fetchLicenses, createLicense, editLicense,
+  fetchLicenses, createLicense, editLicense, fetchCatalogs,
 } from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
 import { has } from 'lodash';
@@ -33,11 +34,16 @@ const LicensesPage = () => {
   const { data, form } = useSelector(state => state.licenses);
   const create = !has(form.license, 'id');
 
+  const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
+
   useEffect(() => {
     dispatch(changeTab(TabIndex.LICENSES));
     dispatch(fetchLicenses(selectedInstitution));
     dispatch(fetchInstitutions());
-  }, [dispatch, selectedInstitution]);
+    if (showCatalogSelector) {
+      dispatch(fetchCatalogs());
+    }
+  }, [dispatch, selectedInstitution, showCatalogSelector]);
 
   useEffect(() => {
     if (!create) {
