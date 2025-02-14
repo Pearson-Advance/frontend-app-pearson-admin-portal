@@ -15,7 +15,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { WarningFilled } from '@edx/paragon/icons';
 
 import { fetchEligibleCourses } from 'features/licenses/data';
-import { RequestStatus, maxLabelLength } from 'features/shared/data/constants';
+import { RequestStatus, maxLabelLength, LicenseTypes } from 'features/shared/data/constants';
 import { activeInstitutions } from 'features/institutions/data/selector';
 
 import 'features/licenses/components/LicenseForm/index.scss';
@@ -78,11 +78,11 @@ export const LicenseForm = ({
     const resetFields = {
       courses: () => {
         setSelectedCatalogs([]);
-        setFields({ ...fields, catalogs: [] });
+        setFields({ ...fields, catalogs: [], licenseType: LicenseTypes.COURSES });
       },
       catalogs: () => {
         setSelectedCourses([]);
-        setFields({ ...fields, courses: [] });
+        setFields({ ...fields, courses: [], licenseType: LicenseTypes.CATALOG });
       },
     };
 
@@ -169,51 +169,57 @@ export const LicenseForm = ({
         && (
           <>
             {
-            (created && showCatalogSelector) && (
-              <Form.Group>
-                <Form.RadioSet
-                  name="option-selector"
-                  onChange={(e) => handleOptionChange(e.target.value)}
-                  defaultValue={optionSelection}
-                  isInline
-                >
-                  <Form.Radio value="courses">Master Courses</Form.Radio>
-                  <Form.Radio value="catalogs">Catalogs</Form.Radio>
-                </Form.RadioSet>
-              </Form.Group>
-            )
+              (created && showCatalogSelector) && (
+                <Form.Group>
+                  <Form.RadioSet
+                    name="option-selector"
+                    onChange={(e) => handleOptionChange(e.target.value)}
+                    defaultValue={optionSelection}
+                    isInline
+                  >
+                    <Form.Radio value="courses">Master Courses</Form.Radio>
+                    <Form.Radio value="catalogs">Catalogs</Form.Radio>
+                  </Form.RadioSet>
+                </Form.Group>
+              )
             }
             <Form.Group isInvalid={has(errors, 'courses') && has(errors.courses, 'id')} className="mb-3 mr-2">
               {courseStatus !== RequestStatus.IN_PROGRESS || catalogStatus !== RequestStatus.IN_PROGRESS
                 ? (
                   <>
+                    {!created && fields.licenseType === LicenseTypes.COURSES && (
+                      <Form.Label>Master Courses</Form.Label>
+                    )}
                     {(selectedCourses.length > 0 || optionSelection === selectorOptions.courses) && (
-                    <Select
-                      isMulti
-                      options={eligibleCourses}
-                      value={selectedCourses}
-                      name="courses"
-                      className="basic-multi-select mb-3"
-                      placeholder="Select Master Courses..."
-                      maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
-                      onChange={handleSelectCourseChange}
-                      components={{ MultiValueContainer: CustomMultiValue }}
-                    />
+                      <Select
+                        isMulti
+                        options={eligibleCourses}
+                        value={selectedCourses}
+                        name="courses"
+                        className="basic-multi-select mb-3"
+                        placeholder="Select Master Courses..."
+                        maxMenuHeight={licenseBeingEdited.id ? 150 : 200}
+                        onChange={handleSelectCourseChange}
+                        components={{ MultiValueContainer: CustomMultiValue }}
+                      />
+                    )}
+                    {!created && fields.licenseType === LicenseTypes.CATALOG && (
+                      <Form.Label>Catalogs</Form.Label>
                     )}
                     {(selectedCatalogs.length > 0 || optionSelection === selectorOptions.catalogs) && (
-                    <Select
-                      isMulti
-                      options={catalogsList}
-                      value={selectedCatalogs}
-                      name="catalogs"
-                      className="basic-multi-select"
-                      placeholder="Select Catalog"
-                      onChange={option => setFields({
-                        ...fields,
-                        catalogs: option.map(catalog => (catalog.value)),
-                      })}
-                      components={{ MultiValueContainer: CustomMultiValue }}
-                    />
+                      <Select
+                        isMulti
+                        options={catalogsList}
+                        value={selectedCatalogs}
+                        name="catalogs"
+                        className="basic-multi-select"
+                        placeholder="Select Catalog"
+                        onChange={option => setFields({
+                          ...fields,
+                          catalogs: option.map(catalog => (catalog.value)),
+                        })}
+                        components={{ MultiValueContainer: CustomMultiValue }}
+                      />
                     )}
                   </>
                 )
@@ -265,6 +271,7 @@ LicenseForm.propTypes = {
     courseAccessDuration: PropTypes.number,
     status: PropTypes.string,
     catalogs: PropTypes.instanceOf(Array),
+    licenseType: PropTypes.string,
   }).isRequired,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({

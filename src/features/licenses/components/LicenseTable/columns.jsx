@@ -91,14 +91,17 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
             alt="Edit"
             iconAs={Edit}
             onClick={() => {
-              handleEditModal(
-                row.values.id,
-                row.values.licenseName,
-                row.values.Institution,
-                row.values.Courses,
-                row.values.status,
-                row.original.catalogs,
-              );
+              const editData = {
+                id: row.values.id,
+                licenseName: row.values.licenseName,
+                institution: row.values.Institution,
+                courses: row.values.Courses,
+                status: row.values.status,
+                catalogs: row.original.catalogs,
+                licenseType: row.original.licenseType,
+              };
+
+              handleEditModal(editData);
             }}
           />
         </OverlayTrigger>

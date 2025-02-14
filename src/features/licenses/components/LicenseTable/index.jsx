@@ -21,10 +21,8 @@ const LicenseTable = ({ data }) => {
     history.push(`/licenses/${licenseId}`);
   };
 
-  const handleEditModal = (id, licenseName, institution, courses, status, catalogs) => {
-    dispatch(openLicenseModal({
-      id, licenseName, institution, courses, status, catalogs,
-    }));
+  const handleEditModal = (editData) => {
+    dispatch(openLicenseModal(editData));
   };
 
   const columns = getColumns({ handleShowDetails, handleEditModal });
