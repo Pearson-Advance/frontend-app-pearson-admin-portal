@@ -42,7 +42,11 @@ export const Modal = (props) => {
           <Button variant="tertiary" onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handlePrimaryAction} disabled={disablePrimaryAction}>
+          <Button
+            variant="primary"
+            onClick={handlePrimaryAction}
+            disabled={disablePrimaryAction}
+          >
             Save
           </Button>
         </ActionRow>
