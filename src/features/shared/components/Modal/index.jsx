@@ -15,7 +15,7 @@ export const Modal = (props) => {
     handlePrimaryAction,
     variant,
     size,
-    disablePrimaryAction,
+    isDisabledPrimaryAction,
   } = props;
 
   return (
@@ -45,7 +45,7 @@ export const Modal = (props) => {
           <Button
             variant="primary"
             onClick={handlePrimaryAction}
-            disabled={disablePrimaryAction}
+            disabled={isDisabledPrimaryAction}
           >
             Save
           </Button>
@@ -63,12 +63,12 @@ Modal.propTypes = {
   handlePrimaryAction: PropTypes.func.isRequired,
   variant: PropTypes.string,
   size: PropTypes.string,
-  disablePrimaryAction: PropTypes.bool,
+  isDisabledPrimaryAction: PropTypes.bool,
 };
 
 Modal.defaultProps = {
   children: null,
   variant: 'default',
   size: 'md',
-  disablePrimaryAction: false,
+  isDisabledPrimaryAction: false,
 };

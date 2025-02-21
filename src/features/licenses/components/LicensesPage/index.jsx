@@ -33,7 +33,7 @@ const LicensesPage = () => {
   const [fields, setFields] = useState(initialFormValues);
   const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const { data, form } = useSelector(state => state.licenses);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const create = !has(form.license, 'id');
 
   const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
@@ -72,9 +72,9 @@ const LicensesPage = () => {
   };
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    setIsRequestInProgress(true);
 
-    if (isLoading) {
+    if (isRequestInProgress) {
       return null;
     }
 
@@ -105,8 +105,7 @@ const LicensesPage = () => {
       );
     }
 
-    setIsLoading(false);
-    return null;
+    return setIsRequestInProgress(false);
   };
 
   return (
@@ -117,7 +116,7 @@ const LicensesPage = () => {
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
         size="lg"
-        disablePrimaryAction={isLoading}
+        isDisabledPrimaryAction={isRequestInProgress}
       >
         <LicenseForm
           created={create}
