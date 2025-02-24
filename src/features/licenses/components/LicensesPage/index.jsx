@@ -33,6 +33,7 @@ const LicensesPage = () => {
   const [fields, setFields] = useState(initialFormValues);
   const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const { data, form } = useSelector(state => state.licenses);
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const create = !has(form.license, 'id');
 
   const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
@@ -70,7 +71,13 @@ const LicensesPage = () => {
     dispatch(openLicenseModal());
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsRequestInProgress(true);
+
+    if (isRequestInProgress) {
+      return null;
+    }
+
     if (create) {
       const newLicenseData = {
         licenseName: fields.licenseName,
@@ -81,7 +88,7 @@ const LicensesPage = () => {
         catalogs: fields.catalogs,
         licenseType: fields.licenseType,
       };
-      dispatch(
+      await dispatch(
         createLicense(newLicenseData),
       );
     } else {
@@ -93,10 +100,12 @@ const LicensesPage = () => {
         catalogs: fields.catalogs,
         licenseType: fields.licenseType,
       };
-      dispatch(
+      await dispatch(
         editLicense(editData),
       );
     }
+
+    return setIsRequestInProgress(false);
   };
 
   return (
@@ -107,6 +116,7 @@ const LicensesPage = () => {
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
         size="lg"
+        isDisabledPrimaryAction={isRequestInProgress}
       >
         <LicenseForm
           created={create}
