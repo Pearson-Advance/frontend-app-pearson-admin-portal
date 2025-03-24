@@ -12,6 +12,7 @@ jest.mock('@edx/frontend-platform/logging', () => ({
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
     SHOW_CATALOG_SELECTOR: true,
+    MULTI_CATALOG_SELECTOR: true,
   })),
 }));
 
@@ -42,6 +43,10 @@ const mockStore = {
           value: '123',
           label: 'full catalog',
         },
+        {
+          value: '111',
+          label: 'demo catalog',
+        },
       ],
     },
   },
@@ -62,7 +67,7 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created
         errors={{}}
-        setFields={() => {}}
+        setFields={() => { }}
         fields={initialFormValues}
       />,
       { preloadedState: mockStore },
@@ -111,7 +116,7 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created={false}
         errors={{}}
-        setFields={() => {}}
+        setFields={() => { }}
         fields={formValues}
       />,
       { preloadedState: mockStore },
@@ -140,7 +145,7 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created={false}
         errors={{}}
-        setFields={() => {}}
+        setFields={() => { }}
         fields={formValues}
       />,
       { preloadedState: mockStore },
@@ -149,5 +154,32 @@ describe('LicenseForm component', () => {
     // Ensure that the selected catalog is displayed
     expect(getByText('Catalogs')).toBeInTheDocument();
     expect(getByText('full catalog')).toBeInTheDocument();
+  });
+
+  test('Edit mode with multipe catalogs', () => {
+    const formValues = {
+      licenseName: 'Demo License',
+      institution: '2',
+      courses: [],
+      status: 'active',
+      courseAccessDuration: 180,
+      catalogs: ['123', '111'],
+      licenseType: LicenseTypes.CATALOG,
+    };
+
+    const { getByText } = renderWithProviders(
+      <LicenseForm
+        created={false}
+        errors={{}}
+        setFields={() => { }}
+        fields={formValues}
+      />,
+      { preloadedState: mockStore },
+    );
+
+    // Ensure that the selected catalog is displayed
+    expect(getByText('Catalogs')).toBeInTheDocument();
+    expect(getByText('full catalog')).toBeInTheDocument();
+    expect(getByText('demo catalog')).toBeInTheDocument();
   });
 });
