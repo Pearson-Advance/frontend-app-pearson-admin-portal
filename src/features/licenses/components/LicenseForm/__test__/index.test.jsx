@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderWithProviders } from 'test-utils';
+import { getConfig } from '@edx/frontend-platform';
 
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import { fireEvent, waitFor } from '@testing-library/react';
@@ -12,9 +13,27 @@ jest.mock('@edx/frontend-platform/logging', () => ({
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(() => ({
     SHOW_CATALOG_SELECTOR: true,
-    MULTI_CATALOG_SELECTOR: true,
   })),
 }));
+
+jest.mock('react-select', () => function reactSelect({ options, currentValue, onChange }) {
+  function handleChange(event) {
+    const currentOption = options.find(
+      (option) => option.value === event.currentTarget.value,
+    );
+    onChange(currentOption);
+  }
+
+  return (
+    <select data-testid="select" value={currentValue} onChange={handleChange}>
+      {options.map(({ label, value }) => (
+        <option key={value} value={value}>
+          {label}
+        </option>
+      ))}
+    </select>
+  );
+});
 
 const mockStore = {
   institutions: {
@@ -63,11 +82,11 @@ const initialFormValues = {
 
 describe('LicenseForm component', () => {
   test('Should render form fields', async () => {
-    const { getByText, queryByText } = renderWithProviders(
+    const { getByText } = renderWithProviders(
       <LicenseForm
         created
         errors={{}}
-        setFields={() => { }}
+        setFields={() => {}}
         fields={initialFormValues}
       />,
       { preloadedState: mockStore },
@@ -84,7 +103,7 @@ describe('LicenseForm component', () => {
 
     await waitFor(() => {
       expect(institutionOption).toBeInTheDocument();
-      expect(getByText('Select Master Courses...')).toBeInTheDocument();
+      expect(getByText('master course v1')).toBeInTheDocument();
     });
 
     expect(getByText('Course access duration')).toBeInTheDocument();
@@ -97,8 +116,7 @@ describe('LicenseForm component', () => {
     expect(courseSelector).toBeInTheDocument();
 
     fireEvent.click(catalogSelector);
-    expect(getByText('Select Catalog')).toBeInTheDocument();
-    expect(queryByText('Select Master Courses...')).not.toBeInTheDocument();
+    expect(getByText('full catalog')).toBeInTheDocument();
   });
 
   test('Edit mode', () => {
@@ -116,7 +134,7 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created={false}
         errors={{}}
-        setFields={() => { }}
+        setFields={() => {}}
         fields={formValues}
       />,
       { preloadedState: mockStore },
@@ -145,7 +163,7 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created={false}
         errors={{}}
-        setFields={() => { }}
+        setFields={() => {}}
         fields={formValues}
       />,
       { preloadedState: mockStore },
@@ -156,7 +174,50 @@ describe('LicenseForm component', () => {
     expect(getByText('full catalog')).toBeInTheDocument();
   });
 
-  test('Edit mode with multipe catalogs', () => {
+  test('Disable license name field according to catalog selected', async () => {
+    const { getByText, getByTestId, getByRole } = renderWithProviders(
+      <LicenseForm
+        created
+        errors={{}}
+        setFields={() => {}}
+        fields={initialFormValues}
+      />,
+      { preloadedState: mockStore },
+    );
+
+    const institutionSelector = getByText('Institution');
+    const institutionOption = getByText('Institution 1');
+    const licenseNameField = getByRole('textbox', { name: 'License Name' });
+
+    expect(institutionSelector).toBeInTheDocument();
+    expect(institutionOption).toBeInTheDocument();
+
+    fireEvent.click(institutionSelector);
+
+    await waitFor(() => {
+      expect(institutionOption).toBeInTheDocument();
+    });
+
+    const catalogRadio = getByText('Catalogs');
+
+    expect(catalogRadio).toBeInTheDocument();
+
+    await waitFor(() => {
+      fireEvent.click(catalogRadio);
+    });
+
+    fireEvent.change(getByTestId('select'), { target: { value: '123' } });
+
+    expect(getByText('full catalog')).toBeInTheDocument();
+    expect(licenseNameField).toBeDisabled();
+  });
+
+  test('Multiple catalog selector', async () => {
+    getConfig.mockImplementation(() => ({
+      MULTI_CATALOG_SELECTOR: true,
+      SHOW_CATALOG_SELECTOR: true,
+    }));
+
     const formValues = {
       licenseName: 'Demo License',
       institution: '2',
@@ -171,13 +232,12 @@ describe('LicenseForm component', () => {
       <LicenseForm
         created={false}
         errors={{}}
-        setFields={() => { }}
+        setFields={() => {}}
         fields={formValues}
       />,
       { preloadedState: mockStore },
     );
 
-    // Ensure that the selected catalog is displayed
     expect(getByText('Catalogs')).toBeInTheDocument();
     expect(getByText('full catalog')).toBeInTheDocument();
     expect(getByText('demo catalog')).toBeInTheDocument();

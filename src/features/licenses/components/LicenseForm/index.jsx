@@ -66,10 +66,11 @@ export const LicenseForm = ({
   const [optionSelection, setOptionSelection] = useState(created ? selectorOptions.courses : '');
 
   const showCatalogSelector = getConfig().SHOW_CATALOG_SELECTOR || false;
-  const isMultiCatalogSel = getConfig().MULTI_CATALOG_SELECTOR || false;
+  const isMultiCatalogSelector = getConfig().MULTI_CATALOG_SELECTOR || false;
 
-  const disableLicenseNameIn = (created && !isMultiCatalogSel)
-  && (selectedCatalogs.length > 0 || optionSelection === selectorOptions.catalogs);
+  const hasCatalogSelected = selectedCatalogs.length > 0 || optionSelection === selectorOptions.catalogs;
+  const disableLicenseNameInput = (created && !isMultiCatalogSelector) && hasCatalogSelected;
+  const emptyLicenseName = (!isMultiCatalogSelector && { licenseName: '' });
 
   const handleInputChange = (e) => {
     setFields({
@@ -86,7 +87,7 @@ export const LicenseForm = ({
           ...fields,
           catalogs: [],
           licenseType: LicenseTypes.COURSES,
-          ...(!isMultiCatalogSel && { licenseName: '' }),
+          emptyLicenseName,
         });
       },
       catalogs: () => {
@@ -95,7 +96,7 @@ export const LicenseForm = ({
           ...fields,
           courses: [],
           licenseType: LicenseTypes.CATALOG,
-          ...(!isMultiCatalogSel && { licenseName: '' }),
+          emptyLicenseName,
         });
       },
     };
@@ -140,14 +141,14 @@ export const LicenseForm = ({
   }, [fields.courses, fields.catalogs, eligibleCourses, catalogsList]);
 
   useEffect(() => {
-    if (!isMultiCatalogSel && selectedCatalogs.length > 0 && created) {
+    if (!isMultiCatalogSelector && selectedCatalogs.length > 0 && created) {
       setFields({
         ...fields,
         licenseName: selectedCatalogs[0].label,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCatalogs, created, isMultiCatalogSel]);
+  }, [selectedCatalogs, created, isMultiCatalogSelector]);
 
   return (
     <>
@@ -168,7 +169,7 @@ export const LicenseForm = ({
           maxLength="255"
           value={fields.licenseName}
           onChange={handleInputChange}
-          disabled={disableLicenseNameIn}
+          disabled={disableLicenseNameInput}
         />
         {errors.licenseName && <Form.Control.Feedback type="invalid">{errors.licenseName}</Form.Control.Feedback>}
       </Form.Group>
@@ -231,9 +232,9 @@ export const LicenseForm = ({
                     {!created && fields.licenseType === LicenseTypes.CATALOG && (
                       <Form.Label>Catalogs</Form.Label>
                     )}
-                    {((selectedCatalogs.length > 0 || optionSelection === selectorOptions.catalogs)) && (
+                    {hasCatalogSelected && (
                       <Select
-                        isMulti={isMultiCatalogSel}
+                        isMulti={isMultiCatalogSelector}
                         options={catalogsList}
                         value={selectedCatalogs}
                         name="catalogs"
@@ -241,7 +242,7 @@ export const LicenseForm = ({
                         placeholder="Select Catalog"
                         onChange={option => setFields({
                           ...fields,
-                          catalogs: isMultiCatalogSel ? option.map(catalog => (catalog.value)) : [option.value],
+                          catalogs: isMultiCatalogSelector ? option.map(catalog => (catalog.value)) : [option.value],
                         })}
                         components={{ MultiValueContainer: CustomMultiValue }}
                       />
