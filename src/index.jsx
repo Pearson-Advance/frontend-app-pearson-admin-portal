@@ -22,7 +22,7 @@ import { DataReportPage } from './features/dataReport/components/DataReportPage'
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={store}>
-      <Header />
+      <Header appID="header-component-admin" />
       <GlobalFilters />
       <MenuBar />
       <Switch>
