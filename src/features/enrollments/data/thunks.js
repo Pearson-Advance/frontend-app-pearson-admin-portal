@@ -4,11 +4,13 @@ import {
   getStudentEnrollments,
   getExportStudentEnrollments,
   handleEnrollments,
+  extendEnrollment,
 } from './api';
 import {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
+  updateEnrollment,
 } from './slices';
 
 /**
@@ -75,8 +77,46 @@ function updateEnrollmentAction(data = null, filters = null, courseId = null) {
   };
 }
 
+/**
+ * Dispatches an async action to extend a student's enrollment.
+ * Handles errors gracefully and optionally triggers a callback on success.
+ *
+ * @param {FormData|null} data - Form data with enrollment update (e.g., new date).
+ * @param {string|null} classId - The ID of the class to update enrollment for.
+ * @param {Function|null} callback - Optional callback to execute after success.
+ * @returns {Function} A thunk function for Redux dispatch.
+ */
+function updateEnrollmentDate(data = null, classId = null, callback = null) {
+  return async (dispatch) => {
+    try {
+      await extendEnrollment(data, classId);
+      fetchStudentEnrollments();
+
+      if (typeof callback === 'function') {
+        callback();
+      }
+    } catch (error) {
+      let errorMessage = 'An unknown error occurred.';
+
+      const parsed = JSON.parse(error?.customAttributes?.httpErrorResponseData || '{}');
+      const flattened = Object.values(parsed).flat();
+
+      if (flattened.length) {
+        errorMessage = flattened.join(', ');
+        logError(error);
+        dispatch(updateEnrollment({ errorMessage }));
+        return;
+      }
+
+      logError(error);
+      dispatch(updateEnrollment({ errorMessage }));
+    }
+  };
+}
+
 export {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
+  updateEnrollmentDate,
 };

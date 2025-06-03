@@ -16,6 +16,9 @@ const studentEnrollmentsSlice = createSlice({
       institutions: null,
       managedMasterCourses: null,
     },
+    updateEnrollmentStatus: {
+      errorMessage: '',
+    },
   },
   reducers: {
     fetchStudentEnrollmentsRequest: (state) => {
@@ -28,6 +31,9 @@ const studentEnrollmentsSlice = createSlice({
     fetchStudentEnrollmentsFailed: (state) => {
       state.status = RequestStatus.FAILED;
     },
+    updateEnrollment: (state, { payload }) => {
+      state.updateEnrollmentStatus.errorMessage = payload.errorMessage || null;
+    },
   },
 });
 
@@ -35,6 +41,7 @@ export const {
   fetchStudentEnrollmentsRequest,
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
+  updateEnrollment,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

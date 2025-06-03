@@ -39,8 +39,18 @@ function handleEnrollments(data, courseId) {
   );
 }
 
+function extendEnrollment(data) {
+  const EXTEND_ENROLLMENT_API_URL = `${getConfig().COURSE_OPERATIONS_API_V2_BASE_URL}/extend-enrollment/`;
+
+  return getAuthenticatedHttpClient().post(
+    EXTEND_ENROLLMENT_API_URL,
+    data,
+  );
+}
+
 export {
   getStudentEnrollments,
   getExportStudentEnrollments,
   handleEnrollments,
+  extendEnrollment,
 };
