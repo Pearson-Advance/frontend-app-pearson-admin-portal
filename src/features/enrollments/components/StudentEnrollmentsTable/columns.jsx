@@ -1,8 +1,14 @@
 /* eslint-disable react/prop-types */
+import React from 'react';
+import {
+  Badge,
+  Dropdown,
+  Icon,
+  IconButton,
+} from '@edx/paragon';
+import { MoreHoriz } from '@edx/paragon/icons';
 
 import { EnrollmentStatus } from 'features/shared/data/constants';
-import { Badge, Button } from '@edx/paragon';
-import React from 'react';
 
 const getColumns = props => [
   {
@@ -69,32 +75,67 @@ const getColumns = props => [
   {
     Header: 'Action',
     accessor: 'action',
+    cellClassName: 'dropdownColumn',
     disableSortBy: true,
     Cell: ({ row }) => {
       const value = row.values;
-      let variant = 'primary';
-      let action = 'Enable';
 
-      if (value.status === EnrollmentStatus.EXPIRED) {
-        return null;
-      }
+      const optionText = {
+        [EnrollmentStatus.ACTIVE]: {
+          text: 'Disable',
+        },
+        [EnrollmentStatus.INACTIVE]: {
+          text: 'Enable',
+        },
+        [EnrollmentStatus.PENDING]: {
+          text: 'Revoke',
+        },
+        [EnrollmentStatus.EXPIRED]: {
+          text: 'Extend',
+        },
+      };
 
-      switch (value.status) {
-        case EnrollmentStatus.ACTIVE:
-          action = 'Disable';
-          break;
-        case EnrollmentStatus.PENDING:
-          variant = 'danger';
-          action = 'Revoke';
-          break;
-        case EnrollmentStatus.INACTIVE:
-          action = 'Enable';
-          break;
-        default:
-          variant = 'primary';
-          action = 'Enable';
-      }
-      return <Button variant={variant} onClick={() => { props.open(); props.setRow(value); }}>{action}</Button>;
+      const columnText = optionText[value.status]?.text || '';
+
+      return (
+        <Dropdown className="dropdowntpz">
+          <Dropdown.Toggle
+            id="dropdown-toggle-with-iconbutton"
+            as={IconButton}
+            src={MoreHoriz}
+            iconAs={Icon}
+            variant="primary"
+            data-testid="droprown-action"
+            menuAlign="right"
+            alt="menu for actions"
+          />
+          <Dropdown.Menu>
+            <Dropdown.Item
+              className="text-truncate text-decoration-none custom-text-black"
+              onClick={() => {
+                props.open();
+                props.setRow(value);
+              }}
+            >
+              {columnText}
+            </Dropdown.Item>
+
+            {
+              value.status === EnrollmentStatus.ACTIVE && (
+                <Dropdown.Item
+                  className="text-truncate text-decoration-none custom-text-black"
+                  onClick={() => {
+                    props.setRow({ ...value, status: EnrollmentStatus.EXPIRED });
+                    props.open();
+                  }}
+                >
+                  {optionText[EnrollmentStatus.EXPIRED].text}
+                </Dropdown.Item>
+              )
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+      );
     },
   },
 ];

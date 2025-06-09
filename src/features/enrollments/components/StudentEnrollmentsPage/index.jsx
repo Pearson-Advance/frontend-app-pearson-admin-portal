@@ -1,18 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from '@edx/paragon/dist/Container';
-import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
-import {
-  fetchStudentEnrollments,
-  fetchExportStudentEnrollments,
-  updateEnrollmentAction,
-} from 'features/enrollments/data';
-import { fetchInstitutions } from 'features/institutions/data';
-import { fetchEligibleCourses } from 'features/licenses/data';
-import { allInstitutionsForSelect } from 'features/institutions/data/selector';
-import { managedCoursesForSelect } from 'features/licenses/data/selectors';
-import { changeTab } from 'features/shared/data/slices';
-import { TabIndex } from 'features/shared/data/constants';
 import {
   Pagination,
   useToggle,
@@ -20,9 +8,31 @@ import {
   ActionRow,
   Button,
 } from '@edx/paragon';
+
+import {
+  fetchStudentEnrollments,
+  fetchExportStudentEnrollments,
+  updateEnrollmentAction,
+  updateEnrollmentDate,
+} from 'features/enrollments/data';
+import { fetchInstitutions } from 'features/institutions/data';
+import { fetchEligibleCourses } from 'features/licenses/data';
+
+import { allInstitutionsForSelect } from 'features/institutions/data/selector';
+import { managedCoursesForSelect } from 'features/licenses/data/selectors';
+
+import { changeTab } from 'features/shared/data/slices';
+import { updateEnrollment } from 'features/enrollments/data/slices';
+
 import { getOrdering } from 'features/shared/data/utils';
+import { TabIndex, EnrollmentStatus } from 'features/shared/data/constants';
+
+import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
+import ModalBody from 'features/enrollments/components/StudentEnrollmentsPage/components/ModalBody';
 import { Filters } from '../Filters';
+
+import './index.scss';
 
 const initialFiltersState = {
   institution: null,
@@ -34,39 +44,46 @@ const initialFiltersState = {
 
 const StudentEnrollmentsPage = () => {
   const dispatch = useDispatch();
+  const error = useSelector((state) => state.enrollments.updateEnrollmentStatus.errorMessage);
   const requestResponse = useSelector(state => state.enrollments.requestResponse);
   const sortBy = useSelector(state => state.page.dataTable.sortBy);
   const pageTab = useSelector(state => state.page.tab);
-  const [filters, setFilters] = useState(initialFiltersState);
-  const [isFilterApplied, setIsFilterApplied] = useState(true);
   const institutions = useSelector(allInstitutionsForSelect);
   const eligibleCourses = useSelector(managedCoursesForSelect);
+
+  const [filters, setFilters] = useState(initialFiltersState);
+  const [isFilterApplied, setIsFilterApplied] = useState(true);
   const [isOpen, open, close] = useToggle(false);
   const [selectedRow, setRow] = useState({});
+  const [extendDate, setExtendDate] = useState('');
 
   const enrollmentData = new FormData();
   enrollmentData.append('identifiers', selectedRow.learnerEmail);
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), [open]);
 
-  let status = '';
+  const statusMap = {
+    [EnrollmentStatus.PENDING]: { status: 'revoked', action: 'unenroll' },
+    [EnrollmentStatus.ACTIVE]: { status: 'unenrolled', action: 'unenroll' },
+    [EnrollmentStatus.INACTIVE]: { status: 'enrolled', action: 'enroll' },
+    [EnrollmentStatus.EXPIRED]: { status: 'expired', action: 'extend' },
+  };
 
-  switch (selectedRow.status) {
-    case 'Pending':
-      status = 'revoked';
-      enrollmentData.append('action', 'unenroll');
-      break;
-    case 'Active':
-      status = 'unenrolled';
-      enrollmentData.append('action', 'unenroll');
-      break;
-    case 'Inactive':
-      status = 'enrolled';
-      enrollmentData.append('action', 'enroll');
-      break;
-    default:
-      status = '';
+  const entry = statusMap[selectedRow.status] || { status: '' };
+  const { status } = entry;
+
+  if (entry.action) {
+    enrollmentData.append('action', entry.action);
   }
+
+  const isExtendAction = enrollmentData.get('action') === 'extend';
+  const isRevoked = status === 'revoked';
+
+  const modalTitle = isExtendAction
+    ? 'New expiration date'
+    : `Are you sure you want the ${
+      isRevoked ? "learner's enrollment to be" : 'learner to be'
+    } ${status}?`;
 
   const handleCleanFilters = () => {
     setFilters(initialFiltersState);
@@ -97,7 +114,35 @@ const StudentEnrollmentsPage = () => {
     }));
   };
 
+  const handleReset = () => {
+    close();
+    dispatch(updateEnrollment({ errorMessage: '' }));
+
+    if (extendDate) {
+      setExtendDate('');
+    }
+  };
+
   const handleAction = () => {
+    if (isExtendAction) {
+      if (!extendDate || Number.isNaN(Date.parse(extendDate))) {
+        return;
+      }
+
+      const formattedDate = new Date(extendDate).toISOString();
+
+      enrollmentData.append('date', formattedDate);
+      enrollmentData.append('student_email', selectedRow.learnerEmail);
+      enrollmentData.append('class_id', selectedRow.ccxId);
+
+      dispatch(updateEnrollmentDate(enrollmentData, selectedRow.ccxId, handleReset));
+      dispatch(fetchStudentEnrollments({
+        ...filters,
+        ordering: getOrdering(sortBy),
+      }));
+      return;
+    }
+
     dispatch(
       updateEnrollmentAction(
         enrollmentData,
@@ -122,6 +167,13 @@ const StudentEnrollmentsPage = () => {
     dispatch(fetchInstitutions());
     dispatch(fetchEligibleCourses());
   }, [dispatch, sortBy, filters, pageTab]);
+
+  const modalFooter = (
+    <ActionRow>
+      <Button variant="tertiary" onClick={handleReset}>Cancel</Button>
+      <Button variant="primary" onClick={handleAction}>Submit</Button>
+    </ActionRow>
+  );
 
   return (
     <Container>
@@ -149,21 +201,20 @@ const StudentEnrollmentsPage = () => {
         onPageSelect={handlePagination}
       />
       <AlertModal
-        title={`Are you sure you want the ${status === 'revoked' ? 'learner\'s enrollment to be' : 'learner to be'} ${status}?`}
+        title={modalTitle}
         isOpen={isOpen}
-        onClose={close}
-        footerNode={(
-          <ActionRow>
-            <Button variant="tertiary" onClick={close}>cancel</Button>
-            <Button variant="primary" onClick={handleAction}>
-              Submit
-            </Button>
-          </ActionRow>
-        )}
+        onClose={handleReset}
+        footerNode={modalFooter}
+        className={isExtendAction ? 'hidden-overflow' : ''}
       >
-        <p>
-          Learner with email <b>{selectedRow.learnerEmail}</b> will be <b>{status}</b> {status === 'enrolled' ? 'to' : 'from'} <b>{selectedRow.ccxName}</b> course.
-        </p>
+        <ModalBody
+          isExtendAction={isExtendAction}
+          extendDate={extendDate}
+          onDateChange={setExtendDate}
+          error={error}
+          selectedRow={selectedRow}
+          status={status}
+        />
       </AlertModal>
     </Container>
   );
