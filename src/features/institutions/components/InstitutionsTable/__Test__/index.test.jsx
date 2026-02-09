@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 import { InstitutionsTable } from 'features/institutions/components/InstitutionsTable';
 
-import '@testing-library/jest-dom/extend-expect';
 import 'features/institutions/data/__factories__';
 
 test('render InstitutionsTable with no data', () => {

@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { initializeStore } from 'store';
 import { GlobalFilters } from 'features/shared/components/GlobalFilters';
 
-import '@testing-library/jest-dom/extend-expect';
 import 'features/institutions/data/__factories__';
 
 test('render Institution global filter', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Nav from '@edx/paragon/dist/Nav';
-import { useHistory } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectPage } from 'features/shared/data/selectors';
 
@@ -9,12 +9,16 @@ import './index.scss';
 
 const MenuBar = () => {
   const { tab } = useSelector(selectPage);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const onLinkClick = (e) => {
     e.preventDefault();
 
-    if (e.currentTarget.pathname !== history.location.pathname) {
-      history.push(e.currentTarget.pathname);
+    const { pathname } = e.currentTarget;
+
+    if (pathname !== location.pathname) {
+      navigate(pathname);
     }
   };
 

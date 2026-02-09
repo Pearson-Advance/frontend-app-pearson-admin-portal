@@ -3,10 +3,10 @@ import {
 } from '@edx/paragon';
 import { Add, ArrowBack } from '@edx/paragon/icons';
 import React, { useEffect, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useHistory, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import { Modal } from 'features/shared/components/Modal';
 import { openLicenseOrderModal, closeLicenseOrderModal, clearLicenseOrder } from 'features/licenses/data/slices';
 import { createLicenseOrder, fetchLicensebyId, editLicenseOrder } from 'features/licenses/data/thunks';
@@ -25,13 +25,13 @@ const initialFormValues = {
 
 export const LicenseDetail = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { ordersData, Orderform, licenseById } = useSelector(state => state.licenses);
   const [fields, setFields] = useState(initialFormValues);
 
   const handleGoBackClick = () => {
-    history.push('/licenses');
+    navigate('/licenses');
   };
 
   const handleCloseModal = () => {

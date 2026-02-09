@@ -1,6 +1,6 @@
 import Header from '@edx/frontend-component-header';
 import Footer from '@edx/frontend-component-footer';
-import { Route, Switch } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 import { Banner } from 'react-paragon-topaz';
 
@@ -16,32 +16,35 @@ const Main = () => {
   const bannerText = getConfig().MAINTENANCE_BANNER_TEXT || '';
 
   const routes = [
-    { path: '/', component: InstitutionsPage, exact: true },
-    { path: '/institution-admins', component: InstitutionAdminsPage, exact: true },
-    { path: '/licenses', component: LicensesPage, exact: true },
-    { path: '/licenses/:id', component: LicenseDetail, exact: true },
-    { path: '/enrollments', component: StudentEnrollmentsPage, exact: true },
-    { path: '/data-report', component: DataReportPage, exact: true },
+    { path: '/', element: <InstitutionsPage /> },
+    { path: '/institution-admins', element: <InstitutionAdminsPage /> },
+    { path: '/licenses', element: <LicensesPage /> },
+    { path: '/licenses/:id', element: <LicenseDetail /> },
+    { path: '/enrollments', element: <StudentEnrollmentsPage /> },
+    { path: '/data-report', element: <DataReportPage /> },
   ];
 
   return (
     <>
       <Header appID="header-component-admin" />
+
       {bannerText && (
-      <Banner variant="warning" iconWarning text={bannerText} />
+        <Banner variant="warning" iconWarning text={bannerText} />
       )}
+
       <GlobalFilters />
       <MenuBar />
-      <Switch>
+
+      <Routes>
         {routes.map((route) => (
           <Route
             key={route.path}
             path={route.path}
-            exact={route.exact}
-            component={route.component}
+            element={route.element}
           />
         ))}
-      </Switch>
+      </Routes>
+
       <Footer />
     </>
   );
