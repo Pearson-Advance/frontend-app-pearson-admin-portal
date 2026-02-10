@@ -6,7 +6,6 @@ import { initializeStore } from 'store';
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 
-import '@testing-library/jest-dom/extend-expect';
 import 'features/enrollments/data/__factories__';
 
 test('render StudentEnrollmentsTable with no data', () => {

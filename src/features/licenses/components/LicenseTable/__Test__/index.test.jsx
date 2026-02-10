@@ -1,43 +1,55 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Factory } from 'rosie';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
+
 import { LicenseTable } from 'features/licenses/components/LicenseTable';
-import '@testing-library/jest-dom/extend-expect';
 import 'features/licenses/data/__factories__';
 import { RequestStatus } from 'features/shared/data/constants';
 
+import { initializeStore } from 'store';
+import { renderWithProviders } from 'test-utils';
+
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+}));
+
 describe('Unit tests for Licenses data table.', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+  });
+
   test('render LicensesTable with no data', () => {
-    const component = render(
-      <Provider store={initializeStore()}>
-        <LicenseTable />
-      </Provider>,
-    );
+    const store = initializeStore();
+
+    const component = renderWithProviders(<LicenseTable />, {
+      store,
+      route: '/licenses',
+    });
+
     expect(component.container).toHaveTextContent('No results found');
   });
 
   test('render LicensesTable with data', () => {
     const data = Factory.build('licenseList');
-    const component = render(
-      <Provider store={initializeStore({
-        licenses: {
-          status: RequestStatus.IN_PROGRESS,
-          data,
-          pageSize: 10,
-          pageIndex: 0,
-          catalogs: {
-            data: [],
-          },
-        },
-      })}
-      >
-        <LicenseTable data={data} />
-      </Provider>,
-    );
 
-    // This should have 3 table rows, inside the table component, 1 for the header and 2 for the details.
+    const store = initializeStore({
+      licenses: {
+        status: RequestStatus.IN_PROGRESS,
+        data,
+        pageSize: 10,
+        pageIndex: 0,
+        catalogs: { data: [] },
+      },
+    });
+
+    const component = renderWithProviders(<LicenseTable data={data} />, {
+      store,
+      route: '/licenses',
+    });
+
     const tableRows = component.container.querySelectorAll('tr');
 
     expect(component.container).toHaveTextContent('course-v1:PX+01+2021');
@@ -47,26 +59,27 @@ describe('Unit tests for Licenses data table.', () => {
   });
 
   test('render LicensesTable with catalog', () => {
-    const data = Factory.build('license', { licenseType: 'catalog', catalogs: ['catalog1'] });
-    const component = render(
-      <Provider store={initializeStore({
-        licenses: {
-          status: RequestStatus.IN_PROGRESS,
-          data: [data],
-          pageSize: 10,
-          pageIndex: 0,
-          catalogs: {
-            data: [{
-              value: 'catalog1',
-              label: 'demo catalog',
-            }],
-          },
+    const license = Factory.build('license', {
+      licenseType: 'catalog',
+      catalogs: ['catalog1'],
+    });
+
+    const store = initializeStore({
+      licenses: {
+        status: RequestStatus.IN_PROGRESS,
+        data: [license],
+        pageSize: 10,
+        pageIndex: 0,
+        catalogs: {
+          data: [{ value: 'catalog1', label: 'demo catalog' }],
         },
-      })}
-      >
-        <LicenseTable data={[data]} />
-      </Provider>,
-    );
+      },
+    });
+
+    const component = renderWithProviders(<LicenseTable data={[license]} />, {
+      store,
+      route: '/licenses',
+    });
 
     expect(component.container).toHaveTextContent('demo catalog');
   });

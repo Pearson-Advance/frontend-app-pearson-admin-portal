@@ -1,63 +1,50 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import { Provider } from 'react-redux';
 import { fireEvent } from '@testing-library/dom';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MenuBar } from 'features/shared/components/MenuBar';
-import { initializeStore } from 'store';
+import { renderWithProviders } from 'test-utils';
 
-const mockHistoryPush = jest.fn();
+const mockNavigate = jest.fn();
+const mockLocation = { pathname: '/' };
 
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useHistory: () => ({
-    push: mockHistoryPush,
-    location: {
-      pathname: '/',
-    },
-  }),
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useLocation: () => mockLocation,
 }));
 
 describe('MenuBar tests', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+    mockLocation.pathname = '/';
+  });
+
   test('renders MenuBar component', () => {
-    const component = render(
-      <Provider store={initializeStore()}>
-        <MenuBar />
-      </Provider>,
-    );
+    const component = renderWithProviders(<MenuBar />, { route: '/' });
     const navLinks = component.container.querySelectorAll('a');
 
     expect(component.container).toHaveTextContent('Institutions');
     expect(navLinks).toHaveLength(5);
   });
 
-  test('redirects to the institutions URL on clicking the institutions button', () => {
-    const component = render(
-      <Provider store={initializeStore()}>
-        <MemoryRouter>
-          <MenuBar />
-        </MemoryRouter>,
-      </Provider>,
-    );
+  test('does not navigate when clicking current route (institutions)', () => {
+    mockLocation.pathname = '/';
+
+    const component = renderWithProviders(<MenuBar />, { route: '/' });
 
     fireEvent.click(component.getByText('Institutions'));
 
-    expect(mockHistoryPush).not.toHaveBeenCalledWith('/');
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  test('redirects to the licenses URL on clicking the licenses button', () => {
-    const component = render(
-      <Provider store={initializeStore()}>
-        <MemoryRouter>
-          <MenuBar />
-        </MemoryRouter>,
-      </Provider>,
-    );
+  test('navigates to the licenses URL on clicking the licenses button', () => {
+    mockLocation.pathname = '/';
+
+    const component = renderWithProviders(<MenuBar />, { route: '/' });
 
     fireEvent.click(component.getByText('Licenses'));
 
-    expect(mockHistoryPush).toHaveBeenCalledWith('/licenses');
+    expect(mockNavigate).toHaveBeenCalledWith('/licenses');
   });
 });

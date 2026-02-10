@@ -1,46 +1,45 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { Factory } from 'rosie';
-import { render } from '@testing-library/react';
-import { LicenseDetail } from 'features/licenses/components/LicenseDetail';
-import '@testing-library/jest-dom/extend-expect';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
-import 'features/licenses/data/__factories__';
-
 import MockAdapter from 'axios-mock-adapter';
+
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import { executeThunk } from 'test-utils';
+
+import { LicenseDetail } from 'features/licenses/components/LicenseDetail';
+import 'features/licenses/data/__factories__';
 import { fetchLicensebyId } from 'features/licenses/data/thunks';
 import { TabIndex } from 'features/shared/data/constants';
 
+import { initializeStore } from 'store';
+import { executeThunk, renderWithProviders } from 'test-utils';
+
+const mockNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useParams: () => ({ id: 1 }),
+}));
+
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
-let axiosMock = null;
-let store;
+
 const licenseData = {
-  institution: {
-    name: 'Training center 1',
-  },
-  courses: [
-    {
-      displayName: 'Master Course',
-    },
-  ],
+  institution: { name: 'Training center 1' },
+  courses: [{ displayName: 'Master Course' }],
   purchasedSeats: 100,
   courseAccessDuration: 180,
   status: 'active',
   licenseOrder: Factory.buildList('licenseOrder', 2),
 };
 
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useParams: () => ({
-    id: 1,
-  }),
-}));
-
 describe('Test suite for license detail component.', () => {
+  let axiosMock;
+  let store;
+
   beforeEach(() => {
+    mockNavigate.mockClear();
+
     initializeMockApp({
       authenticatedUser: {
         userId: 1,
@@ -49,19 +48,24 @@ describe('Test suite for license detail component.', () => {
         roles: [],
       },
     });
+
     axiosMock = new MockAdapter(getAuthenticatedHttpClient());
     store = initializeStore();
+  });
+
+  afterEach(() => {
+    axiosMock?.restore();
   });
 
   test('render license detail component', async () => {
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, licenseData);
     await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = render(
-      <Provider store={store}>
-        <LicenseDetail />
-      </Provider>,
-    );
+    const { container } = renderWithProviders(<LicenseDetail />, {
+      store,
+      route: '/licenses/1',
+    });
+
     const tableRows = container.querySelectorAll('tr');
 
     expect(container).toHaveTextContent('Training center 1');
@@ -70,31 +74,28 @@ describe('Test suite for license detail component.', () => {
   });
 
   test('render license detail with no orders', async () => {
-    licenseData.licenseOrder = [];
+    const licenseDataNoOrders = { ...licenseData, licenseOrder: [] };
 
-    axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, licenseData);
+    axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, licenseDataNoOrders);
     await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = render(
-      <Provider store={store}>
-        <LicenseDetail />
-      </Provider>,
-    );
+    const { container } = renderWithProviders(<LicenseDetail />, {
+      store,
+      route: '/licenses/1',
+    });
 
     expect(container).toHaveTextContent('No orders found.');
   });
 
   test('render license detail with a failed request', async () => {
-    licenseData.licenseOrder = [];
-
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(500);
     await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = render(
-      <Provider store={store}>
-        <LicenseDetail />
-      </Provider>,
-    );
+    const { container } = renderWithProviders(<LicenseDetail />, {
+      store,
+      route: '/licenses/1',
+    });
+
     const table = container.querySelectorAll('table');
 
     expect(container).not.toHaveTextContent('Institution:');
