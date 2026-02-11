@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
-import { Add } from '@edx/paragon/icons';
+import { Add } from '@openedx/paragon/icons';
 import {
   Container, ActionRow, Button,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { LicenseTable } from 'features/licenses/components/LicenseTable';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex, LicenseTypes } from 'features/shared/data/constants';

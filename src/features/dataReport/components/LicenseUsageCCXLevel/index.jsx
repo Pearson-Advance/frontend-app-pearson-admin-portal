@@ -1,8 +1,8 @@
 import {
   Icon, IconButton, OverlayTrigger, Pagination, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import PropTypes from 'prop-types';
-import { Download } from '@edx/paragon/icons';
+import { Download } from '@openedx/paragon/icons';
 import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';

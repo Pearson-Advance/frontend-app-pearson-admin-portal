@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { DataTable, TextFilter } from '@edx/paragon';
+import { DataTable, TextFilter } from '@openedx/paragon';
 
 import { PersistController } from 'features/shared/components/PersistController';
 

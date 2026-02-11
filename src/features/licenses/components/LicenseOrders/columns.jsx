@@ -5,8 +5,8 @@ import {
   OverlayTrigger,
   Tooltip,
   IconButton,
-} from '@edx/paragon';
-import { Edit } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Edit } from '@openedx/paragon/icons';
 
 export const getColumns = props => [
   {

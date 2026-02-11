@@ -1,4 +1,4 @@
-import { Container, Tab, Tabs } from '@edx/paragon';
+import { Container, Tab, Tabs } from '@openedx/paragon';
 import React, { useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';

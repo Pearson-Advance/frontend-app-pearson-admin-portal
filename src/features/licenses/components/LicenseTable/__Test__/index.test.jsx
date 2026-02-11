@@ -7,7 +7,7 @@ import 'features/licenses/data/__factories__';
 import { RequestStatus } from 'features/shared/data/constants';
 
 import { initializeStore } from 'store';
-import { renderWithProviders } from 'test-utils';
+import { renderWithProvidersAndIntl } from 'test-utils';
 
 const mockNavigate = jest.fn();
 
@@ -24,9 +24,8 @@ describe('Unit tests for Licenses data table.', () => {
   test('render LicensesTable with no data', () => {
     const store = initializeStore();
 
-    const component = renderWithProviders(<LicenseTable />, {
+    const component = renderWithProvidersAndIntl(<LicenseTable />, {
       store,
-      route: '/licenses',
     });
 
     expect(component.container).toHaveTextContent('No results found');
@@ -45,9 +44,8 @@ describe('Unit tests for Licenses data table.', () => {
       },
     });
 
-    const component = renderWithProviders(<LicenseTable data={data} />, {
+    const component = renderWithProvidersAndIntl(<LicenseTable data={data} />, {
       store,
-      route: '/licenses',
     });
 
     const tableRows = component.container.querySelectorAll('tr');
@@ -76,9 +74,8 @@ describe('Unit tests for Licenses data table.', () => {
       },
     });
 
-    const component = renderWithProviders(<LicenseTable data={[license]} />, {
+    const component = renderWithProvidersAndIntl(<LicenseTable data={[license]} />, {
       store,
-      route: '/licenses',
     });
 
     expect(component.container).toHaveTextContent('demo catalog');

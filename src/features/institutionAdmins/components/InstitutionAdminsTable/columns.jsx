@@ -1,20 +1,25 @@
 /* eslint-disable react/prop-types */
-import { CheckboxFilter, Form, Spinner } from '@edx/paragon';
+import React from 'react';
+import { CheckboxFilter, Form, Spinner } from '@openedx/paragon';
 import { has } from 'lodash';
 
-export const getColumns = props => [
+export const getColumns = (props) => [
   {
     Header: 'Institution',
-    accessor: ({ institution }) => institution.name,
+    accessor: 'institution',
     disableFilters: true,
+    Cell: ({ row }) => row.original?.institution?.name || '',
   },
   {
     Header: 'Admin username',
-    accessor: ({ user }) => user.username,
+    accessor: 'user',
+    Cell: ({ row }) => row.original?.user?.username || '',
   },
   {
     Header: 'Admin email',
-    accessor: ({ user }) => user.email,
+    accessor: 'user',
+    id: 'adminEmail',
+    Cell: ({ row }) => row.original?.user?.email || '',
   },
   {
     Header: 'Active',
@@ -23,9 +28,7 @@ export const getColumns = props => [
     Cell: ({ row }) => {
       if (!has(row.original, 'loading')) {
         return (
-          <Form.Group
-            controlId={`formSwitch-${row.id}`}
-          >
+          <Form.Group controlId={`formSwitch-${row.id}`}>
             <Form.Check
               type="switch"
               checked={row.values.active}
@@ -37,17 +40,21 @@ export const getColumns = props => [
       }
       return <Spinner animation="border" />;
     },
+
     Filter: CheckboxFilter,
-    filter: 'includesValue',
+
     filterChoices: [
-      {
-        name: 'yes',
-        value: true,
-      },
-      {
-        name: 'no',
-        value: false,
-      },
+      { name: 'yes', value: 'true' },
+      { name: 'no', value: 'false' },
     ],
+
+    filter: (rows, id, filterValues) => {
+      if (!filterValues || filterValues.length === 0) {
+        return rows;
+      }
+
+      const selected = new Set(filterValues);
+      return rows.filter(r => selected.has(String(Boolean(r.values[id]))));
+    },
   },
 ];

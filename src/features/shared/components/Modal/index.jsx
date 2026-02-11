@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ActionRow, Button, ModalDialog,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import './index.scss';

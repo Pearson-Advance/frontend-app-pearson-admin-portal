@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react';
-import { DataTableContext } from '@edx/paragon';
+import { DataTableContext } from '@openedx/paragon';
 
 import { useDispatch } from 'react-redux';
 import {

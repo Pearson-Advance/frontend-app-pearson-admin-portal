@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Nav from '@edx/paragon/dist/Nav';
+import Nav from '@openedx/paragon/dist/Nav';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectPage } from 'features/shared/data/selectors';

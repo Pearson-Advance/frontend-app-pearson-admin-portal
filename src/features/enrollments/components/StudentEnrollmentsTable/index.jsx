@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '@edx/paragon/dist/DataTable';
+import DataTable from '@openedx/paragon/dist/DataTable';
 import {
   Row, Col,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { PersistController } from 'features/shared/components/PersistController';
 
 const StudentEnrollmentsTable = ({

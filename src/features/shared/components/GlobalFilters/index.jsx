@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { TabIndex } from 'features/shared/data/constants';
 import { fetchInstitutionsForGlobalFilter } from 'features/shared/data/thunks';
 import { changeGlobalFilters } from 'features/shared/data/slices';
-import { Col, Container, Row } from '@edx/paragon';
+import { Col, Container, Row } from '@openedx/paragon';
 
 export const GlobalFilters = () => {
   const dispatch = useDispatch();

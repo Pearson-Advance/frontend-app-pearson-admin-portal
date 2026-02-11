@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form } from '@edx/paragon';
+import { Form } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { fetchInstitutions } from 'features/institutions/data';
 import { activeInstitutions } from 'features/institutions/data/selector';

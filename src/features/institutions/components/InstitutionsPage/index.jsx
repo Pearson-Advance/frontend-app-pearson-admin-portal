@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Container from '@edx/paragon/dist/Container';
+import Container from '@openedx/paragon/dist/Container';
 import { InstitutionsTable } from 'features/institutions/components/InstitutionsTable';
 import { fetchInstitutions, createInstitution, editInstitution } from 'features/institutions/data';
 import { InstitutionForm } from 'features/institutions/components/institutionForm';
-import { Add } from '@edx/paragon/icons';
-import { ActionRow, Button } from '@edx/paragon';
+import { Add } from '@openedx/paragon/icons';
+import { ActionRow, Button } from '@openedx/paragon';
 import { Modal } from 'features/shared/components/Modal';
 import { closeModalForm, openModalForm } from 'features/institutions/data/slices';
 import { changeTab } from 'features/shared/data/slices';

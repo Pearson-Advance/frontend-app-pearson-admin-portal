@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import DataTable from '@edx/paragon/dist/DataTable';
+import DataTable from '@openedx/paragon/dist/DataTable';
 import {
   Row, Col, TextFilter, useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { editInstitutionAdmin } from 'features/institutionAdmins/data';
 import { Modal } from 'features/shared/components/Modal';
 import { isEmpty } from 'lodash';

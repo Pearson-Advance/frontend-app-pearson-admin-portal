@@ -1,8 +1,8 @@
 import {
   DataTable, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { getConfig } from '@edx/frontend-platform';
-import { Launch, Share } from '@edx/paragon/icons';
+import { Launch, Share } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
