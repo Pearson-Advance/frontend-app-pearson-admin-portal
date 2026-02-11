@@ -46,7 +46,7 @@ push_translations:
 
 # Pulls translations from Transifex.
 pull_translations:
-	tx pull -f --mode reviewed --language=$(transifex_langs)
+	@echo "Skipping pull_translations for pearson admin portal (no tx in Tutor MFE image)."
 
 # This target is used by Travis.
 validate-no-uncommitted-package-lock-changes:
