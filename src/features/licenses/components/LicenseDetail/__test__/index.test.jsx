@@ -2,17 +2,17 @@
 import React from 'react';
 import { Factory } from 'rosie';
 import MockAdapter from 'axios-mock-adapter';
+import { waitFor } from '@testing-library/react';
 
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 import { LicenseDetail } from 'features/licenses/components/LicenseDetail';
 import 'features/licenses/data/__factories__';
-import { fetchLicensebyId } from 'features/licenses/data/thunks';
 import { TabIndex } from 'features/shared/data/constants';
 
 import { initializeStore } from 'store';
-import { executeThunk, renderWithProviders } from 'test-utils';
+import { renderWithProvidersAndIntl } from 'test-utils';
 
 const mockNavigate = jest.fn();
 
@@ -59,29 +59,25 @@ describe('Test suite for license detail component.', () => {
 
   test('render license detail component', async () => {
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, licenseData);
-    await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = renderWithProviders(<LicenseDetail />, {
-      store,
-      route: '/licenses/1',
+    const { container } = renderWithProvidersAndIntl(<LicenseDetail />, { store });
+
+    await waitFor(() => {
+      expect(container).toHaveTextContent('Training center 1');
     });
 
-    const tableRows = container.querySelectorAll('tr');
-
-    expect(container).toHaveTextContent('Training center 1');
-    expect(tableRows).toHaveLength(1);
+    expect(container).toHaveTextContent('Master Course');
     expect(store.getState().page.tab).toEqual(TabIndex.LICENSES);
   });
 
   test('render license detail with no orders', async () => {
     const licenseDataNoOrders = { ...licenseData, licenseOrder: [] };
-
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(200, licenseDataNoOrders);
-    await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = renderWithProviders(<LicenseDetail />, {
-      store,
-      route: '/licenses/1',
+    const { container } = renderWithProvidersAndIntl(<LicenseDetail />, { store });
+
+    await waitFor(() => {
+      expect(container).toHaveTextContent('Training center 1');
     });
 
     expect(container).toHaveTextContent('No orders found.');
@@ -89,16 +85,14 @@ describe('Test suite for license detail component.', () => {
 
   test('render license detail with a failed request', async () => {
     axiosMock.onGet(`${licensesApiUrl}1/`).reply(500);
-    await executeThunk(fetchLicensebyId(1), store.dispatch, store.getState);
 
-    const { container } = renderWithProviders(<LicenseDetail />, {
-      store,
-      route: '/licenses/1',
+    const { container } = renderWithProvidersAndIntl(<LicenseDetail />, { store });
+
+    await waitFor(() => {
+      expect(axiosMock.history.get.length).toBeGreaterThan(0);
     });
 
-    const table = container.querySelectorAll('table');
-
     expect(container).not.toHaveTextContent('Institution:');
-    expect(table).toHaveLength(0);
+    expect(container.querySelectorAll('table')).toHaveLength(0);
   });
 });

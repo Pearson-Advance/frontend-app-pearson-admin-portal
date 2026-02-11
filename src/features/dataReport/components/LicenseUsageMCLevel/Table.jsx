@@ -1,4 +1,4 @@
-import { DataTable } from '@edx/paragon';
+import { DataTable } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 

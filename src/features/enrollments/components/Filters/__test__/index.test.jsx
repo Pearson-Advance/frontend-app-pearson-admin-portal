@@ -1,20 +1,20 @@
 import React from 'react';
-import {
-  render,
-  screen,
-} from '@testing-library/react';
-import { Filters } from 'features/enrollments/components/Filters';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+
+import { Filters } from 'features/enrollments/components/Filters';
+import { initializeStore } from 'store';
 
 const setFilters = jest.fn();
 const setIsFilterApplied = jest.fn();
 const handleCleanFilters = jest.fn();
 const handleApplyFilters = jest.fn();
+const handleExportEnrollments = jest.fn();
 
 describe('Test suite for Filters component.', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     const store = initializeStore();
 
     render(
@@ -26,6 +26,7 @@ describe('Test suite for Filters component.', () => {
           eligibleCourses={[]}
           handleCleanFilters={handleCleanFilters}
           handleApplyFilters={handleApplyFilters}
+          handleExportEnrollments={handleExportEnrollments}
           isFilterApplied
           setIsFilterApplied={setIsFilterApplied}
         />
@@ -33,13 +34,12 @@ describe('Test suite for Filters component.', () => {
     );
   });
 
-  test('render Filters  component', () => {
+  test('render Filters component', async () => {
+    const user = userEvent.setup();
     const learnerEmailElement = screen.getByTestId('learnerEmail');
-    expect(screen.getAllByRole('combobox', { class: /select__input/i }))
-      .toHaveLength(3); // institutions, master courses and enrollments comboboxes.
 
-    userEvent.type(learnerEmailElement, 'example@example.com');
-
+    expect(screen.getAllByRole('combobox')).toHaveLength(3);
+    await user.type(learnerEmailElement, 'example@example.com');
     expect(learnerEmailElement).toHaveValue('example@example.com');
   });
 });

@@ -1,27 +1,23 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Factory } from 'rosie';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
-import { InstitutionAdminsTable } from 'features/institutionAdmins/components/InstitutionAdminsTable';
 
+import { InstitutionAdminsTable } from 'features/institutionAdmins/components/InstitutionAdminsTable';
 import 'features/institutionAdmins/data/__factories__';
 
+import { renderWithProvidersAndIntl } from 'test-utils';
+
 test('render InstitutionAdminsTable with no data', () => {
-  const component = render(
-    <Provider store={initializeStore()}>
-      <InstitutionAdminsTable data={[]} />
-    </Provider>,
+  const component = renderWithProvidersAndIntl(
+    <InstitutionAdminsTable data={[]} />,
   );
   expect(component.container).toHaveTextContent('No results found');
 });
 
 test('render InstitutionAdminsTable with data', () => {
   const data = Factory.build('adminList');
-  const component = render(
-    <Provider store={initializeStore()}>
-      <InstitutionAdminsTable data={data} />
-    </Provider>,
+
+  const component = renderWithProvidersAndIntl(
+    <InstitutionAdminsTable data={data} />,
   );
   // This should have 3 table rows, inside the table component, 1 for the header and 2 for the details.
   const tableRows = component.container.querySelectorAll('tr');

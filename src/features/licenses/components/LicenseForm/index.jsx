@@ -7,12 +7,12 @@ import {
   Spinner,
   Tooltip,
   OverlayTrigger,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { has } from 'lodash';
 import PropTypes from 'prop-types';
 import Select, { components } from 'react-select';
 import { getConfig } from '@edx/frontend-platform';
-import { WarningFilled } from '@edx/paragon/icons';
+import { WarningFilled } from '@openedx/paragon/icons';
 
 import { fetchEligibleCourses } from 'features/licenses/data';
 import { RequestStatus, maxLabelLength, LicenseTypes } from 'features/shared/data/constants';

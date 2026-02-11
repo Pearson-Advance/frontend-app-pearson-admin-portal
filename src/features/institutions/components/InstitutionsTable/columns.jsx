@@ -2,10 +2,10 @@
 import React from 'react';
 import {
   Badge, IconButton, Tooltip, OverlayTrigger, CheckboxFilter,
-} from '@edx/paragon';
-import { Edit } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Edit } from '@openedx/paragon/icons';
 
-export const getColumns = props => [
+export const getColumns = (props) => [
   {
     Header: 'Name',
     accessor: 'name',
@@ -23,19 +23,26 @@ export const getColumns = props => [
     Header: 'Active',
     accessor: 'active',
     disableSortBy: true,
-    Cell: ({ row }) => <Badge variant={row.values.active ? 'success' : 'danger'}>{row.values.active ? 'Yes' : 'No'}</Badge>,
+    Cell: ({ row }) => (
+      <Badge variant={row.values.active ? 'success' : 'danger'}>
+        {row.values.active ? 'Yes' : 'No'}
+      </Badge>
+    ),
     Filter: CheckboxFilter,
-    filter: 'includesValue',
+
     filterChoices: [
-      {
-        name: 'yes',
-        value: true,
-      },
-      {
-        name: 'no',
-        value: false,
-      },
+      { name: 'yes', value: 'true' },
+      { name: 'no', value: 'false' },
     ],
+
+    filter: (rows, id, filterValues) => {
+      if (!filterValues || filterValues.length === 0) {
+        return rows;
+      }
+
+      const selected = new Set(filterValues);
+      return rows.filter((r) => selected.has(String(Boolean(r.values[id]))));
+    },
   },
   {
     Header: 'Actions',

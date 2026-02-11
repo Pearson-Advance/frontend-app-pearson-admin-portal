@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
+import React from 'react';
 import { useSelector } from 'react-redux';
 import {
   IconButton, OverlayTrigger, Tooltip, Badge,
-} from '@edx/paragon';
-import { BookOpen, Edit } from '@edx/paragon/icons';
-import { filter } from 'lodash';
+} from '@openedx/paragon';
+import { BookOpen, Edit } from '@openedx/paragon/icons';
+import { filter as lodashFilter } from 'lodash';
 
 import { LicenseTypes } from 'features/shared/data/constants';
 
@@ -16,39 +17,61 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   },
   {
     Header: 'Institution',
-    accessor: ({ institution }) => institution.name,
+    accessor: 'institution',
+    id: 'institution',
     disableFilters: true,
+    Cell: ({ row }) => row.original?.institution?.name || '',
   },
   {
     Header: 'Master Courses / Catalogs',
     accessor: 'courses',
+    id: 'masterCoursesOrCatalogs',
     filter: 'text',
     disableSortBy: true,
     Cell: ({ row }) => {
-      const { licenseType, courses, catalogs } = row.original;
+      const { licenseType, courses = [], catalogs = [] } = row.original;
       const catalogsList = useSelector(state => state.licenses.catalogs.data);
 
       if (licenseType === LicenseTypes.CATALOG) {
-        const elements = catalogs.map(catalog => filter(catalogsList, { value: catalog }));
+        const elements = catalogs.map((catalog) => lodashFilter(catalogsList, { value: catalog }));
         return (
-          elements.map(el => <Badge variant="light" className="mr-2 p-2  mb-2">{el[0].label}</Badge>)
-
+          <>
+            {elements.map((el) => (
+              <Badge
+                key={el?.[0]?.value || el?.[0]?.label || Math.random()}
+                variant="light"
+                className="mr-2 p-2 mb-2"
+              >
+                {el?.[0]?.label || ''}
+              </Badge>
+            ))}
+          </>
         );
       }
       if (licenseType === LicenseTypes.COURSES) {
         return (
           <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-            {courses.map(course => <li key={course}>{`${course.id} - ${course.displayName}`}</li>)}
+            {courses.map((course) => (
+              <li key={course.id}>
+                {`${course.id} - ${course.displayName}`}
+              </li>
+            ))}
           </ul>
         );
       }
+
       return null;
     },
   },
   {
     Header: 'Courses',
-    accessor: ({ courses }) => courses.map(course => course.id),
+    accessor: 'courses',
+    id: 'courseIds',
     disableSortBy: true,
+    Cell: ({ row }) => {
+      const { courses = [] } = row.original;
+      return courses.map(c => c.id).join(', ');
+    },
   },
   {
     Header: 'Purchased seats',
@@ -75,7 +98,7 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
       <>
         <OverlayTrigger
           placement="top"
-          overlay={<Tooltip variant="light">View details</Tooltip>}
+          overlay={<Tooltip id={`license-view-${row.values.id}`} variant="light">View details</Tooltip>}
         >
           <IconButton
             alt="View"
@@ -85,7 +108,7 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
         </OverlayTrigger>
         <OverlayTrigger
           placement="top"
-          overlay={<Tooltip variant="light">Edit</Tooltip>}
+          overlay={<Tooltip id={`license-edit-${row.values.id}`} variant="light">Edit</Tooltip>}
         >
           <IconButton
             alt="Edit"
@@ -94,13 +117,12 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
               const editData = {
                 id: row.values.id,
                 licenseName: row.values.licenseName,
-                institution: row.values.Institution,
-                courses: row.values.Courses,
+                institution: row.original.institution,
+                courses: row.original.courses,
                 status: row.values.status,
                 catalogs: row.original.catalogs,
                 licenseType: row.original.licenseType,
               };
-
               handleEditModal(editData);
             }}
           />

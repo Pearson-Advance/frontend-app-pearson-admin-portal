@@ -1,13 +1,13 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Container from '@edx/paragon/dist/Container';
+import Container from '@openedx/paragon/dist/Container';
 import {
   Pagination,
   useToggle,
   AlertModal,
   ActionRow,
   Button,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 
 import {
   fetchStudentEnrollments,

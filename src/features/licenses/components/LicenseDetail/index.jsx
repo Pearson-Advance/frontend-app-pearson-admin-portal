@@ -1,7 +1,7 @@
 import {
   ActionRow, Button, Card, Col, Container, Icon, IconButton, Row, Spinner,
-} from '@edx/paragon';
-import { Add, ArrowBack } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Add, ArrowBack } from '@openedx/paragon/icons';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

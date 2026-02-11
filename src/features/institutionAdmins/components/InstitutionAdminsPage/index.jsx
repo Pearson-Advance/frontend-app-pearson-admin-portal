@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActionRow, Button } from '@edx/paragon';
-import { Add } from '@edx/paragon/icons';
-import Container from '@edx/paragon/dist/Container';
+import { ActionRow, Button } from '@openedx/paragon';
+import { Add } from '@openedx/paragon/icons';
+import Container from '@openedx/paragon/dist/Container';
 import { InstitutionAdminForm } from 'features/institutionAdmins/components/institutionAdminForm';
 import { InstitutionAdminsTable } from 'features/institutionAdmins/components/InstitutionAdminsTable';
 import { fetchInstitutionAdmins, selectAdmins, createInstitutionAdmin } from 'features/institutionAdmins/data';

@@ -3,7 +3,7 @@ import Select from 'react-select';
 import PropTypes from 'prop-types';
 import {
   Card, Col, Form, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export const Filters = (props) => {

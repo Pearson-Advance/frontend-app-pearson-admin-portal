@@ -1,63 +1,84 @@
 import React from 'react';
-import { render } from '@testing-library/react';
 import { Factory } from 'rosie';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
+
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 
 import 'features/enrollments/data/__factories__';
+import { renderWithProvidersAndIntl } from 'test-utils';
+
+const columnProps = {
+  open: jest.fn(),
+  setRow: jest.fn(),
+};
 
 test('render StudentEnrollmentsTable with no data', () => {
-  const component = render(
-    <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={[]} count={0} columns={[]} hideColumns={{}} />
-    </Provider>,
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={[]}
+      count={0}
+      columns={[]}
+      hideColumns={{}}
+    />,
   );
+
   expect(component.container).toHaveTextContent('No enrollments found');
 });
 
 test('render StudentEnrollmentsTable with data', () => {
   const data = Factory.build('enrollmentsList');
-  const component = render(
-    <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={data} count={data.length} columns={getColumns()} hideColumns={hideColumns} />
-    </Provider>,
+
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={data}
+      count={data.length}
+      columns={getColumns(columnProps)}
+      hideColumns={hideColumns}
+    />,
   );
-  // This should have 4 table rows, inside the table component, 1 for the header and 3 for the enrollments.
+
+  // 1 header row + 3 enrollment rows
   const tableRows = component.container.querySelectorAll('tr');
 
   expect(component.container).not.toHaveTextContent('No enrollments found');
   expect(tableRows).toHaveLength(4);
-  // Check hidden columns
+
+  // Hidden columns
   expect(component.container).not.toHaveTextContent('Master Course ID');
   expect(component.container).not.toHaveTextContent('Ccx Id');
-  // Check institutions
+
+  // Institutions
   expect(component.container).toHaveTextContent('Training Center 1');
   expect(component.container).toHaveTextContent('Training Center 2');
   expect(component.container).toHaveTextContent('Training Center 3');
-  // Check emails
+
+  // Emails
   expect(component.container).toHaveTextContent('admin1@example.com');
   expect(component.container).toHaveTextContent('admin2@example.com');
   expect(component.container).toHaveTextContent('admin3@example.com');
   expect(component.container).toHaveTextContent('lerner1@example.com');
   expect(component.container).toHaveTextContent('lerner2@example.com');
   expect(component.container).toHaveTextContent('lerner3@example.com');
-  // Check if the table has all available status
+
+  // Status
   expect(component.container).toHaveTextContent('Pending');
   expect(component.container).toHaveTextContent('Active');
   expect(component.container).toHaveTextContent('Inactive');
-  // Check datetime is formatted.
+
+  // Date formatting
   expect(component.container).toHaveTextContent('Fri, 14 Jan 2022 16:15:10 GMT');
 });
 
 test('Check sorting columns of StudentEnrollmentsTable', () => {
-  const component = render(
-    <Provider store={initializeStore()}>
-      <StudentEnrollmentsTable data={[]} count={0} columns={getColumns()} />
-    </Provider>,
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={[]}
+      count={0}
+      columns={getColumns(columnProps)}
+      hideColumns={hideColumns}
+    />,
   );
 
-  // The 4 Sorting columns are: institution, master course name, admin email and learner email.
+  // Sortable columns: institution, master course name, admin email, learner email
   expect(component.getAllByTitle('Toggle SortBy')).toHaveLength(4);
 });

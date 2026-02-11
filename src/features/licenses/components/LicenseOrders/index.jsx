@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTable } from '@edx/paragon';
+import { DataTable } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { getColumns } from 'features/licenses/components/LicenseOrders/columns';
 

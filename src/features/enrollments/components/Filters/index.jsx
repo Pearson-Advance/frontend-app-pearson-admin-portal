@@ -1,6 +1,6 @@
 import {
   Card, Col, Form, IconButton, OverlayTrigger, Tooltip,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DataTable from '@edx/paragon/dist/DataTable';
-import { Row, Col, TextFilter } from '@edx/paragon';
+import DataTable from '@openedx/paragon/dist/DataTable';
+import { Row, Col, TextFilter } from '@openedx/paragon';
 import { useDispatch, useSelector } from 'react-redux';
 import { openModalForm } from 'features/institutions/data/slices';
 import { PersistController } from 'features/shared/components/PersistController';

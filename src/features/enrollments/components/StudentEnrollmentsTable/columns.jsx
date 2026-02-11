@@ -5,12 +5,12 @@ import {
   Dropdown,
   Icon,
   IconButton,
-} from '@edx/paragon';
-import { MoreHoriz } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { MoreHoriz } from '@openedx/paragon/icons';
 
 import { EnrollmentStatus } from 'features/shared/data/constants';
 
-const getColumns = props => [
+const getColumns = (props = {}) => [
   {
     Header: 'Institution',
     accessor: 'institution',
