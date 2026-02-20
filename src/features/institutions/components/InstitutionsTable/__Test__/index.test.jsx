@@ -25,3 +25,19 @@ test('render InstitutionsTable with data', () => {
   expect(component.container).not.toHaveTextContent('No results found');
   expect(tableRows).toHaveLength(3);
 });
+
+test('Render InstitutionsTable with expected columns.', () => {
+  const data = Factory.build('institutionsList');
+  const component = renderWithProvidersAndIntl(<InstitutionsTable data={data} />);
+
+  const tableHeadRows = component.container.querySelectorAll('table thead tr');
+  const tableHeadRow = tableHeadRows[0];
+
+  expect(tableHeadRow).toHaveTextContent('ID');
+  expect(tableHeadRow).toHaveTextContent('Name');
+  expect(tableHeadRow).toHaveTextContent('Short name');
+  expect(tableHeadRow).toHaveTextContent('External ID');
+  expect(tableHeadRow).toHaveTextContent('Active');
+  expect(tableHeadRow).toHaveTextContent('Actions');
+  expect(tableHeadRow.children).toHaveLength(6);
+});
