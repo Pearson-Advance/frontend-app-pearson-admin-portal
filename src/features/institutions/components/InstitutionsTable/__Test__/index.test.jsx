@@ -20,6 +20,8 @@ test('render InstitutionsTable with data', () => {
 
   expect(component.container).toHaveTextContent('Training Center 1');
   expect(component.container).toHaveTextContent('Training Center 2');
+  expect(component.container).toHaveTextContent('uuid-12345 1');
+  expect(component.container).toHaveTextContent('uuid-12345 2');
   expect(component.container).not.toHaveTextContent('No results found');
   expect(tableRows).toHaveLength(3);
 });
