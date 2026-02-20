@@ -45,10 +45,10 @@ describe('Institutions data layer tests', () => {
     expect(store.getState().institutions.data)
       .toEqual([
         {
-          id: 1, name: 'Training Center 1', shortName: 'TC1', active: true,
+          id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
         },
         {
-          id: 2, name: 'Training Center 2', shortName: 'TC2', active: true,
+          id: 2, name: 'Training Center 2', shortName: 'TC2', active: true, uuid: 'uuid-12345 2',
         },
       ]);
 
@@ -89,7 +89,7 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true,
+        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
       }]);
 
     expect(store.getState().institutions.status)
@@ -145,7 +145,7 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1 changed', shortName: 'TC1', active: false,
+        id: 1, name: 'Training Center 1 changed', shortName: 'TC1', active: false, uuid: 'uuid-12345 1',
       }]);
 
     expect(store.getState().institutions.status)
@@ -179,7 +179,7 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true,
+        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
       }]);
 
     expect(store.getState().institutions.status)

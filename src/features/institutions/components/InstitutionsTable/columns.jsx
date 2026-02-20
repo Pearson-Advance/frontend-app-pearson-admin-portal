@@ -1,11 +1,15 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import {
   Badge, IconButton, Tooltip, OverlayTrigger, CheckboxFilter,
 } from '@edx/paragon';
 import { Edit } from '@edx/paragon/icons';
 
 export const getColumns = props => [
+  {
+    Header: 'ID',
+    accessor: 'uuid',
+    disableFilters: true,
+  },
   {
     Header: 'Name',
     accessor: 'name',
