@@ -1,6 +1,9 @@
-@import 'assets/styles/colors';
+/**
+ * Design tokens stylesheet.
+ * Uses CSS custom properties (e.g., --pgn-*) for consistent theming.
+ */
 
 .menu-bar {
-    background-color: $menubar-background-color;
+    background-color: var(--pgn-color-white-200);
     padding: 0.8em;
 }
