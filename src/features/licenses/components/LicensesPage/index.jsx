@@ -52,7 +52,7 @@ const LicensesPage = () => {
       setFields({
         licenseName: form.license.licenseName,
         status: form.license.status,
-        courses: form.license.courses,
+        courses: form.license.courses || [],
         license: form.license.id,
         institution: form.license.institution,
         catalogs: form.license.catalogs || [],
@@ -72,46 +72,46 @@ const LicensesPage = () => {
   };
 
   const handleSubmit = async () => {
-    setIsRequestInProgress(true);
-
     if (isRequestInProgress) {
       return null;
     }
 
-    if (create) {
-      const newLicenseData = {
-        licenseName: fields.licenseName,
-        institution: parseInt(fields.institution, 10),
-        courses: fields.courses,
-        courseAccessDuration: fields.courseAccessDuration,
-        status: fields.status,
-        catalogs: fields.catalogs,
-        licenseType: fields.licenseType,
-      };
-      await dispatch(
-        createLicense(newLicenseData),
-      );
-    } else {
-      const editData = {
-        licenseName: fields.licenseName,
-        licenseId: parseInt(fields.license, 10),
-        status: fields.status,
-        courses: fields.courses,
-        catalogs: fields.catalogs,
-        licenseType: fields.licenseType,
-      };
-      await dispatch(
-        editLicense(editData),
-      );
+    setIsRequestInProgress(true);
+
+    try {
+      if (create) {
+        const newLicenseData = {
+          licenseName: fields.licenseName,
+          institution: parseInt(fields.institution, 10),
+          courses: fields.courses,
+          courseAccessDuration: fields.courseAccessDuration,
+          status: fields.status,
+          catalogs: fields.catalogs,
+          licenseType: fields.licenseType,
+        };
+        await dispatch(createLicense(newLicenseData));
+      } else {
+        const editData = {
+          licenseName: fields.licenseName,
+          licenseId: parseInt(fields.license, 10),
+          status: fields.status,
+          courses: fields.courses,
+          catalogs: fields.catalogs,
+          licenseType: fields.licenseType,
+        };
+        await dispatch(editLicense(editData));
+      }
+    } finally {
+      setIsRequestInProgress(false);
     }
 
-    return setIsRequestInProgress(false);
+    return null;
   };
 
   return (
     <Container className="pr-6 pl-6 pt-4 pb-4">
       <Modal
-        title={!create ? `Edit license for ${fields.institution} Institution:` : 'Add license:  '}
+        title={!create ? `Edit license for x Institution:` : 'Add license:'}
         isOpen={form.isOpen}
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
@@ -120,7 +120,7 @@ const LicensesPage = () => {
       >
         <LicenseForm
           created={create}
-          courses_selected={[]}
+          courses_selected={fields.courses || []}
           fields={fields}
           setFields={setFields}
           errors={form.errors}
