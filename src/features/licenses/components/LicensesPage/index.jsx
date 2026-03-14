@@ -52,7 +52,7 @@ const LicensesPage = () => {
       setFields({
         licenseName: form.license.licenseName,
         status: form.license.status,
-        courses: form.license.courses,
+        courses: (form.license.courses || []).map(course => course.id),
         license: form.license.id,
         institution: form.license.institution,
         catalogs: form.license.catalogs || [],
@@ -111,7 +111,7 @@ const LicensesPage = () => {
   return (
     <Container className="pr-6 pl-6 pt-4 pb-4">
       <Modal
-        title={!create ? `Edit license for ${fields.institution} Institution:` : 'Add license:  '}
+        title={!create ? `Edit license for ${fields.institution.name} Institution:` : 'Add license:  '}
         isOpen={form.isOpen}
         handleCloseModal={handleCloseModal}
         handlePrimaryAction={handleSubmit}
