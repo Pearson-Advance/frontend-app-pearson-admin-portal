@@ -65,13 +65,8 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
   },
   {
     Header: 'Courses',
-    accessor: 'courses',
-    id: 'courseIds',
+    accessor: ({ courses }) => courses.map(course => course.id),
     disableSortBy: true,
-    Cell: ({ row }) => {
-      const { courses = [] } = row.original;
-      return courses.map(c => c.id).join(', ');
-    },
   },
   {
     Header: 'Purchased seats',
