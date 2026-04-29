@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Select from 'react-select';
 import { EnrollmentStatus } from 'features/shared/data/constants';
-import { faDownload, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Delete, Search, Download } from '@openedx/paragon/icons';
 
 export const Filters = props => {
   const {
@@ -121,13 +121,23 @@ export const Filters = props => {
           placement="top"
           overlay={<Tooltip variant="light">Apply filters</Tooltip>}
         >
-          <IconButton icon={faSearch} alt="filter" onClick={handleApplyFilters} variant="secondary" />
+          <IconButton
+            src={Search}
+            alt="Apply filters"
+            onClick={handleApplyFilters}
+            variant="secondary"
+          />
         </OverlayTrigger>
         <OverlayTrigger
           placement="top"
           overlay={<Tooltip variant="light">Clean filters</Tooltip>}
         >
-          <IconButton icon={faTrash} alt="filter" onClick={handleCleanFilters} variant="secondary" />
+          <IconButton
+            src={Delete}
+            alt="Clear filters"
+            onClick={handleCleanFilters}
+            variant="secondary"
+          />
         </OverlayTrigger>
         <OverlayTrigger
           placement="top"
@@ -140,7 +150,13 @@ export const Filters = props => {
           )}
         >
           <div className="ml-6">
-            <IconButton disabled={!isFilterApplied} icon={faDownload} alt="filter" onClick={handleExportEnrollments} variant="secondary" />
+            <IconButton
+              disabled={!isFilterApplied}
+              src={Download}
+              alt="Export enrollments"
+              onClick={handleExportEnrollments}
+              variant="secondary"
+            />
           </div>
         </OverlayTrigger>
 
