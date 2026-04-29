@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Card, Col, Form, IconButton, OverlayTrigger, Tooltip,
 } from '@openedx/paragon';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Delete } from '@openedx/paragon/icons';
 
 export const Filters = (props) => {
   const {
@@ -71,7 +71,12 @@ export const Filters = (props) => {
           placement="top"
           overlay={<Tooltip variant="light">Clean filters</Tooltip>}
         >
-          <IconButton icon={faTrash} alt="filter" onClick={handleCleanFilters} variant="secondary" />
+          <IconButton
+            src={Delete}
+            alt="Clear filters"
+            onClick={handleCleanFilters}
+            variant="secondary"
+          />
         </OverlayTrigger>
       </Form>
     </Card>
