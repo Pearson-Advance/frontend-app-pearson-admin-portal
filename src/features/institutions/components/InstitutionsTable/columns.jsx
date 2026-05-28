@@ -24,6 +24,17 @@ export const getColumns = (props) => [
     accessor: 'externalId',
   },
   {
+    Header: 'Support link',
+    accessor: 'supportLink',
+    Cell: ({ value }) => (
+      value ? (
+        <a href={value} target="_blank" rel="noopener noreferrer">
+          Link
+        </a>
+      ) : null
+    ),
+  },
+  {
     Header: 'Active',
     accessor: 'active',
     disableSortBy: true,
@@ -68,6 +79,7 @@ export const getColumns = (props) => [
               row.values.shortName,
               row.values.externalId,
               row.values.active,
+              row.values.supportLink,
             );
           }}
         />

@@ -8,4 +8,5 @@ Factory.define('institution')
   .sequence('name', (i) => `Training Center ${i}`)
   .sequence('shortName', (i) => `TC${i}`)
   .sequence('uuid', (i) => `uuid-12345 ${i}`)
+  .sequence('supportLink', (i) => `https://example.com/support/${i}`)
   .attr('active', true);

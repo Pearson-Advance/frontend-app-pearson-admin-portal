@@ -17,6 +17,7 @@ const initialFormValues = {
   name: '',
   shortName: '',
   externalId: '',
+  supportLink: '',
   active: true,
 };
 
@@ -68,6 +69,7 @@ const InstitutionsPage = () => {
         shortName: form.institution.shortName,
         externalId: form.institution.externalId,
         active: form.institution.active,
+        supportLink: form.institution.supportLink,
       });
     }
   }, [dispatch, create, form]);
@@ -84,6 +86,7 @@ const InstitutionsPage = () => {
           fields={fields}
           setFields={setFields}
           errors={form.errors}
+          isCreating={create}
         />
       </Modal>
       <ActionRow className="pt-4">
