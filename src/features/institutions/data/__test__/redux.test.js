@@ -45,10 +45,20 @@ describe('Institutions data layer tests', () => {
     expect(store.getState().institutions.data)
       .toEqual([
         {
-          id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
+          id: 1,
+          name: 'Training Center 1',
+          shortName: 'TC1',
+          active: true,
+          uuid: 'uuid-12345 1',
+          supportLink: 'https://example.com/support/1',
         },
         {
-          id: 2, name: 'Training Center 2', shortName: 'TC2', active: true, uuid: 'uuid-12345 2',
+          id: 2,
+          name: 'Training Center 2',
+          shortName: 'TC2',
+          active: true,
+          uuid: 'uuid-12345 2',
+          supportLink: 'https://example.com/support/2',
         },
       ]);
 
@@ -89,7 +99,12 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
+        id: 1,
+        name: 'Training Center 1',
+        shortName: 'TC1',
+        active: true,
+        uuid: 'uuid-12345 1',
+        supportLink: 'https://example.com/support/1',
       }]);
 
     expect(store.getState().institutions.status)
@@ -145,7 +160,12 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1 changed', shortName: 'TC1', active: false, uuid: 'uuid-12345 1',
+        id: 1,
+        name: 'Training Center 1 changed',
+        shortName: 'TC1',
+        active: false,
+        uuid: 'uuid-12345 1',
+        supportLink: 'https://example.com/support/1',
       }]);
 
     expect(store.getState().institutions.status)
@@ -179,7 +199,12 @@ describe('Institutions data layer tests', () => {
 
     expect(store.getState().institutions.data)
       .toEqual([{
-        id: 1, name: 'Training Center 1', shortName: 'TC1', active: true, uuid: 'uuid-12345 1',
+        id: 1,
+        name: 'Training Center 1',
+        shortName: 'TC1',
+        active: true,
+        uuid: 'uuid-12345 1',
+        supportLink: 'https://example.com/support/1',
       }]);
 
     expect(store.getState().institutions.status)

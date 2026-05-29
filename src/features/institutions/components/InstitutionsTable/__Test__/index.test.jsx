@@ -22,6 +22,8 @@ test('render InstitutionsTable with data', () => {
   expect(component.container).toHaveTextContent('Training Center 2');
   expect(component.container).toHaveTextContent('uuid-12345 1');
   expect(component.container).toHaveTextContent('uuid-12345 2');
+  expect(component.container).toHaveTextContent('Link');
+  expect(component.container).toHaveTextContent('Link');
   expect(component.container).not.toHaveTextContent('No results found');
   expect(tableRows).toHaveLength(3);
 });
@@ -37,7 +39,8 @@ test('Render InstitutionsTable with expected columns.', () => {
   expect(tableHeadRow).toHaveTextContent('Name');
   expect(tableHeadRow).toHaveTextContent('Short name');
   expect(tableHeadRow).toHaveTextContent('External ID');
+  expect(tableHeadRow).toHaveTextContent('link');
   expect(tableHeadRow).toHaveTextContent('Active');
   expect(tableHeadRow).toHaveTextContent('Actions');
-  expect(tableHeadRow.children).toHaveLength(6);
+  expect(tableHeadRow.children).toHaveLength(7);
 });

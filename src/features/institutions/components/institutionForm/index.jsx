@@ -3,7 +3,12 @@ import { Form } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { has } from 'lodash';
 
-export const InstitutionForm = ({ fields, setFields, errors }) => {
+export const InstitutionForm = ({
+  fields,
+  setFields,
+  errors,
+  isCreating,
+}) => {
   const handleInputChange = (e) => {
     setFields({
       ...fields,
@@ -43,6 +48,18 @@ export const InstitutionForm = ({ fields, setFields, errors }) => {
         />
         {errors.externalId && <Form.Control.Feedback type="invalid">{errors.externalId}</Form.Control.Feedback>}
       </Form.Group>
+      {!isCreating && (
+        <Form.Group isInvalid={has(errors, 'supportLink')}>
+          <Form.Label>Support link</Form.Label>
+          <Form.Control
+            name="supportLink"
+            maxLength="256"
+            value={fields.supportLink}
+            disabled
+          />
+          {errors.supportLink && <Form.Control.Feedback type="invalid">{errors.supportLink}</Form.Control.Feedback>}
+        </Form.Group>
+      )}
       <Form.Group>
         <Form.Checkbox
           name="active"
@@ -61,12 +78,15 @@ InstitutionForm.propTypes = {
     name: PropTypes.string,
     shortName: PropTypes.string,
     externalId: PropTypes.string,
+    supportLink: PropTypes.string,
     active: PropTypes.bool,
   }).isRequired,
+  isCreating: PropTypes.bool,
   setFields: PropTypes.func.isRequired,
   errors: PropTypes.shape({
     name: PropTypes.string,
     shortName: PropTypes.string,
     externalId: PropTypes.string,
+    supportLink: PropTypes.string,
   }).isRequired,
 };
