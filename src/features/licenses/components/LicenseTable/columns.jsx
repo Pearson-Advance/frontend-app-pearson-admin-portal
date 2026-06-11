@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { useSelector } from 'react-redux';
 import {
   IconButton, OverlayTrigger, Tooltip, Badge,
 } from '@openedx/paragon';
@@ -9,7 +8,7 @@ import { filter as lodashFilter } from 'lodash';
 
 import { LicenseTypes } from 'features/shared/data/constants';
 
-export const getColumns = ({ handleShowDetails, handleEditModal }) => [
+export const getColumns = ({ handleShowDetails, handleEditModal, catalogsList = [] }) => [
   {
     Header: 'License Name',
     accessor: 'licenseName',
@@ -26,11 +25,31 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
     Header: 'Master Courses / Catalogs',
     accessor: 'courses',
     id: 'masterCoursesOrCatalogs',
-    filter: 'text',
+    filter: (rows, columnIds, filterValue) => {
+      if (!filterValue) { return rows; }
+      const searchValue = filterValue.toLowerCase();
+      return rows.filter((row) => {
+        const { courses = [], catalogs = [], licenseType } = row.original;
+        if (licenseType === LicenseTypes.COURSES) {
+          return courses.some(
+            (course) => (course.id || '').toLowerCase().includes(searchValue)
+              || (course.displayName || '').toLowerCase().includes(searchValue),
+          );
+        }
+        if (licenseType === LicenseTypes.CATALOG) {
+          return catalogs.some((catalogId) => {
+            const catalogItem = catalogsList.find((c) => c.value === catalogId);
+            const catalogName = catalogItem?.label || '';
+            return catalogId.toLowerCase().includes(searchValue)
+              || catalogName.toLowerCase().includes(searchValue);
+          });
+        }
+        return false;
+      });
+    },
     disableSortBy: true,
     Cell: ({ row }) => {
       const { licenseType, courses = [], catalogs = [] } = row.original;
-      const catalogsList = useSelector(state => state.licenses.catalogs.data);
 
       if (licenseType === LicenseTypes.CATALOG) {
         const elements = catalogs.map((catalog) => lodashFilter(catalogsList, { value: catalog }));
@@ -62,11 +81,6 @@ export const getColumns = ({ handleShowDetails, handleEditModal }) => [
 
       return null;
     },
-  },
-  {
-    Header: 'Courses',
-    accessor: ({ courses }) => courses.map(course => course.id),
-    disableSortBy: true,
   },
   {
     Header: 'Purchased seats',
