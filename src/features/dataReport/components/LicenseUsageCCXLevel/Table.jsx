@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}${getConfig().LEARNING_MFE_PATH}/course/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}/instructor`;
 
-export const Table = ({ data, count }) => {
+export const Table = ({ data, count, isLoading }) => {
   const [isCCXUrlCopied, setisCCXUrlCopied] = useState(false);
 
   function openCcxInstructorUrl(ccxId) {
@@ -86,6 +86,7 @@ export const Table = ({ data, count }) => {
   return (
     <DataTable
       itemCount={count}
+      isLoading={isLoading}
       data={data}
       columns={columns}
     >
@@ -99,8 +100,10 @@ export const Table = ({ data, count }) => {
 Table.propTypes = {
   count: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  isLoading: PropTypes.bool,
 };
 
 Table.defaultProps = {
   data: [],
+  isLoading: false,
 };

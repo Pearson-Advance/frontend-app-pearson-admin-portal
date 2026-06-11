@@ -11,7 +11,7 @@ import { isEmpty } from 'lodash';
 import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
 
-const InstitutionAdminsTable = ({ data }) => {
+const InstitutionAdminsTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const {
     pageSize, pageIndex, filters, sortBy,
@@ -40,6 +40,7 @@ const InstitutionAdminsTable = ({ data }) => {
             isFilterable
             showFiltersInSidebar
             isPaginated
+            isLoading={isLoading}
             defaultColumnValues={{ Filter: TextFilter }}
             initialState={{
               pageSize, pageIndex, filters: JSON.parse(filters), sortBy,
@@ -71,10 +72,12 @@ const InstitutionAdminsTable = ({ data }) => {
 
 InstitutionAdminsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  isLoading: PropTypes.bool,
 };
 
 InstitutionAdminsTable.defaultProps = {
   data: [],
+  isLoading: false,
 };
 
 export { InstitutionAdminsTable };

@@ -11,12 +11,14 @@ const StudentEnrollmentsTable = ({
   count,
   columns,
   hideColumns,
+  isLoading,
 }) => (
   <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
     <Col xs={12}>
       <DataTable
         isSortable
         manualSortBy
+        isLoading={isLoading}
         itemCount={count}
         data={data}
         columns={columns}
@@ -36,6 +38,7 @@ StudentEnrollmentsTable.propTypes = {
   count: PropTypes.number,
   columns: PropTypes.arrayOf(PropTypes.shape([])),
   hideColumns: PropTypes.oneOfType({}),
+  isLoading: PropTypes.bool,
 };
 
 StudentEnrollmentsTable.defaultProps = {
@@ -43,6 +46,7 @@ StudentEnrollmentsTable.defaultProps = {
   count: 0,
   columns: [],
   hideColumns: {},
+  isLoading: false,
 };
 
 export { StudentEnrollmentsTable };

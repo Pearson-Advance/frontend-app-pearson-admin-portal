@@ -7,7 +7,7 @@ import { InstitutionAdminForm } from 'features/institutionAdmins/components/inst
 import { InstitutionAdminsTable } from 'features/institutionAdmins/components/InstitutionAdminsTable';
 import { fetchInstitutionAdmins, selectAdmins, createInstitutionAdmin } from 'features/institutionAdmins/data';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex } from 'features/shared/data/constants';
+import { TabIndex, RequestStatus } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { closeModal, openModal } from 'features/institutionAdmins/data/slices';
 
@@ -18,7 +18,7 @@ const initialFormValues = {
 
 const InstitutionAdminsPage = () => {
   const dispatch = useDispatch();
-  const { data, form } = useSelector(selectAdmins);
+  const { data, form, status: adminsStatus } = useSelector(selectAdmins);
   const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const [fields, setFields] = useState(initialFormValues);
 
@@ -58,7 +58,7 @@ const InstitutionAdminsPage = () => {
       <ActionRow className="pt-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add admin</Button>
       </ActionRow>
-      <InstitutionAdminsTable data={data} />
+      <InstitutionAdminsTable data={data} isLoading={adminsStatus === RequestStatus.IN_PROGRESS} />
     </Container>
   );
 };

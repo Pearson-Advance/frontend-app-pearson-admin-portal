@@ -7,7 +7,7 @@ import { openModalForm } from 'features/institutions/data/slices';
 import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
 
-const InstitutionsTable = ({ data }) => {
+const InstitutionsTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const {
     pageSize, pageIndex, filters, sortBy,
@@ -29,6 +29,7 @@ const InstitutionsTable = ({ data }) => {
           isPaginated
           isFilterable
           showFiltersInSidebar
+          isLoading={isLoading}
           defaultColumnValues={{ Filter: TextFilter }}
           initialState={{
             pageSize, pageIndex, filters: JSON.parse(filters), sortBy,
@@ -49,10 +50,12 @@ const InstitutionsTable = ({ data }) => {
 
 InstitutionsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  isLoading: PropTypes.bool,
 };
 
 InstitutionsTable.defaultProps = {
   data: [],
+  isLoading: false,
 };
 
 export { InstitutionsTable };

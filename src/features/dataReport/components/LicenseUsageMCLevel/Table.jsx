@@ -2,7 +2,7 @@ import { DataTable } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-export const Table = ({ data, count }) => {
+export const Table = ({ data, count, isLoading }) => {
   const columns = [
     {
       Header: 'Institution',
@@ -24,6 +24,7 @@ export const Table = ({ data, count }) => {
   return (
     <DataTable
       itemCount={count}
+      isLoading={isLoading}
       data={data}
       columns={columns}
     >
@@ -37,8 +38,10 @@ export const Table = ({ data, count }) => {
 Table.propTypes = {
   count: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  isLoading: PropTypes.bool,
 };
 
 Table.defaultProps = {
   data: [],
+  isLoading: false,
 };

@@ -9,11 +9,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchExportLicenseUsageMCLevel, fetchLicenseUsageMCLevel } from 'features/dataReport/data/thunks';
 import { fetchEligibleCourses } from 'features/licenses/data';
+import { RequestStatus } from 'features/shared/data/constants';
 import { Table } from './Table';
 
 export const LicenseUsageMCLevel = ({ filters }) => {
   const dispatch = useDispatch();
   const mcLevelTable = useSelector(state => state.dataReport.mcLevelResponse);
+  const dataReportStatus = useSelector(state => state.dataReport.status);
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageMCLevel(filters));
@@ -51,7 +53,11 @@ export const LicenseUsageMCLevel = ({ filters }) => {
           />
         </OverlayTrigger>
       </div>
-      <Table data={mcLevelTable.results} count={mcLevelTable.count} />
+      <Table
+        data={mcLevelTable.results}
+        count={mcLevelTable.count}
+        isLoading={dataReportStatus === RequestStatus.IN_PROGRESS}
+      />
       {mcLevelTable.count > 0 && (
       <Pagination
         paginationLabel="navigation"
