@@ -5,6 +5,7 @@ import {
   Row, Col,
 } from '@openedx/paragon';
 import { PersistController } from 'features/shared/components/PersistController';
+import './index.scss';
 
 const StudentEnrollmentsTable = ({
   data,
@@ -13,7 +14,7 @@ const StudentEnrollmentsTable = ({
   hideColumns,
   isLoading,
 }) => (
-  <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
+  <Row className="enrollments-table-wrapper justify-content-center my-4 border-gray-300 bg-light-100 my-3">
     <Col xs={12}>
       <DataTable
         isSortable
