@@ -17,6 +17,8 @@ const LicenseTable = ({ data }) => {
     pageSize, pageIndex, filters, sortBy,
   } = useSelector(state => state.page.dataTable);
 
+  const catalogsList = useSelector(state => state.licenses.catalogs.data);
+
   const handleShowDetails = (licenseId) => {
     navigate(`/licenses/${licenseId}`);
   };
@@ -25,7 +27,7 @@ const LicenseTable = ({ data }) => {
     dispatch(openLicenseModal(editData));
   };
 
-  const columns = getColumns({ handleShowDetails, handleEditModal });
+  const columns = getColumns({ handleShowDetails, handleEditModal, catalogsList });
 
   return (
     <DataTable
@@ -39,7 +41,6 @@ const LicenseTable = ({ data }) => {
         pageIndex,
         filters: JSON.parse(filters),
         sortBy,
-        hiddenColumns: ['Courses'],
       }}
       itemCount={data.length}
       data={data}
