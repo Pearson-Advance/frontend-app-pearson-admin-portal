@@ -1,0 +1,21 @@
+@import '../../../shared/components/table-layout';
+
+.license-table-wrapper {
+  .pgn__data-table-layout-wrapper {
+    flex-direction: column;
+
+    @include table-sidebar-stacked;
+
+    @media (min-width: 1280px) {
+      flex-direction: row;
+
+      .pgn__data-table-layout-sidebar {
+        width: auto;
+        flex: 0 0 var(--pgn-size-data-table-layout-sidebar-width);
+        min-width: 340px;
+        margin-right: 2.5rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+}

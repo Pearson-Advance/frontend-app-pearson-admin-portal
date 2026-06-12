@@ -1,0 +1,5 @@
+@import '../../../shared/components/table-layout';
+
+.institution-admins-table-wrapper {
+  @include table-layout-desktop-first(300px);
+}

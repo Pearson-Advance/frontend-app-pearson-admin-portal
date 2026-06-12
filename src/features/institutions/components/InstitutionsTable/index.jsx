@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openModalForm } from 'features/institutions/data/slices';
 import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
+import './index.scss';
 
 const InstitutionsTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const InstitutionsTable = ({ data, isLoading }) => {
   const COLUMNS = getColumns({ handleEditModal });
 
   return (
-    <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
+    <Row className="institutions-table-wrapper justify-content-center my-4 border-gray-300 bg-light-100 my-3">
       <Col xs={12}>
         <DataTable
           isSortable

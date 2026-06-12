@@ -10,6 +10,7 @@ import { Modal } from 'features/shared/components/Modal';
 import { isEmpty } from 'lodash';
 import { PersistController } from 'features/shared/components/PersistController';
 import { getColumns } from './columns';
+import './index.scss';
 
 const InstitutionAdminsTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const InstitutionAdminsTable = ({ data, isLoading }) => {
 
   return (
     <>
-      <Row className="justify-content-center my-4 border-gray-300 bg-light-100 my-3">
+      <Row className="institution-admins-table-wrapper justify-content-center my-4 border-gray-300 bg-light-100 my-3">
         <Col xs={12}>
           <DataTable
             isSortable
