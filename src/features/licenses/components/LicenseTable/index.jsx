@@ -9,7 +9,7 @@ import { PersistController } from 'features/shared/components/PersistController'
 import { getColumns } from './columns';
 import { openLicenseModal } from '../../data/slices';
 
-const LicenseTable = ({ data }) => {
+const LicenseTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -35,6 +35,7 @@ const LicenseTable = ({ data }) => {
       isPaginated
       isFilterable
       showFiltersInSidebar
+      isLoading={isLoading}
       defaultColumnValues={{ Filter: TextFilter }}
       initialState={{
         pageSize,
@@ -56,10 +57,12 @@ const LicenseTable = ({ data }) => {
 
 LicenseTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
+  isLoading: PropTypes.bool,
 };
 
 LicenseTable.defaultProps = {
   data: [],
+  isLoading: false,
 };
 
 export { LicenseTable };

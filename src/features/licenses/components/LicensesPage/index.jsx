@@ -7,7 +7,7 @@ import {
 } from '@openedx/paragon';
 import { LicenseTable } from 'features/licenses/components/LicenseTable';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex, LicenseTypes } from 'features/shared/data/constants';
+import { TabIndex, LicenseTypes, RequestStatus } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import {
@@ -32,7 +32,7 @@ const LicensesPage = () => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState(initialFormValues);
   const { selectedInstitution } = useSelector(state => state.page.globalFilters);
-  const { data, form } = useSelector(state => state.licenses);
+  const { data, form, status: licensesStatus } = useSelector(state => state.licenses);
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const create = !has(form.license, 'id');
 
@@ -129,7 +129,7 @@ const LicensesPage = () => {
       <ActionRow className="pb-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add license</Button>
       </ActionRow>
-      <LicenseTable data={data} />
+      <LicenseTable data={data} isLoading={licensesStatus === RequestStatus.IN_PROGRESS} />
     </Container>
   );
 };

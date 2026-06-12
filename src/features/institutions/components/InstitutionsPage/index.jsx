@@ -9,7 +9,7 @@ import { ActionRow, Button } from '@openedx/paragon';
 import { Modal } from 'features/shared/components/Modal';
 import { closeModalForm, openModalForm } from 'features/institutions/data/slices';
 import { changeTab } from 'features/shared/data/slices';
-import { TabIndex } from 'features/shared/data/constants';
+import { TabIndex, RequestStatus } from 'features/shared/data/constants';
 import { has } from 'lodash';
 
 const initialFormValues = {
@@ -24,7 +24,7 @@ const initialFormValues = {
 const InstitutionsPage = () => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState(initialFormValues);
-  const { data, form } = useSelector(state => state.institutions);
+  const { data, form, status: institutionsStatus } = useSelector(state => state.institutions);
   const { selectedInstitution } = useSelector(state => state.page.globalFilters);
   const create = !has(form.institution, 'id');
 
@@ -92,7 +92,7 @@ const InstitutionsPage = () => {
       <ActionRow className="pt-4">
         <Button variant="outline-primary" onClick={handleOpenModal} iconBefore={Add}>Add institution</Button>
       </ActionRow>
-      <InstitutionsTable data={data} />
+      <InstitutionsTable data={data} isLoading={institutionsStatus === RequestStatus.IN_PROGRESS} />
     </Container>
   );
 };

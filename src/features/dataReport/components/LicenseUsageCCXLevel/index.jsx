@@ -9,11 +9,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { fetchExportLicenseUsageCCXLevel, fetchLicenseUsageCCXLevel } from 'features/dataReport/data/thunks';
 import { fetchEligibleCourses } from 'features/licenses/data';
+import { RequestStatus } from 'features/shared/data/constants';
 import { Table } from './Table';
 
 export const LicenseUsageCCXLevel = ({ filters }) => {
   const dispatch = useDispatch();
   const ccxLevelTable = useSelector(state => state.dataReport.ccxLevelResponse);
+  const dataReportStatus = useSelector(state => state.dataReport.status);
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageCCXLevel(filters));
@@ -51,7 +53,11 @@ export const LicenseUsageCCXLevel = ({ filters }) => {
           />
         </OverlayTrigger>
       </div>
-      <Table data={ccxLevelTable.results} count={ccxLevelTable.count} />
+      <Table
+        data={ccxLevelTable.results}
+        count={ccxLevelTable.count}
+        isLoading={dataReportStatus === RequestStatus.IN_PROGRESS}
+      />
       {ccxLevelTable.count > 0 && (
         <Pagination
           paginationLabel="navigation"

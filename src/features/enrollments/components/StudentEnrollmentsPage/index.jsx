@@ -25,7 +25,7 @@ import { changeTab } from 'features/shared/data/slices';
 import { updateEnrollment } from 'features/enrollments/data/slices';
 
 import { getOrdering } from 'features/shared/data/utils';
-import { TabIndex, EnrollmentStatus } from 'features/shared/data/constants';
+import { TabIndex, EnrollmentStatus, RequestStatus } from 'features/shared/data/constants';
 
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
@@ -46,8 +46,8 @@ const StudentEnrollmentsPage = () => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.enrollments.updateEnrollmentStatus.errorMessage);
   const requestResponse = useSelector(state => state.enrollments.requestResponse);
+  const enrollmentsStatus = useSelector(state => state.enrollments.status);
   const sortBy = useSelector(state => state.page.dataTable.sortBy);
-  const pageTab = useSelector(state => state.page.tab);
   const institutions = useSelector(allInstitutionsForSelect);
   const eligibleCourses = useSelector(managedCoursesForSelect);
 
@@ -158,15 +158,20 @@ const StudentEnrollmentsPage = () => {
   };
 
   useEffect(() => {
-    if (TabIndex.ENROLLMENTS !== pageTab) { dispatch(changeTab(TabIndex.ENROLLMENTS)); }
+    dispatch(changeTab(TabIndex.ENROLLMENTS));
+  }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(fetchInstitutions());
+    dispatch(fetchEligibleCourses());
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(fetchStudentEnrollments({
       ...filters,
       ordering: getOrdering(sortBy),
     }));
-    dispatch(fetchInstitutions());
-    dispatch(fetchEligibleCourses());
-  }, [dispatch, sortBy, filters, pageTab]);
+  }, [dispatch, sortBy, filters]);
 
   const modalFooter = (
     <ActionRow>
@@ -193,6 +198,7 @@ const StudentEnrollmentsPage = () => {
         count={requestResponse.count}
         columns={COLUMNS}
         hideColumns={hideColumns}
+        isLoading={enrollmentsStatus === RequestStatus.IN_PROGRESS}
       />
       <Pagination
         paginationLabel="paginationNavigation"
