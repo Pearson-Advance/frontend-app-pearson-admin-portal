@@ -12,13 +12,14 @@ export const getColumns = (props) => [
   },
   {
     Header: 'Admin username',
-    accessor: 'user',
+    id: 'username',
+    accessor: (row) => row.user?.username || '',
     Cell: ({ row }) => row.original?.user?.username || '',
   },
   {
     Header: 'Admin email',
-    accessor: 'user',
-    id: 'adminEmail',
+    id: 'email',
+    accessor: (row) => row.user?.email || '',
     Cell: ({ row }) => row.original?.user?.email || '',
   },
   {
