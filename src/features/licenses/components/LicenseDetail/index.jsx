@@ -1,5 +1,5 @@
 import {
-  ActionRow, Button, Card, Col, Container, Icon, IconButton, Row, Spinner,
+  ActionRow, Alert, Button, Card, Col, Container, Icon, IconButton, Row, Spinner, useToggle,
 } from '@openedx/paragon';
 import { Add, ArrowBack } from '@openedx/paragon/icons';
 import React, { useEffect, useState } from 'react';
@@ -9,7 +9,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { Modal } from 'features/shared/components/Modal';
 import { openLicenseOrderModal, closeLicenseOrderModal, clearLicenseOrder } from 'features/licenses/data/slices';
-import { createLicenseOrder, fetchLicensebyId, editLicenseOrder } from 'features/licenses/data/thunks';
+import {
+  createLicenseOrder, fetchLicensebyId, editLicenseOrder, removeLicenseOrder,
+} from 'features/licenses/data/thunks';
 import { LicenseOrders } from 'features/licenses/components/LicenseOrders';
 import { LicenseOrderForm } from 'features/licenses/components/LicenseOrderForm';
 import { TabIndex } from 'features/shared/data/constants';
@@ -29,6 +31,12 @@ export const LicenseDetail = () => {
   const { id } = useParams();
   const { ordersData, Orderform, licenseById } = useSelector(state => state.licenses);
   const [fields, setFields] = useState(initialFormValues);
+  const [isDeleteModalOpen, openDeleteModal, closeDeleteModal] = useToggle(false);
+  const [deleteState, setDeleteState] = useState({
+    orderId: null,
+    error: null,
+    isDeleting: false,
+  });
 
   const handleGoBackClick = () => {
     navigate('/licenses');
@@ -47,6 +55,30 @@ export const LicenseDetail = () => {
       }));
     } else {
       dispatch(openLicenseOrderModal());
+    }
+  };
+
+  const handleOpenDeleteModal = (orderId) => {
+    setDeleteState({ orderId, error: null, isDeleting: false });
+    openDeleteModal();
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteState({ orderId: null, error: null, isDeleting: false });
+    closeDeleteModal();
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteState.isDeleting) {
+      return;
+    }
+    setDeleteState(prev => ({ ...prev, isDeleting: true }));
+    const result = await dispatch(removeLicenseOrder(deleteState.orderId));
+    if (result.success) {
+      handleCloseDeleteModal();
+      dispatch(fetchLicensebyId(id));
+    } else {
+      setDeleteState(prev => ({ ...prev, isDeleting: false, error: result.error }));
     }
   };
 
@@ -159,9 +191,29 @@ export const LicenseDetail = () => {
                         errors={Orderform.errors}
                       />
                     </Modal>
+                    <Modal
+                      title="Remove order"
+                      isOpen={isDeleteModalOpen}
+                      handleCloseModal={handleCloseDeleteModal}
+                      handlePrimaryAction={handleConfirmDelete}
+                      primaryActionText="Remove"
+                      primaryVariant="danger"
+                      isDisabledPrimaryAction={deleteState.isDeleting}
+                    >
+                      <>
+                        <p>Are you sure you want to remove this order? This will deactivate it.</p>
+                        {deleteState.error && (
+                          <Alert variant="danger">{deleteState.error}</Alert>
+                        )}
+                      </>
+                    </Modal>
                   </Container>
                   <Card.Body>
-                    <LicenseOrders data={licenseById.licenseOrder} handleOpenModal={handleOpenModal} />
+                    <LicenseOrders
+                      data={licenseById.licenseOrder}
+                      handleOpenModal={handleOpenModal}
+                      handleOpenDeleteModal={handleOpenDeleteModal}
+                    />
                   </Card.Body>
                 </Card>
               </Col>

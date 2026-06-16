@@ -65,3 +65,21 @@ export const LicenseTypes = {
   COURSES: 'courses',
   CATALOG: 'catalog',
 };
+
+/**
+ * Error messages, keyed by HTTP status, shown when removing a license order fails.
+ * @readonly
+ * @enum {string}
+ */
+export const DELETE_ORDER_ERROR_MESSAGES = {
+  401: 'Your session has expired. Please sign in again.',
+  403: "You don't have permission to remove orders.",
+};
+
+/**
+ * Fallback error message shown when removing a license order fails
+ * with an unmapped HTTP status.
+ * @readonly
+ * @string
+ */
+export const GENERIC_DELETE_ORDER_ERROR = 'Something went wrong while removing the order. Please try again.';

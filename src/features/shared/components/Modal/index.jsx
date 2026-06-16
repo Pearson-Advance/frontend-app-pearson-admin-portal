@@ -16,6 +16,8 @@ export const Modal = (props) => {
     variant,
     size,
     isDisabledPrimaryAction,
+    primaryActionText,
+    primaryVariant,
   } = props;
 
   return (
@@ -43,11 +45,11 @@ export const Modal = (props) => {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant={primaryVariant}
             onClick={handlePrimaryAction}
             disabled={isDisabledPrimaryAction}
           >
-            Save
+            {primaryActionText}
           </Button>
         </ActionRow>
       </ModalDialog.Footer>
@@ -64,6 +66,8 @@ Modal.propTypes = {
   variant: PropTypes.string,
   size: PropTypes.string,
   isDisabledPrimaryAction: PropTypes.bool,
+  primaryActionText: PropTypes.string,
+  primaryVariant: PropTypes.string,
 };
 
 Modal.defaultProps = {
@@ -71,4 +75,6 @@ Modal.defaultProps = {
   variant: 'default',
   size: 'md',
   isDisabledPrimaryAction: false,
+  primaryActionText: 'Save',
+  primaryVariant: 'primary',
 };

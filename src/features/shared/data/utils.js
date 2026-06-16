@@ -1,3 +1,15 @@
+import { DELETE_ORDER_ERROR_MESSAGES, GENERIC_DELETE_ORDER_ERROR } from 'features/shared/data/constants';
+
+/**
+ * Return a user-facing error message for a failed license order deletion,
+ * based on the HTTP status of the response.
+ * @param {number} status HTTP status code of the failed request.
+ * @returns {string} Error message to show to the user.
+ */
+export function getDeleteOrderErrorMessage(status) {
+  return DELETE_ORDER_ERROR_MESSAGES[status] || GENERIC_DELETE_ORDER_ERROR;
+}
+
 export function removeNullOrEmptyObjectAttributes(object) {
   return Object.keys(object)
     .filter((key) => object[key] !== null && object[key] !== '')

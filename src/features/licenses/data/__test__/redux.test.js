@@ -5,10 +5,12 @@ import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { executeThunk } from 'test-utils';
 import { initializeStore } from 'store';
 
+import { DELETE_ORDER_ERROR_MESSAGES } from 'features/shared/data/constants';
 import 'features/licenses/data/__factories__';
-import { fetchLicenses, fetchCatalogs } from '../thunks';
+import { fetchLicenses, fetchCatalogs, removeLicenseOrder } from '../thunks';
 
 const licensesApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license/`;
+const licensesOrdersApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license-orders/`;
 let axiosMock;
 let store;
 
@@ -95,6 +97,33 @@ describe('Licenses data layer tests', () => {
 
     expect(store.getState().licenses.status)
       .toEqual('failed');
+  });
+
+  test('removeLicenseOrder resolves successfully on a 204 response', async () => {
+    axiosMock.onDelete(`${licensesOrdersApiUrl}1/`).reply(204);
+
+    const result = await store.dispatch(removeLicenseOrder(1));
+
+    expect(result).toEqual({ success: true });
+  });
+
+  test('removeLicenseOrder treats a 404 as already removed', async () => {
+    axiosMock.onDelete(`${licensesOrdersApiUrl}1/`).reply(404);
+
+    const result = await store.dispatch(removeLicenseOrder(1));
+
+    expect(result).toEqual({ success: true });
+  });
+
+  test('removeLicenseOrder returns a permission error on a 403 response', async () => {
+    axiosMock.onDelete(`${licensesOrdersApiUrl}1/`).reply(403);
+
+    const result = await store.dispatch(removeLicenseOrder(1));
+
+    expect(result).toEqual({
+      success: false,
+      error: DELETE_ORDER_ERROR_MESSAGES[403],
+    });
   });
 
   test('Should fetch multiple pages of catalogs', async () => {

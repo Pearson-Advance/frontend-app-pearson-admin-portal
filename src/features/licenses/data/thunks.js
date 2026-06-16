@@ -2,7 +2,7 @@ import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
 import {
   getLicenses, getLicenseById, postLicense, getEligibleCourses,
-  postLicenseOrder, updateLicenseOrder, updateLicense, getCatalogs,
+  postLicenseOrder, updateLicenseOrder, deleteLicenseOrder, updateLicense, getCatalogs,
 } from './api';
 import {
   fetchLicensesRequest,
@@ -26,6 +26,7 @@ import {
   updateCatalogsRequestStatus,
 } from './slices';
 import { RequestStatus } from '../../shared/data/constants';
+import { getDeleteOrderErrorMessage } from '../../shared/data/utils';
 
 /**
  * Fetches all licenses.
@@ -194,6 +195,28 @@ export function editLicenseOrder(orderId, orderReference, purchasedSeats) {
     } catch (error) {
       dispatch(patchLicenseOrderFailed(camelCaseObject(error.response.data)));
       logError(error);
+    }
+  };
+}
+
+/**
+ * Remove (soft-delete) a LicenseOrder.
+ * Returns a result object so the caller can drive the confirmation modal locally.
+ * @returns {(function(*): Promise<{success: boolean, error?: string}>)|*}
+ */
+export function removeLicenseOrder(orderId) {
+  return async () => {
+    try {
+      await deleteLicenseOrder(orderId);
+      return { success: true };
+    } catch (error) {
+      const status = error.response?.status;
+      if (status === 404) {
+        // The order no longer exists or is already inactive; treat it as removed.
+        return { success: true };
+      }
+      logError(error);
+      return { success: false, error: getDeleteOrderErrorMessage(status) };
     }
   };
 }

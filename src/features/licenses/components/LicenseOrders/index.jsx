@@ -3,8 +3,8 @@ import { DataTable } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { getColumns } from 'features/licenses/components/LicenseOrders/columns';
 
-const LicenseOrders = ({ data, handleOpenModal }) => {
-  const COLUMNS = getColumns({ handleOpenModal });
+const LicenseOrders = ({ data, handleOpenModal, handleOpenDeleteModal }) => {
+  const COLUMNS = getColumns({ handleOpenModal, handleOpenDeleteModal });
 
   return (
     <DataTable
@@ -20,12 +20,14 @@ const LicenseOrders = ({ data, handleOpenModal }) => {
 
 LicenseOrders.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
-  handleOpenModal: PropTypes.arrayOf(PropTypes.shape([])),
+  handleOpenModal: PropTypes.func,
+  handleOpenDeleteModal: PropTypes.func,
 };
 
 LicenseOrders.defaultProps = {
   data: [],
-  handleOpenModal: [],
+  handleOpenModal: () => {},
+  handleOpenDeleteModal: () => {},
 };
 
 export { LicenseOrders };

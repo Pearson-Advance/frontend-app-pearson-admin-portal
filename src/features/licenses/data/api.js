@@ -64,6 +64,16 @@ export function updateLicenseOrder(orderId, orderReference, purchasedSeats) {
 }
 
 /**
+ * Remove (soft-delete) a license order.
+ * The backend deactivates the order and responds with 204 No Content.
+ * @param {number} orderId - The id of the license order to remove.
+ * @returns {Promise} - A promise that resolves with the response of the DELETE request.
+ */
+export function deleteLicenseOrder(orderId) {
+  return getAuthenticatedHttpClient().delete(`${ordersEndpoint()}${orderId}/`);
+}
+
+/**
  * Get catalogs.
  * @param {object} - [params] - Optional parameters
  * @param {number} - [params.page] - The page number for page pagination.
