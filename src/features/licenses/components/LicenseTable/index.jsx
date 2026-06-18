@@ -8,6 +8,7 @@ import { PersistController } from 'features/shared/components/PersistController'
 
 import { getColumns } from './columns';
 import { openLicenseModal } from '../../data/slices';
+import './index.scss';
 
 const LicenseTable = ({ data, isLoading }) => {
   const dispatch = useDispatch();
@@ -30,28 +31,30 @@ const LicenseTable = ({ data, isLoading }) => {
   const columns = getColumns({ handleShowDetails, handleEditModal, catalogsList });
 
   return (
-    <DataTable
-      isSortable
-      isPaginated
-      isFilterable
-      showFiltersInSidebar
-      isLoading={isLoading}
-      defaultColumnValues={{ Filter: TextFilter }}
-      initialState={{
-        pageSize,
-        pageIndex,
-        filters: JSON.parse(filters),
-        sortBy,
-      }}
-      itemCount={data.length}
-      data={data}
-      columns={columns}
-    >
-      <DataTable.Table />
-      <DataTable.EmptyTable content="No results found." />
-      <DataTable.TableFooter />
-      <PersistController />
-    </DataTable>
+    <div className="license-table-wrapper">
+      <DataTable
+        isSortable
+        isPaginated
+        isFilterable
+        isLoading={isLoading}
+        showFiltersInSidebar
+        defaultColumnValues={{ Filter: TextFilter }}
+        initialState={{
+          pageSize,
+          pageIndex,
+          filters: JSON.parse(filters),
+          sortBy,
+        }}
+        itemCount={data.length}
+        data={data}
+        columns={columns}
+      >
+        <DataTable.Table />
+        <DataTable.EmptyTable content="No results found." />
+        <DataTable.TableFooter />
+        <PersistController />
+      </DataTable>
+    </div>
   );
 };
 

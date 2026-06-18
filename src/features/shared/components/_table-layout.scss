@@ -1,0 +1,25 @@
+// Shared SCSS mixins for pgn__data-table-layout filter sidebar patterns.
+
+// Sidebar styles when in stacked (column) layout.
+@mixin table-sidebar-stacked {
+  .pgn__data-table-layout-sidebar {
+    width: 100%;
+    flex: none;
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@mixin table-layout-desktop-first($sidebar-min-width) {
+  .pgn__data-table-layout-wrapper {
+    .pgn__data-table-layout-sidebar {
+      min-width: $sidebar-min-width;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+
+      @include table-sidebar-stacked;
+    }
+  }
+}

@@ -109,7 +109,7 @@ const LicensesPage = () => {
   };
 
   return (
-    <Container className="pr-6 pl-6 pt-4 pb-4">
+    <Container className="py-4 px-2 px-md-3" size="xl">
       <Modal
         title={!create ? `Edit license for ${fields.institution.name} Institution:` : 'Add license:  '}
         isOpen={form.isOpen}
