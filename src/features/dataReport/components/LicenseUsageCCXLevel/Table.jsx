@@ -2,12 +2,13 @@ import {
   DataTable, IconButton, OverlayTrigger, Tooltip,
 } from '@openedx/paragon';
 import { getConfig } from '@edx/frontend-platform';
-import { Launch, Share } from '@openedx/paragon/icons';
+import { Launch, Settings, Share } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}${getConfig().LEARNING_MFE_PATH}/course/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}/instructor`;
+const getPssAdminCourseUrl = (courseId) => `${getConfig().LMS_BASE_URL}/admin/courses/${encodeURIComponent(courseId)}`;
 
 export const Table = ({ data, count, isLoading }) => {
   const [isCCXUrlCopied, setisCCXUrlCopied] = useState(false);
@@ -19,6 +20,10 @@ export const Table = ({ data, count, isLoading }) => {
   function copyCcxUrl(ccxId) {
     navigator.clipboard.writeText(getCcxUrl(ccxId))
       .then(setisCCXUrlCopied(true));
+  }
+
+  function openPssAdminCourseUrl(courseId) {
+    window.open(getPssAdminCourseUrl(courseId), '_blank', 'noopener, noreferrer');
   }
 
   const columns = [
@@ -76,6 +81,18 @@ export const Table = ({ data, count, isLoading }) => {
               alt="Copy CCX URL"
               iconAs={Share}
               onClick={() => { copyCcxUrl(row.values.ccxId); }} // eslint-disable-line react/prop-types
+            />
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip variant="light">Go to class in PSS admin</Tooltip>}
+          >
+            <IconButton
+              alt="Go to class in PSS admin"
+              iconAs={Settings}
+              onClick={() => {
+                openPssAdminCourseUrl(row.values.masterCourse); // eslint-disable-line react/prop-types
+              }}
             />
           </OverlayTrigger>
         </>
