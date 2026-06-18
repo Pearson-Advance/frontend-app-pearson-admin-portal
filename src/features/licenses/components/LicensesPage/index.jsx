@@ -11,12 +11,12 @@ import { TabIndex, LicenseTypes, RequestStatus } from 'features/shared/data/cons
 import { Modal } from 'features/shared/components/Modal';
 import { LicenseForm } from 'features/licenses/components/LicenseForm';
 import {
-  fetchLicenses, createLicense, editLicense, fetchCatalogs,
+  fetchLicenses, createLicense, editLicense, fetchCatalogs, cancelFetchLicenses, cancelFetchCatalogs,
 } from 'features/licenses/data';
 import { fetchInstitutions } from 'features/institutions/data';
 import { has } from 'lodash';
 
-import { openLicenseModal, closeLicenseModal } from 'features/licenses/data/slices';
+import { openLicenseModal, closeLicenseModal, resetStatus } from 'features/licenses/data/slices';
 
 const initialFormValues = {
   licenseName: '',
@@ -45,6 +45,13 @@ const LicensesPage = () => {
     if (showCatalogSelector) {
       dispatch(fetchCatalogs());
     }
+    return () => {
+      dispatch(cancelFetchLicenses());
+      if (showCatalogSelector) {
+        dispatch(cancelFetchCatalogs());
+      }
+      dispatch(resetStatus());
+    };
   }, [dispatch, selectedInstitution, showCatalogSelector]);
 
   useEffect(() => {

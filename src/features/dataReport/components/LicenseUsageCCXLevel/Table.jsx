@@ -8,9 +8,11 @@ import React, { useState } from 'react';
 
 const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}${getConfig().LEARNING_MFE_PATH}/course/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}/instructor`;
-const getPssAdminCourseUrl = (courseId) => `${getConfig().LMS_BASE_URL}/admin/courses/${encodeURIComponent(courseId)}`;
+const getPssAdminCourseUrl = (courseId, institutionId) => `${getConfig().LMS_BASE_URL}/admin/courses/${encodeURIComponent(courseId)}?institutionId=${institutionId}`;
 
-export const Table = ({ data, count, isLoading }) => {
+export const Table = ({
+  data, count, isLoading, institutionsByName,
+}) => {
   const [isCCXUrlCopied, setisCCXUrlCopied] = useState(false);
 
   function openCcxInstructorUrl(ccxId) {
@@ -22,8 +24,8 @@ export const Table = ({ data, count, isLoading }) => {
       .then(setisCCXUrlCopied(true));
   }
 
-  function openPssAdminCourseUrl(courseId) {
-    window.open(getPssAdminCourseUrl(courseId), '_blank', 'noopener, noreferrer');
+  function openPssAdminCourseUrl(courseId, institutionId) {
+    window.open(getPssAdminCourseUrl(courseId, institutionId), '_blank', 'noopener, noreferrer');
   }
 
   const columns = [
@@ -91,7 +93,10 @@ export const Table = ({ data, count, isLoading }) => {
               alt="Go to class in PSS admin"
               iconAs={Settings}
               onClick={() => {
-                openPssAdminCourseUrl(row.values.masterCourse); // eslint-disable-line react/prop-types
+                openPssAdminCourseUrl(
+                  row.values.masterCourse, // eslint-disable-line react/prop-types
+                  institutionsByName[row.values.institution], // eslint-disable-line react/prop-types
+                );
               }}
             />
           </OverlayTrigger>
@@ -118,9 +123,11 @@ Table.propTypes = {
   count: PropTypes.number.isRequired,
   data: PropTypes.arrayOf(PropTypes.shape([])),
   isLoading: PropTypes.bool,
+  institutionsByName: PropTypes.objectOf(PropTypes.number),
 };
 
 Table.defaultProps = {
   data: [],
   isLoading: false,
+  institutionsByName: {},
 };

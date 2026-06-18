@@ -7,15 +7,15 @@ import React, { useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchExportLicenseUsageMCLevel, fetchLicenseUsageMCLevel } from 'features/dataReport/data/thunks';
-import { fetchEligibleCourses } from 'features/licenses/data';
+import { fetchExportLicenseUsageMCLevel, fetchLicenseUsageMCLevel, cancelFetchLicenseUsageMCLevel } from 'features/dataReport/data/thunks';
+import { fetchEligibleCourses, cancelFetchEligibleCourses } from 'features/licenses/data';
 import { RequestStatus } from 'features/shared/data/constants';
 import { Table } from './Table';
 
 export const LicenseUsageMCLevel = ({ filters }) => {
   const dispatch = useDispatch();
   const mcLevelTable = useSelector(state => state.dataReport.mcLevelResponse);
-  const dataReportStatus = useSelector(state => state.dataReport.status);
+  const dataReportStatus = useSelector(state => state.dataReport.mcLevelStatus);
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageMCLevel(filters));
@@ -30,10 +30,16 @@ export const LicenseUsageMCLevel = ({ filters }) => {
 
   useEffect(() => {
     dispatch(fetchEligibleCourses());
+    return () => {
+      dispatch(cancelFetchEligibleCourses());
+    };
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchLicenseUsageMCLevel(filters));
+    return () => {
+      dispatch(cancelFetchLicenseUsageMCLevel());
+    };
   }, [dispatch, filters]);
 
   return (

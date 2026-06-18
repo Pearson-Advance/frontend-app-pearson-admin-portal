@@ -76,6 +76,9 @@ const institutionSlice = createSlice({
         isOpen: false,
       };
     },
+    resetStatus: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
     patchInstitutionFailed: (state, { payload }) => {
       state.status = RequestStatus.FAILED;
       state.form = {
@@ -98,6 +101,7 @@ export const {
   openModalForm,
   patchInstitutionFailed,
   patchInstitutionSuccess,
+  resetStatus,
 } = institutionSlice.actions;
 
 export const { reducer } = institutionSlice;

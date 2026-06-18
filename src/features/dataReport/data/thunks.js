@@ -7,10 +7,12 @@ import {
   getLicenseUsageMCLevel,
 } from './api';
 import {
-  fetchLicenseUsageRequest,
+  fetchLicenseUsageCCXLevelRequest,
   fetchLicenseUsageCCXLevelSuccess,
-  fetchLicenseUsageFailed,
+  fetchLicenseUsageCCXLevelFailed,
+  fetchLicenseUsageMCLevelRequest,
   fetchLicenseUsageMCLevelSuccess,
+  fetchLicenseUsageMCLevelFailed,
 } from './slices';
 
 /**
@@ -28,15 +30,16 @@ function fetchLicenseUsageCCXLevel(filters) {
     const { signal } = abortLicenseUsageCCXLevelController;
 
     try {
-      dispatch(fetchLicenseUsageRequest());
+      dispatch(fetchLicenseUsageCCXLevelRequest());
       dispatch(fetchLicenseUsageCCXLevelSuccess(
         camelCaseObject((await getLicenseUsageCCXLevel(filters, signal)).data),
       ));
     } catch (error) {
       if (signal.aborted) {
         logError('License ccx canceled!');
+        return;
       }
-      dispatch(fetchLicenseUsageFailed());
+      dispatch(fetchLicenseUsageCCXLevelFailed());
       logError(error);
     }
   };
@@ -47,13 +50,25 @@ function fetchLicenseUsageCCXLevel(filters) {
  *  which satisfy the filters criteria level.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortLicenseUsageMCLevelController = null;
 function fetchLicenseUsageMCLevel(filters) {
   return async (dispatch) => {
+    if (abortLicenseUsageMCLevelController) {
+      abortLicenseUsageMCLevelController.abort();
+    }
+
+    abortLicenseUsageMCLevelController = new AbortController();
+    const { signal } = abortLicenseUsageMCLevelController;
+
     try {
-      dispatch(fetchLicenseUsageRequest());
-      dispatch(fetchLicenseUsageMCLevelSuccess(camelCaseObject((await getLicenseUsageMCLevel(filters)).data)));
+      dispatch(fetchLicenseUsageMCLevelRequest());
+      dispatch(fetchLicenseUsageMCLevelSuccess(camelCaseObject((await getLicenseUsageMCLevel(filters, signal)).data)));
     } catch (error) {
-      dispatch(fetchLicenseUsageFailed());
+      if (signal.aborted) {
+        logError('License mc canceled!');
+        return;
+      }
+      dispatch(fetchLicenseUsageMCLevelFailed());
       logError(error);
     }
   };
@@ -99,9 +114,27 @@ function fetchExportLicenseUsageMCLevel(filters) {
   };
 }
 
+function cancelFetchLicenseUsageCCXLevel() {
+  return () => {
+    if (abortLicenseUsageCCXLevelController) {
+      abortLicenseUsageCCXLevelController.abort();
+    }
+  };
+}
+
+function cancelFetchLicenseUsageMCLevel() {
+  return () => {
+    if (abortLicenseUsageMCLevelController) {
+      abortLicenseUsageMCLevelController.abort();
+    }
+  };
+}
+
 export {
   fetchLicenseUsageCCXLevel,
+  cancelFetchLicenseUsageCCXLevel,
   fetchExportLicenseUsageCCXLevel,
   fetchLicenseUsageMCLevel,
+  cancelFetchLicenseUsageMCLevel,
   fetchExportLicenseUsageMCLevel,
 };

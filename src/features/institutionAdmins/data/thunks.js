@@ -34,6 +34,7 @@ export function fetchInstitutionAdmins(selectedInstitution = null) {
     } catch (error) {
       if (signal.aborted) {
         logError('Institution canceled!');
+        return;
       }
       dispatch(fetchInstitutionAdminsFailed());
       logError(error);
@@ -60,6 +61,14 @@ export function editInstitutionAdmin(id, active) {
     } catch (error) {
       dispatch(patchAdminFailed({ id }));
       logError(error);
+    }
+  };
+}
+
+export function cancelFetchInstitutionAdmins() {
+  return () => {
+    if (abortInstitutionController) {
+      abortInstitutionController.abort();
     }
   };
 }

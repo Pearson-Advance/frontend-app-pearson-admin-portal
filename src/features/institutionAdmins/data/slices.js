@@ -72,6 +72,9 @@ const institutionAdminSlice = createSlice({
         isOpen: false,
       };
     },
+    resetStatus: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
   },
 });
 
@@ -86,6 +89,7 @@ export const {
   patchAdminRequest,
   patchAdminSuccess,
   patchAdminFailed,
+  resetStatus,
 } = institutionAdminSlice.actions;
 
 export const { reducer } = institutionAdminSlice;

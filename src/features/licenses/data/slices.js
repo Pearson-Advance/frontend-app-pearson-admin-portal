@@ -6,6 +6,7 @@ const licenseSlice = createSlice({
   name: 'licenses',
   initialState: {
     status: RequestStatus.IN_PROGRESS,
+    eligibleCoursesStatus: RequestStatus.IN_PROGRESS,
     data: [],
     ordersData: [],
     eligibleCourses: [],
@@ -68,14 +69,14 @@ const licenseSlice = createSlice({
       };
     },
     fetchEligibleCoursesRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
+      state.eligibleCoursesStatus = RequestStatus.IN_PROGRESS;
     },
     fetchEligibleCoursesSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
+      state.eligibleCoursesStatus = RequestStatus.SUCCESSFUL;
       state.eligibleCourses = payload.map(course => ({ value: course.id, label: `${course.displayName} - ${course.id}` }));
     },
     fetchEligibleCoursesFailed: (state) => {
-      state.status = RequestStatus.FAILED;
+      state.eligibleCoursesStatus = RequestStatus.FAILED;
     },
     openLicenseModal: (state, { payload }) => {
       if (payload) {
@@ -172,6 +173,9 @@ const licenseSlice = createSlice({
         state.licenseById.licenseOrder = [];
       }
     },
+    resetStatus: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
     updateCatalogs: (state, { payload }) => {
       state.catalogs.data = payload.map(catalog => ({ value: catalog.id, label: catalog.name }));
     },
@@ -206,6 +210,7 @@ export const {
   clearLicenseOrder,
   updateCatalogs,
   updateCatalogsRequestStatus,
+  resetStatus,
 } = licenseSlice.actions;
 
 export const { reducer } = licenseSlice;

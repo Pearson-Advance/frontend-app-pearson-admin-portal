@@ -1,2 +1,7 @@
 export { reducer } from './slices';
-export { fetchLicenseUsageCCXLevel } from './thunks';
+export {
+  fetchLicenseUsageCCXLevel,
+  cancelFetchLicenseUsageCCXLevel,
+  fetchLicenseUsageMCLevel,
+  cancelFetchLicenseUsageMCLevel,
+} from './thunks';

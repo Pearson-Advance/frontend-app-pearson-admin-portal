@@ -37,10 +37,10 @@ export function updateLicense(editData) {
   );
 }
 
-export function getEligibleCourses(params) {
+export function getEligibleCourses(params, signal = null) {
   return getAuthenticatedHttpClient().get(
     eligibleCoursesEndpoint(),
-    { params: { ...params } },
+    { params: { ...params }, signal },
   );
 }
 
@@ -70,9 +70,9 @@ export function updateLicenseOrder(orderId, orderReference, purchasedSeats) {
  * @returns {Promise} - A promise that resolves with the response of the GET request.
  */
 
-export function getCatalogs(params) {
+export function getCatalogs(params, signal = null) {
   return getAuthenticatedHttpClient().get(
     `${getConfig().CATALOG_PLUGIN_API_BASE_URL}/flexible-catalogs/`,
-    { params },
+    { params, signal },
   );
 }

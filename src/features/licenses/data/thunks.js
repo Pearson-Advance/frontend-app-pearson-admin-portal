@@ -48,6 +48,7 @@ export function fetchLicenses(selectedInstitution = null) {
     } catch (error) {
       if (signal.aborted) {
         logError('Licenses canceled!');
+        return;
       }
 
       dispatch(fetchLicensesFailed());
@@ -113,18 +114,46 @@ export function editLicense(editData) {
  * Fetches all license managed courses.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortEligibleCoursesController = null;
 export function fetchEligibleCourses(params) {
   return async (dispatch) => {
+    if (abortEligibleCoursesController) {
+      abortEligibleCoursesController.abort();
+    }
+
+    abortEligibleCoursesController = new AbortController();
+    const { signal } = abortEligibleCoursesController;
+
     try {
       dispatch(fetchEligibleCoursesRequest());
       dispatch(
         fetchEligibleCoursesSuccess(
-          camelCaseObject((await getEligibleCourses(params)).data),
+          camelCaseObject((await getEligibleCourses(params, signal)).data),
         ),
       );
     } catch (error) {
+      if (signal.aborted) {
+        logError('Eligible courses canceled!');
+        return;
+      }
       dispatch(fetchEligibleCoursesFailed());
       logError(error);
+    }
+  };
+}
+
+export function cancelFetchLicenses() {
+  return () => {
+    if (abortLicensesController) {
+      abortLicensesController.abort();
+    }
+  };
+}
+
+export function cancelFetchEligibleCourses() {
+  return () => {
+    if (abortEligibleCoursesController) {
+      abortEligibleCoursesController.abort();
     }
   };
 }
@@ -173,14 +202,22 @@ export function editLicenseOrder(orderId, orderReference, purchasedSeats) {
  * Fetch all catalogs.
  * @returns {(function(*): Promise<void>)|*}
  */
+let abortCatalogsController = null;
+
 export function fetchCatalogs() {
   return async (dispatch) => {
+    if (abortCatalogsController) {
+      abortCatalogsController.abort();
+    }
+    abortCatalogsController = new AbortController();
+    const { signal } = abortCatalogsController;
+
     dispatch(updateCatalogsRequestStatus(RequestStatus.IN_PROGRESS));
 
     let page = 1;
     const fetchAllPages = async () => {
       try {
-        const response = await getCatalogs({ page });
+        const response = await getCatalogs({ page }, signal);
         const { results, next: existNextPage } = response.data;
         dispatch(updateCatalogs(results));
 
@@ -188,17 +225,30 @@ export function fetchCatalogs() {
           page += 1;
           // eslint-disable-next-line no-promise-executor-return
           await new Promise((resolve) => setTimeout(resolve, 200));
-          return fetchAllPages();
+          if (signal.aborted) { return; }
+          await fetchAllPages();
+          return;
         }
 
         dispatch(updateCatalogsRequestStatus(RequestStatus.SUCCESSFUL));
-        return results;
       } catch (error) {
+        if (signal.aborted) {
+          logError('Catalogs fetch canceled!');
+          return;
+        }
         dispatch(updateCatalogsRequestStatus(RequestStatus.FAILED));
-        return logError(error);
+        logError(error);
       }
     };
 
     return fetchAllPages();
+  };
+}
+
+export function cancelFetchCatalogs() {
+  return () => {
+    if (abortCatalogsController) {
+      abortCatalogsController.abort();
+    }
   };
 }

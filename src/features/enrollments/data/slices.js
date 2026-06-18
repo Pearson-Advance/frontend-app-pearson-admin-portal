@@ -34,6 +34,9 @@ const studentEnrollmentsSlice = createSlice({
     updateEnrollment: (state, { payload }) => {
       state.updateEnrollmentStatus.errorMessage = payload.errorMessage || null;
     },
+    resetStatus: (state) => {
+      state.status = RequestStatus.IN_PROGRESS;
+    },
   },
 });
 
@@ -42,6 +45,7 @@ export const {
   fetchStudentEnrollmentsSuccess,
   fetchStudentEnrollmentsFailed,
   updateEnrollment,
+  resetStatus,
 } = studentEnrollmentsSlice.actions;
 
 export const { reducer } = studentEnrollmentsSlice;

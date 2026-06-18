@@ -15,7 +15,7 @@ function getLicenseUsageCCXLevel(filters, signal = null) {
   );
 }
 
-function getLicenseUsageMCLevel(filters) {
+function getLicenseUsageMCLevel(filters, signal = null) {
   let params = {};
 
   if (filters) {
@@ -24,7 +24,7 @@ function getLicenseUsageMCLevel(filters) {
 
   return getAuthenticatedHttpClient().get(
     `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/license-usage/`,
-    { params },
+    { params, signal },
   );
 }
 
