@@ -5,7 +5,8 @@ import { RequestStatus } from 'features/shared/data/constants';
 const dataReportSlice = createSlice({
   name: 'dataReport',
   initialState: {
-    status: RequestStatus.IN_PROGRESS,
+    ccxLevelStatus: RequestStatus.IN_PROGRESS,
+    mcLevelStatus: RequestStatus.IN_PROGRESS,
     ccxLevelResponse: {
       results: [],
       count: 0,
@@ -17,28 +18,36 @@ const dataReportSlice = createSlice({
     managedMasterCourses: [],
   },
   reducers: {
-    fetchLicenseUsageRequest: (state) => {
-      state.status = RequestStatus.IN_PROGRESS;
+    fetchLicenseUsageCCXLevelRequest: (state) => {
+      state.ccxLevelStatus = RequestStatus.IN_PROGRESS;
+    },
+    fetchLicenseUsageMCLevelRequest: (state) => {
+      state.mcLevelStatus = RequestStatus.IN_PROGRESS;
     },
     fetchLicenseUsageCCXLevelSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
+      state.ccxLevelStatus = RequestStatus.SUCCESSFUL;
       state.ccxLevelResponse = payload;
     },
     fetchLicenseUsageMCLevelSuccess: (state, { payload }) => {
-      state.status = RequestStatus.SUCCESSFUL;
+      state.mcLevelStatus = RequestStatus.SUCCESSFUL;
       state.mcLevelResponse = payload;
     },
-    fetchLicenseUsageFailed: (state) => {
-      state.status = RequestStatus.FAILED;
+    fetchLicenseUsageCCXLevelFailed: (state) => {
+      state.ccxLevelStatus = RequestStatus.FAILED;
+    },
+    fetchLicenseUsageMCLevelFailed: (state) => {
+      state.mcLevelStatus = RequestStatus.FAILED;
     },
   },
 });
 
 export const {
-  fetchLicenseUsageRequest,
+  fetchLicenseUsageCCXLevelRequest,
+  fetchLicenseUsageMCLevelRequest,
   fetchLicenseUsageCCXLevelSuccess,
   fetchLicenseUsageMCLevelSuccess,
-  fetchLicenseUsageFailed,
+  fetchLicenseUsageCCXLevelFailed,
+  fetchLicenseUsageMCLevelFailed,
 } = dataReportSlice.actions;
 
 export const { reducer } = dataReportSlice;

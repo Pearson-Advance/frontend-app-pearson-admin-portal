@@ -4,4 +4,5 @@ export {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  cancelFetchStudentEnrollments,
 } from './thunks';

@@ -33,6 +33,7 @@ function fetchStudentEnrollments(filters = null) {
     } catch (error) {
       if (signal.aborted) {
         logError('Student enrollments canceled!');
+        return;
       }
 
       dispatch(fetchStudentEnrollmentsFailed());
@@ -114,9 +115,18 @@ function updateEnrollmentDate(data = null, classId = null, callback = null) {
   };
 }
 
+function cancelFetchStudentEnrollments() {
+  return () => {
+    if (abortStudentEnrollmentsController) {
+      abortStudentEnrollmentsController.abort();
+    }
+  };
+}
+
 export {
   fetchStudentEnrollments,
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  cancelFetchStudentEnrollments,
 };

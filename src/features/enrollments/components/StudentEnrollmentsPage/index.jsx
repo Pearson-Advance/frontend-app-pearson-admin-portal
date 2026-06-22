@@ -14,15 +14,16 @@ import {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  cancelFetchStudentEnrollments,
 } from 'features/enrollments/data';
 import { fetchInstitutions } from 'features/institutions/data';
-import { fetchEligibleCourses } from 'features/licenses/data';
+import { fetchEligibleCourses, cancelFetchEligibleCourses } from 'features/licenses/data';
 
 import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 
 import { changeTab } from 'features/shared/data/slices';
-import { updateEnrollment } from 'features/enrollments/data/slices';
+import { updateEnrollment, resetStatus } from 'features/enrollments/data/slices';
 
 import { getOrdering } from 'features/shared/data/utils';
 import { TabIndex, EnrollmentStatus, RequestStatus } from 'features/shared/data/constants';
@@ -164,6 +165,9 @@ const StudentEnrollmentsPage = () => {
   useEffect(() => {
     dispatch(fetchInstitutions());
     dispatch(fetchEligibleCourses());
+    return () => {
+      dispatch(cancelFetchEligibleCourses());
+    };
   }, [dispatch]);
 
   useEffect(() => {
@@ -171,6 +175,10 @@ const StudentEnrollmentsPage = () => {
       ...filters,
       ordering: getOrdering(sortBy),
     }));
+    return () => {
+      dispatch(cancelFetchStudentEnrollments());
+      dispatch(resetStatus());
+    };
   }, [dispatch, sortBy, filters]);
 
   const modalFooter = (

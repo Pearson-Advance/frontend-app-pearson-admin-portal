@@ -31,6 +31,7 @@ export function fetchInstitutions(selectedInstitution) {
     } catch (error) {
       if (signal.aborted) {
         logError('Institution canceled!');
+        return;
       }
       dispatch(fetchInstitutionsFailed());
       logError(error);
@@ -72,6 +73,14 @@ export function editInstitution(id, name, shortName, externalId, active) {
     } catch (error) {
       dispatch(patchInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);
+    }
+  };
+}
+
+export function cancelFetchInstitutions() {
+  return () => {
+    if (abortInstitutionController) {
+      abortInstitutionController.abort();
     }
   };
 }

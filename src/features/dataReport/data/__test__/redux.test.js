@@ -37,7 +37,7 @@ describe('CCX Level license usage data report tests', () => {
     axiosMock.onGet(ccxReportsApiUrl)
       .reply(200, { results: Factory.build('ccxReportList') });
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.ccxLevelStatus)
       .toEqual('in-progress');
 
     await executeThunk(fetchLicenseUsageCCXLevel(), store.dispatch, store.getState);
@@ -73,7 +73,7 @@ describe('CCX Level license usage data report tests', () => {
         },
       ]);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.ccxLevelStatus)
       .toEqual('successful');
   });
 
@@ -81,7 +81,7 @@ describe('CCX Level license usage data report tests', () => {
     axiosMock.onGet(ccxReportsApiUrl)
       .reply(500);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.ccxLevelStatus)
       .toEqual('in-progress');
 
     await executeThunk(fetchLicenseUsageCCXLevel(), store.dispatch, store.getState);
@@ -89,7 +89,7 @@ describe('CCX Level license usage data report tests', () => {
     expect(store.getState().dataReport.ccxLevelResponse.results)
       .toEqual([]);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.ccxLevelStatus)
       .toEqual('failed');
   });
 });
@@ -118,7 +118,7 @@ describe('MC Level license usage data report tests', () => {
     axiosMock.onGet(mcReportsApiUrl)
       .reply(200, { results: Factory.build('mcReportList') });
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.mcLevelStatus)
       .toEqual('in-progress');
 
     await executeThunk(fetchLicenseUsageMCLevel(), store.dispatch, store.getState);
@@ -145,7 +145,7 @@ describe('MC Level license usage data report tests', () => {
         },
       ]);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.mcLevelStatus)
       .toEqual('successful');
   });
 
@@ -153,7 +153,7 @@ describe('MC Level license usage data report tests', () => {
     axiosMock.onGet(mcReportsApiUrl)
       .reply(500);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.mcLevelStatus)
       .toEqual('in-progress');
 
     await executeThunk(fetchLicenseUsageMCLevel(), store.dispatch, store.getState);
@@ -161,7 +161,7 @@ describe('MC Level license usage data report tests', () => {
     expect(store.getState().dataReport.mcLevelResponse.results)
       .toEqual([]);
 
-    expect(store.getState().dataReport.status)
+    expect(store.getState().dataReport.mcLevelStatus)
       .toEqual('failed');
   });
 });

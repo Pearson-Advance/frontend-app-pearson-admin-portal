@@ -3,19 +3,25 @@ import {
 } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Download } from '@openedx/paragon/icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchExportLicenseUsageCCXLevel, fetchLicenseUsageCCXLevel } from 'features/dataReport/data/thunks';
-import { fetchEligibleCourses } from 'features/licenses/data';
+import { fetchExportLicenseUsageCCXLevel, fetchLicenseUsageCCXLevel, cancelFetchLicenseUsageCCXLevel } from 'features/dataReport/data/thunks';
+import { fetchEligibleCourses, cancelFetchEligibleCourses } from 'features/licenses/data';
 import { RequestStatus } from 'features/shared/data/constants';
 import { Table } from './Table';
 
 export const LicenseUsageCCXLevel = ({ filters }) => {
   const dispatch = useDispatch();
   const ccxLevelTable = useSelector(state => state.dataReport.ccxLevelResponse);
-  const dataReportStatus = useSelector(state => state.dataReport.status);
+  const dataReportStatus = useSelector(state => state.dataReport.ccxLevelStatus);
+  const institutions = useSelector(state => state.institutions.data);
+
+  const institutionsByName = useMemo(
+    () => Object.fromEntries(institutions.map(inst => [inst.name, inst.id])),
+    [institutions],
+  );
 
   const handleExportAsCSV = () => {
     dispatch(fetchExportLicenseUsageCCXLevel(filters));
@@ -30,15 +36,21 @@ export const LicenseUsageCCXLevel = ({ filters }) => {
 
   useEffect(() => {
     dispatch(fetchEligibleCourses());
+    return () => {
+      dispatch(cancelFetchEligibleCourses());
+    };
   }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchLicenseUsageCCXLevel(filters));
+    return () => {
+      dispatch(cancelFetchLicenseUsageCCXLevel());
+    };
   }, [dispatch, filters]);
 
   return (
     <>
-      <div className="d-flex justify-content-end py-2">
+      <div className="py-2 d-flex justify-content-end">
         <OverlayTrigger
           placement="top"
           overlay={<Tooltip variant="light">Export as CSV</Tooltip>}
@@ -57,6 +69,7 @@ export const LicenseUsageCCXLevel = ({ filters }) => {
         data={ccxLevelTable.results}
         count={ccxLevelTable.count}
         isLoading={dataReportStatus === RequestStatus.IN_PROGRESS}
+        institutionsByName={institutionsByName}
       />
       {ccxLevelTable.count > 0 && (
         <Pagination

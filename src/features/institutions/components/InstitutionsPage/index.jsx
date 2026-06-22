@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from '@openedx/paragon/dist/Container';
 import { InstitutionsTable } from 'features/institutions/components/InstitutionsTable';
-import { fetchInstitutions, createInstitution, editInstitution } from 'features/institutions/data';
+import {
+  fetchInstitutions, createInstitution, editInstitution, cancelFetchInstitutions,
+} from 'features/institutions/data';
 import { InstitutionForm } from 'features/institutions/components/institutionForm';
 import { Add } from '@openedx/paragon/icons';
 import { ActionRow, Button } from '@openedx/paragon';
 import { Modal } from 'features/shared/components/Modal';
-import { closeModalForm, openModalForm } from 'features/institutions/data/slices';
+import { closeModalForm, openModalForm, resetStatus } from 'features/institutions/data/slices';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex, RequestStatus } from 'features/shared/data/constants';
 import { has } from 'lodash';
@@ -60,6 +62,10 @@ const InstitutionsPage = () => {
   useEffect(() => {
     dispatch(changeTab(TabIndex.INSTITUTIONS));
     dispatch(fetchInstitutions(selectedInstitution));
+    return () => {
+      dispatch(cancelFetchInstitutions());
+      dispatch(resetStatus());
+    };
   }, [dispatch, selectedInstitution]);
 
   useEffect(() => {

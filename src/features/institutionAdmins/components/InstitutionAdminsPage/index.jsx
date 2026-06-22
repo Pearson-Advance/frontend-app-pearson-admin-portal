@@ -5,11 +5,13 @@ import { Add } from '@openedx/paragon/icons';
 import Container from '@openedx/paragon/dist/Container';
 import { InstitutionAdminForm } from 'features/institutionAdmins/components/institutionAdminForm';
 import { InstitutionAdminsTable } from 'features/institutionAdmins/components/InstitutionAdminsTable';
-import { fetchInstitutionAdmins, selectAdmins, createInstitutionAdmin } from 'features/institutionAdmins/data';
+import {
+  fetchInstitutionAdmins, selectAdmins, createInstitutionAdmin, cancelFetchInstitutionAdmins,
+} from 'features/institutionAdmins/data';
 import { changeTab } from 'features/shared/data/slices';
 import { TabIndex, RequestStatus } from 'features/shared/data/constants';
 import { Modal } from 'features/shared/components/Modal';
-import { closeModal, openModal } from 'features/institutionAdmins/data/slices';
+import { closeModal, openModal, resetStatus } from 'features/institutionAdmins/data/slices';
 
 const initialFormValues = {
   institutionId: '',
@@ -39,6 +41,10 @@ const InstitutionAdminsPage = () => {
   useEffect(() => {
     dispatch(changeTab(TabIndex.ADMINS));
     dispatch(fetchInstitutionAdmins(selectedInstitution));
+    return () => {
+      dispatch(cancelFetchInstitutionAdmins());
+      dispatch(resetStatus());
+    };
   }, [dispatch, selectedInstitution]);
 
   return (
