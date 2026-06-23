@@ -2,7 +2,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import {
-  getLicenses, getLicenseById, updateLicenseOrder, getCatalogs,
+  getLicenses, getLicenseById, updateLicenseOrder, deleteLicenseOrder, getCatalogs,
 } from 'features/licenses/data/api';
 import { snakeCaseObject } from '@edx/frontend-platform';
 
@@ -78,6 +78,15 @@ describe('Licenses API tests', () => {
     const response = await updateLicenseOrder(1, 'TEST04', 300);
 
     expect(response.data).toEqual(expectedResponse);
+  });
+
+  test('Successfully complete a delete request to the licenses orders endpoint', async () => {
+    axiosMock.onDelete(`${licensesOrdersApiUrl}1/`).reply(204);
+
+    const response = await deleteLicenseOrder(1);
+
+    expect(response.status).toEqual(204);
+    expect(axiosMock.history.delete[0].url).toEqual(`${licensesOrdersApiUrl}1/`);
   });
 
   test('Successfully complete fetch catalogs', async () => {

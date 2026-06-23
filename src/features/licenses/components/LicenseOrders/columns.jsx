@@ -6,7 +6,7 @@ import {
   Tooltip,
   IconButton,
 } from '@openedx/paragon';
-import { Edit } from '@openedx/paragon/icons';
+import { Edit, DeleteOutline } from '@openedx/paragon/icons';
 
 export const getColumns = props => [
   {
@@ -25,24 +25,38 @@ export const getColumns = props => [
   {
     Header: 'Actions',
     accessor: 'id',
-    Cell: ({ row }) => (
-      <OverlayTrigger
-        placement="right"
-        overlay={<Tooltip variant="light">edit</Tooltip>}
-      >
-        <IconButton
-          alt="Edit"
-          iconAs={Edit}
-          onClick={() => {
-            props.handleOpenModal(
-              row.values.id,
-              row.values.orderReference,
-              row.values.purchasedSeats,
-              row.values.active,
-            );
-          }}
-        />
-      </OverlayTrigger>
-    ),
+    // Inactive (already removed) orders are read-only: no Edit or Remove actions.
+    Cell: ({ row }) => (row.values.active ? (
+      <div className="d-flex">
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip variant="light">edit</Tooltip>}
+        >
+          <IconButton
+            alt="Edit"
+            iconAs={Edit}
+            onClick={() => {
+              props.handleOpenModal(
+                row.values.id,
+                row.values.orderReference,
+                row.values.purchasedSeats,
+                row.values.active,
+              );
+            }}
+          />
+        </OverlayTrigger>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip variant="light">remove order</Tooltip>}
+        >
+          <IconButton
+            alt="Remove order"
+            iconAs={DeleteOutline}
+            variant="danger"
+            onClick={() => props.handleOpenDeleteModal(row.values.id)}
+          />
+        </OverlayTrigger>
+      </div>
+    ) : null),
   },
 ];
