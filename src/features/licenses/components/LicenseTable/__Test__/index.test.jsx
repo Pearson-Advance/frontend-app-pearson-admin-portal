@@ -56,6 +56,55 @@ describe('Unit tests for Licenses data table.', () => {
     expect(tableRows).toHaveLength(3);
   });
 
+  test('render seat-usage columns (Enrolled, Pending, Remaining)', () => {
+    const data = Factory.build('licenseList');
+
+    const store = initializeStore({
+      licenses: {
+        status: RequestStatus.IN_PROGRESS,
+        data,
+        pageSize: 10,
+        pageIndex: 0,
+        catalogs: { data: [] },
+      },
+    });
+
+    const component = renderWithProvidersAndIntl(<LicenseTable data={data} />, {
+      store,
+    });
+
+    expect(component.container).toHaveTextContent('Enrolled');
+    expect(component.container).toHaveTextContent('Pending');
+    expect(component.container).toHaveTextContent('Remaining');
+  });
+
+  test('seat-usage cells fall back to 0 when the value is missing', () => {
+    const license = Factory.build('license', {
+      enrolled: undefined,
+      pending: null,
+      remaining: undefined,
+    });
+
+    const store = initializeStore({
+      licenses: {
+        status: RequestStatus.IN_PROGRESS,
+        data: [license],
+        pageSize: 10,
+        pageIndex: 0,
+        catalogs: { data: [] },
+      },
+    });
+
+    const component = renderWithProvidersAndIntl(<LicenseTable data={[license]} />, {
+      store,
+    });
+
+    const dataCells = component.container.querySelectorAll('tbody td');
+    const cellTexts = Array.from(dataCells).map((cell) => cell.textContent);
+
+    expect(cellTexts).toContain('0');
+  });
+
   test('render LicensesTable with catalog', () => {
     const license = Factory.build('license', {
       licenseType: 'catalog',
