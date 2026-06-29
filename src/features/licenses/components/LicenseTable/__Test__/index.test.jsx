@@ -80,8 +80,8 @@ describe('Unit tests for Licenses data table.', () => {
 
   test('seat-usage cells fall back to 0 when the value is missing', () => {
     const license = Factory.build('license', {
-      enrolled: undefined,
-      pending: null,
+      numberOfStudents: undefined,
+      numberOfPendingStudents: null,
       remaining: undefined,
     });
 

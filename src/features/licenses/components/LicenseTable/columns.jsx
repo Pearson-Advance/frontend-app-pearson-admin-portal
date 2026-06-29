@@ -89,14 +89,14 @@ export const getColumns = ({ handleShowDetails, handleEditModal, catalogsList = 
   },
   {
     Header: 'Enrolled',
-    accessor: 'enrolled',
+    accessor: 'numberOfStudents',
     disableSortBy: true,
     disableFilters: true,
     Cell: ({ value }) => value ?? 0,
   },
   {
     Header: 'Pending',
-    accessor: 'pending',
+    accessor: 'numberOfPendingStudents',
     disableSortBy: true,
     disableFilters: true,
     Cell: ({ value }) => value ?? 0,
