@@ -14,6 +14,8 @@ import { LicenseUsageMCLevel } from '../LicenseUsageMCLevel';
 const initialFiltersState = {
   institutionId: null,
   masterCourseId: null,
+  ccxName: '',
+  ccxId: '',
   page: 1,
 };
 
@@ -25,7 +27,14 @@ export const DataReportPage = () => {
   const institutions = useSelector(allInstitutionsForSelect);
   const pageTab = useSelector(state => state.page.tab);
 
-  const handleChangeDataReportTab = tab => setDataReport(tab);
+  const handleChangeDataReportTab = (tab) => {
+    setDataReport(tab);
+    // Class Name / Class ID filters only apply to the CCX level. Clear them when
+    // leaving CCX so ccx_name / ccx_id are not sent to the MC level endpoint.
+    if (tab === DataReportTab.MC_LEVEL) {
+      setFilters(prevFilters => ({ ...prevFilters, ccxName: '', ccxId: '' }));
+    }
+  };
 
   const handleCleanFilters = () => {
     setFilters(initialFiltersState);
@@ -44,6 +53,7 @@ export const DataReportPage = () => {
         filters={filters}
         setFilters={setFilters}
         handleCleanFilters={handleCleanFilters}
+        dataReportTab={dataReportTab}
       />
       <Tabs
         className="pt-3"

@@ -46,120 +46,134 @@ export const Filters = props => {
 
   return (
     <Card className="pt-3 mt-3">
-      <Form className="row justify-content-center">
-        <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            placeholder="Select Institution..."
-            isDisabled={false}
-            isLoading={false}
-            isClearable
-            isRtl={false}
-            isSearchable
-            options={institutions}
-            maxMenuHeight={250}
-            name="institution"
-            onChange={handleSelectInstitutionChange}
-            value={institutions.find(institution => institution.value === filters.institution) || null}
-          />
-        </Form.Group>
+      <Form>
+        <div className="row justify-content-center">
+          <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4">
+            <Select
+              className="basic-single"
+              classNamePrefix="select"
+              placeholder="Select Institution..."
+              isDisabled={false}
+              isLoading={false}
+              isClearable
+              isRtl={false}
+              isSearchable
+              options={institutions}
+              maxMenuHeight={250}
+              name="institution"
+              onChange={handleSelectInstitutionChange}
+              value={institutions.find(institution => institution.value === filters.institution) || null}
+            />
+          </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4 col-sm-6">
-          <Select
-            className="basic-single"
-            classNamePrefix="select"
-            placeholder="Select Master Course..."
-            isDisabled={false}
-            isLoading={false}
-            isClearable
-            isRtl={false}
-            isSearchable
-            options={eligibleCourses}
-            maxMenuHeight={250}
-            name="masterCourseId"
-            onChange={handleSelectMasterCourseChange}
-            value={eligibleCourses.find(courses => courses.value === filters.masterCourseId) || null}
-          />
-        </Form.Group>
+          <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Select
+              className="basic-single"
+              classNamePrefix="select"
+              placeholder="Select Master Course..."
+              isDisabled={false}
+              isLoading={false}
+              isClearable
+              isRtl={false}
+              isSearchable
+              options={eligibleCourses}
+              maxMenuHeight={250}
+              name="masterCourseId"
+              onChange={handleSelectMasterCourseChange}
+              value={eligibleCourses.find(courses => courses.value === filters.masterCourseId) || null}
+            />
+          </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
-          <Form.Control
-            name="ccxAdminEmail"
-            floatingLabel="CCX admin email"
-            value={filters.ccxAdminEmail}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
+          <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Form.Control
+              data-testid="ccxName"
+              name="ccxName"
+              floatingLabel="CCX Name"
+              value={filters.ccxName}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
-          <Form.Control
-            data-testid="learnerEmail"
-            name="learnerEmail"
-            floatingLabel="Learner email"
-            value={filters.learnerEmail}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
+          <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Form.Control
+              name="ccxAdminEmail"
+              floatingLabel="CCX admin email"
+              value={filters.ccxAdminEmail}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
 
-        <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4 col-sm-6">
-          <Form.Control
-            name="enrollmentStatus"
-            floatingLabel="Enrollment status"
-            as="select"
-            value={filters.enrollmentStatus}
-            onChange={handleInputChange}
+          <Form.Group as={Col} controlId="formGridCity" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Form.Control
+              data-testid="learnerEmail"
+              name="learnerEmail"
+              floatingLabel="Learner email"
+              value={filters.learnerEmail}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridState" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Form.Control
+              name="enrollmentStatus"
+              floatingLabel="Enrollment status"
+              as="select"
+              value={filters.enrollmentStatus}
+              onChange={handleInputChange}
+            >
+              <option value="">Choose...</option>
+              <option value={EnrollmentStatus.ACTIVE}>{EnrollmentStatus.ACTIVE}</option>
+              <option value={EnrollmentStatus.INACTIVE}>{EnrollmentStatus.INACTIVE}</option>
+              <option value={EnrollmentStatus.PENDING}>{EnrollmentStatus.PENDING}</option>
+              <option value={EnrollmentStatus.EXPIRED}>{EnrollmentStatus.EXPIRED}</option>
+            </Form.Control>
+          </Form.Group>
+        </div>
+
+        <div className="row justify-content-center align-items-center pt-3">
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip variant="light">Apply filters</Tooltip>}
           >
-            <option value="">Choose...</option>
-            <option value={EnrollmentStatus.ACTIVE}>{EnrollmentStatus.ACTIVE}</option>
-            <option value={EnrollmentStatus.INACTIVE}>{EnrollmentStatus.INACTIVE}</option>
-            <option value={EnrollmentStatus.PENDING}>{EnrollmentStatus.PENDING}</option>
-            <option value={EnrollmentStatus.EXPIRED}>{EnrollmentStatus.EXPIRED}</option>
-          </Form.Control>
-        </Form.Group>
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip variant="light">Apply filters</Tooltip>}
-        >
-          <IconButton
-            src={Search}
-            alt="Apply filters"
-            onClick={handleApplyFilters}
-            variant="secondary"
-          />
-        </OverlayTrigger>
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip variant="light">Clean filters</Tooltip>}
-        >
-          <IconButton
-            src={Delete}
-            alt="Clear filters"
-            onClick={handleCleanFilters}
-            variant="secondary"
-          />
-        </OverlayTrigger>
-        <OverlayTrigger
-          placement="top"
-          overlay={(
-            <Tooltip variant="light">
-              {isFilterApplied
-                ? 'Export as CSV'
-                : 'Apply filters to enable this feature'}
-            </Tooltip>
-          )}
-        >
-          <div className="ml-6">
             <IconButton
-              disabled={!isFilterApplied}
-              src={Download}
-              alt="Export enrollments"
-              onClick={handleExportEnrollments}
+              src={Search}
+              alt="Apply filters"
+              onClick={handleApplyFilters}
               variant="secondary"
             />
-          </div>
-        </OverlayTrigger>
-
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip variant="light">Clean filters</Tooltip>}
+          >
+            <IconButton
+              src={Delete}
+              alt="Clear filters"
+              onClick={handleCleanFilters}
+              variant="secondary"
+            />
+          </OverlayTrigger>
+          <OverlayTrigger
+            placement="top"
+            overlay={(
+              <Tooltip variant="light">
+                {isFilterApplied
+                  ? 'Export as CSV'
+                  : 'Apply filters to enable this feature'}
+              </Tooltip>
+            )}
+          >
+            <div className="ml-6">
+              <IconButton
+                disabled={!isFilterApplied}
+                src={Download}
+                alt="Export enrollments"
+                onClick={handleExportEnrollments}
+                variant="secondary"
+              />
+            </div>
+          </OverlayTrigger>
+        </div>
       </Form>
     </Card>
   );
@@ -169,6 +183,7 @@ Filters.propTypes = {
   filters: PropTypes.shape({
     institution: PropTypes.string,
     masterCourseId: PropTypes.string,
+    ccxName: PropTypes.string,
     learnerEmail: PropTypes.string,
     ccxAdminEmail: PropTypes.string,
     enrollmentStatus: PropTypes.string,

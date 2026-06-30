@@ -38,6 +38,7 @@ import './index.scss';
 const initialFiltersState = {
   institution: null,
   masterCourseId: null,
+  ccxName: '',
   learnerEmail: '',
   ccxAdminEmail: '',
   enrollmentStatus: '',
