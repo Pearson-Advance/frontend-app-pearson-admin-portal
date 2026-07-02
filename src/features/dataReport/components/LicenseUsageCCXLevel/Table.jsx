@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 const getCcxUrl = (ccxId) => `${getConfig().LMS_BASE_URL}${getConfig().LEARNING_MFE_PATH}/course/${ccxId}`;
 const getCcxInstructorUrl = (ccxId) => `${getConfig().LMS_BASE_URL}/courses/${ccxId}/instructor`;
-const getPssAdminCourseUrl = (courseId, institutionId) => `${getConfig().LMS_BASE_URL}/admin/courses/${encodeURIComponent(courseId)}?institutionId=${institutionId}`;
+const getPssAdminCourseUrl = (courseId, classId, institutionId) => `${getConfig().LMS_BASE_URL}/courses/${encodeURIComponent(courseId)}/${encodeURIComponent(classId)}?previous=courses&institutionId=${institutionId}`;
 
 export const Table = ({
   data, count, isLoading, institutionsByName,
@@ -24,8 +24,8 @@ export const Table = ({
       .then(setisCCXUrlCopied(true));
   }
 
-  function openPssAdminCourseUrl(courseId, institutionId) {
-    window.open(getPssAdminCourseUrl(courseId, institutionId), '_blank', 'noopener, noreferrer');
+  function openPssAdminCourseUrl(courseId, classId, institutionId) {
+    window.open(getPssAdminCourseUrl(courseId, classId, institutionId), '_blank', 'noopener, noreferrer');
   }
 
   const columns = [
@@ -95,6 +95,7 @@ export const Table = ({
               onClick={() => {
                 openPssAdminCourseUrl(
                   row.values.masterCourse, // eslint-disable-line react/prop-types
+                  row.values.ccxId, // eslint-disable-line react/prop-types
                   institutionsByName[row.values.institution], // eslint-disable-line react/prop-types
                 );
               }}
