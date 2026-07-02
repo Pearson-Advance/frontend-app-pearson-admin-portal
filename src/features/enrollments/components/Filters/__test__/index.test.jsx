@@ -42,4 +42,13 @@ describe('Test suite for Filters component.', () => {
     await user.type(learnerEmailElement, 'example@example.com');
     expect(learnerEmailElement).toHaveValue('example@example.com');
   });
+
+  test('search by Class Name updates the value', async () => {
+    const user = userEvent.setup();
+    const ccxNameElement = screen.getByTestId('ccxName');
+
+    await user.type(ccxNameElement, 'Algebra 101');
+    expect(ccxNameElement).toHaveValue('Algebra 101');
+    expect(setFilters).toHaveBeenCalled();
+  });
 });

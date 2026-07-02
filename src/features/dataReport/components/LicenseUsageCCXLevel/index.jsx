@@ -88,6 +88,8 @@ LicenseUsageCCXLevel.propTypes = {
   filters: PropTypes.shape({
     institutionId: PropTypes.number,
     masterCourseId: PropTypes.string,
+    ccxName: PropTypes.string,
+    ccxId: PropTypes.string,
     page: PropTypes.number.isRequired,
   }),
 };
@@ -96,6 +98,8 @@ LicenseUsageCCXLevel.defaultProps = {
   filters: {
     institutionId: null,
     masterCourseId: null,
+    ccxName: '',
+    ccxId: '',
     page: 1,
   },
 };
