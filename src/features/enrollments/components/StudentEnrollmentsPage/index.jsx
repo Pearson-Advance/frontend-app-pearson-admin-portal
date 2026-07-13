@@ -78,6 +78,10 @@ const StudentEnrollmentsPage = () => {
     enrollmentData.append('action', entry.action);
   }
 
+  if (entry.action === 'unenroll') {
+    enrollmentData.append('allow_lab_unenroll', true);
+  }
+
   const isExtendAction = enrollmentData.get('action') === 'extend';
   const isRevoked = status === 'revoked';
 
