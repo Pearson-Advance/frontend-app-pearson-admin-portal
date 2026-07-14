@@ -83,3 +83,10 @@ export const DELETE_ORDER_ERROR_MESSAGES = {
  * @string
  */
 export const GENERIC_DELETE_ORDER_ERROR = 'Something went wrong while removing the order. Please try again.';
+
+/**
+ * Number for maximum records in tables.
+ * @readonly
+ * @number
+ */
+export const MAX_TABLE_RECORDS = 50;
