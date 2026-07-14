@@ -4,7 +4,7 @@ import { Factory } from 'rosie';
 
 import { LicenseTable } from 'features/licenses/components/LicenseTable';
 import 'features/licenses/data/__factories__';
-import { RequestStatus } from 'features/shared/data/constants';
+import { RequestStatus, MAX_TABLE_RECORDS } from 'features/shared/data/constants';
 
 import { initializeStore } from 'store';
 import { renderWithProvidersAndIntl } from 'test-utils';
@@ -38,7 +38,7 @@ describe('Unit tests for Licenses data table.', () => {
       licenses: {
         status: RequestStatus.IN_PROGRESS,
         data,
-        pageSize: 10,
+        pageSize: MAX_TABLE_RECORDS,
         pageIndex: 0,
         catalogs: { data: [] },
       },
@@ -63,7 +63,7 @@ describe('Unit tests for Licenses data table.', () => {
       licenses: {
         status: RequestStatus.IN_PROGRESS,
         data,
-        pageSize: 10,
+        pageSize: MAX_TABLE_RECORDS,
         pageIndex: 0,
         catalogs: { data: [] },
       },
@@ -89,7 +89,7 @@ describe('Unit tests for Licenses data table.', () => {
       licenses: {
         status: RequestStatus.IN_PROGRESS,
         data: [license],
-        pageSize: 10,
+        pageSize: MAX_TABLE_RECORDS,
         pageIndex: 0,
         catalogs: { data: [] },
       },
@@ -115,7 +115,7 @@ describe('Unit tests for Licenses data table.', () => {
       licenses: {
         status: RequestStatus.IN_PROGRESS,
         data: [license],
-        pageSize: 10,
+        pageSize: MAX_TABLE_RECORDS,
         pageIndex: 0,
         catalogs: {
           data: [{ value: 'catalog1', label: 'demo catalog' }],

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { RequestStatus } from 'features/shared/data/constants';
+import { RequestStatus, MAX_TABLE_RECORDS } from 'features/shared/data/constants';
 
 const licenseSlice = createSlice({
   name: 'licenses',
@@ -11,7 +11,7 @@ const licenseSlice = createSlice({
     ordersData: [],
     eligibleCourses: [],
     licenseById: null,
-    pageSize: 10,
+    pageSize: MAX_TABLE_RECORDS,
     pageIndex: 0,
     form: {
       isOpen: false,

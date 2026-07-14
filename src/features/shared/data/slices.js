@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { TabIndex } from 'features/shared/data/constants';
+import { TabIndex, MAX_TABLE_RECORDS } from 'features/shared/data/constants';
 
 const initialDataTableState = {
   filters: '[]',
   sortBy: [],
   pageIndex: 0,
-  pageSize: 10,
+  pageSize: MAX_TABLE_RECORDS,
 };
 
 const pageSlice = createSlice({
