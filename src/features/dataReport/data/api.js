@@ -1,12 +1,18 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
+import { MAX_TABLE_RECORDS } from 'features/shared/data/constants';
 
 function getLicenseUsageCCXLevel(filters, signal = null) {
-  let params = {};
+  let params = {
+    page_size: MAX_TABLE_RECORDS,
+  };
 
   if (filters) {
-    params = snakeCaseObject(removeNullOrEmptyObjectAttributes(filters));
+    params = {
+      ...params,
+      ...snakeCaseObject(removeNullOrEmptyObjectAttributes(filters)),
+    };
   }
 
   return getAuthenticatedHttpClient().get(
