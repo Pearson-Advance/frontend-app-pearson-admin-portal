@@ -44,6 +44,14 @@ export const Filters = props => {
     setIsFilterApplied(false);
   };
 
+  const handleDateChange = (e) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+    setIsFilterApplied(false);
+  };
+
   return (
     <Card className="pt-3 mt-3">
       <Form>
@@ -130,49 +138,71 @@ export const Filters = props => {
           </Form.Group>
         </div>
 
-        <div className="row justify-content-center align-items-center pt-3">
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip variant="light">Apply filters</Tooltip>}
-          >
-            <IconButton
-              src={Search}
-              alt="Apply filters"
-              onClick={handleApplyFilters}
-              variant="secondary"
+        <div className="row justify-content-center pt-2">
+          <Form.Group as={Col} controlId="formGridStartDate" className="col col-xl-3 col-lg-6 col-sm-6">
+            <Form.Control
+              type="date"
+              name="class_start_date_from"
+              floatingLabel="Class start date from"
+              value={filters.class_start_date_from || ''}
+              onChange={handleDateChange}
             />
-          </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip variant="light">Clean filters</Tooltip>}
-          >
-            <IconButton
-              src={Delete}
-              alt="Clear filters"
-              onClick={handleCleanFilters}
-              variant="secondary"
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridEndDate" className="col col-xl-3 col-lg-6 col-sm-6">
+            <Form.Control
+              type="date"
+              name="class_start_date_to"
+              floatingLabel="Class start date to"
+              value={filters.class_start_date_to || ''}
+              onChange={handleDateChange}
             />
-          </OverlayTrigger>
-          <OverlayTrigger
-            placement="top"
-            overlay={(
-              <Tooltip variant="light">
-                {isFilterApplied
-                  ? 'Export as CSV'
-                  : 'Apply filters to enable this feature'}
-              </Tooltip>
-            )}
-          >
-            <div className="ml-6">
+          </Form.Group>
+
+          <div className="row justify-content-center align-items-center pb-3">
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip variant="light">Apply filters</Tooltip>}
+            >
               <IconButton
-                disabled={!isFilterApplied}
-                src={Download}
-                alt="Export enrollments"
-                onClick={handleExportEnrollments}
+                src={Search}
+                alt="Apply filters"
+                onClick={handleApplyFilters}
                 variant="secondary"
               />
-            </div>
-          </OverlayTrigger>
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip variant="light">Clean filters</Tooltip>}
+            >
+              <IconButton
+                src={Delete}
+                alt="Clear filters"
+                onClick={handleCleanFilters}
+                variant="secondary"
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="top"
+              overlay={(
+                <Tooltip variant="light">
+                  {isFilterApplied
+                    ? 'Export as CSV'
+                    : 'Apply filters to enable this feature'}
+                </Tooltip>
+            )}
+            >
+              <div className="ml-6">
+                <IconButton
+                  disabled={!isFilterApplied}
+                  src={Download}
+                  alt="Export enrollments"
+                  onClick={handleExportEnrollments}
+                  variant="secondary"
+                />
+              </div>
+            </OverlayTrigger>
+          </div>
         </div>
       </Form>
     </Card>
@@ -187,6 +217,8 @@ Filters.propTypes = {
     learnerEmail: PropTypes.string,
     ccxAdminEmail: PropTypes.string,
     enrollmentStatus: PropTypes.string,
+    class_start_date_from: PropTypes.string,
+    class_start_date_to: PropTypes.string,
   }).isRequired,
   setFilters: PropTypes.func.isRequired,
   institutions: PropTypes.arrayOf(PropTypes.shape([])),

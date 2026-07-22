@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 
@@ -50,5 +50,27 @@ describe('Test suite for Filters component.', () => {
     await user.type(ccxNameElement, 'Algebra 101');
     expect(ccxNameElement).toHaveValue('Algebra 101');
     expect(setFilters).toHaveBeenCalled();
+  });
+
+  test('search by Class Start Date From updates the value', () => {
+    const startDateFromElement = screen.getByLabelText('Class start date from');
+    fireEvent.change(startDateFromElement, {
+      target: { name: 'class_start_date_from', value: '2026-01-01' },
+    });
+    expect(setFilters).toHaveBeenCalledWith({
+      class_start_date_from: '2026-01-01',
+    });
+    expect(setIsFilterApplied).toHaveBeenCalledWith(false);
+  });
+
+  test('search by Class Start Date To updates the value', () => {
+    const startDateToElement = screen.getByLabelText('Class start date to');
+    fireEvent.change(startDateToElement, {
+      target: { name: 'class_start_date_to', value: '2026-03-31' },
+    });
+    expect(setFilters).toHaveBeenCalledWith({
+      class_start_date_to: '2026-03-31',
+    });
+    expect(setIsFilterApplied).toHaveBeenCalledWith(false);
   });
 });
