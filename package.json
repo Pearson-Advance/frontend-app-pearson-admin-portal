@@ -49,6 +49,7 @@
     "@openedx/paragon": "^23.4.5",
     "@reduxjs/toolkit": "1.8.1",
     "core-js": "3.31.0",
+    "date-fns": "^4.4.0",
     "lodash": "^4.17.21",
     "lodash.camelcase": "4.3.0",
     "prop-types": "15.8.1",

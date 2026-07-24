@@ -25,7 +25,7 @@ describe('MenuBar tests', () => {
     const navLinks = component.container.querySelectorAll('a');
 
     expect(component.container).toHaveTextContent('Institutions');
-    expect(navLinks).toHaveLength(5);
+    expect(navLinks).toHaveLength(6);
   });
 
   test('does not navigate when clicking current route (institutions)', () => {

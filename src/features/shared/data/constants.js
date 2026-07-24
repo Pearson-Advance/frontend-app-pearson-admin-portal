@@ -22,9 +22,10 @@ export const RequestStatus = {
 export const TabIndex = {
   INSTITUTIONS: '1',
   ADMINS: '2',
-  LICENSES: '3',
-  DATA_REPORT: '4',
-  ENROLLMENTS: '5',
+  INSTRUCTORS: '3',
+  LICENSES: '4',
+  DATA_REPORT: '5',
+  ENROLLMENTS: '6',
 };
 
 /**
@@ -90,3 +91,18 @@ export const GENERIC_DELETE_ORDER_ERROR = 'Something went wrong while removing t
  * @number
  */
 export const MAX_TABLE_RECORDS = 50;
+
+/**
+ * Default initial state for the instructor filters form.
+ * @type {Object}
+ * @property {string|null} institutionId - Selected institution ID for filtering.
+ * @property {string|null} courseName - Selected master course display name for filtering.
+ * @property {string} instructorEmail - Instructor email address or partial email search term.
+ * @property {boolean|string} active - Instructor status flag (true: active, false: inactive, '': all).
+ */
+export const INSTRUCTOR_INITIAL_FILTERS_STATE = {
+  institutionId: null,
+  courseName: null,
+  instructorEmail: '',
+  active: '',
+};

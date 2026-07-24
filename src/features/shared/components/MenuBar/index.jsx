@@ -35,17 +35,22 @@ const MenuBar = () => {
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="3" href="/licenses">
+        <Nav.Link onClick={onLinkClick} eventKey="3" href="/instructors">
+          Instructors
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link onClick={onLinkClick} eventKey="4" href="/licenses">
           Licenses
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="4" href="/data-report">
+        <Nav.Link onClick={onLinkClick} eventKey="5" href="/data-report">
           Data Report
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link onClick={onLinkClick} eventKey="5" href="/enrollments">
+        <Nav.Link onClick={onLinkClick} eventKey="6" href="/enrollments">
           Enrollments
         </Nav.Link>
       </Nav.Item>
