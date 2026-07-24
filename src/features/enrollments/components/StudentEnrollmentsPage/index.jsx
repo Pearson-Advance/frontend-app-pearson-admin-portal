@@ -1,5 +1,8 @@
-import { useEffect, useState, useMemo } from 'react';
+import {
+  useEffect, useState, useMemo, useCallback,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { skipToken } from '@reduxjs/toolkit/query';
 import Container from '@openedx/paragon/dist/Container';
 import {
   Pagination,
@@ -10,23 +13,21 @@ import {
 } from '@openedx/paragon';
 
 import {
-  fetchStudentEnrollments,
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
-  cancelFetchStudentEnrollments,
 } from 'features/enrollments/data';
-import { fetchInstitutions } from 'features/institutions/data';
+import { useGetStudentEnrollmentsQuery } from 'features/enrollments/data/apiSlice';
+import { useGetInstitutionsQuery } from 'features/institutions/data/apiSlice';
 import { fetchEligibleCourses, cancelFetchEligibleCourses } from 'features/licenses/data';
 
-import { allInstitutionsForSelect } from 'features/institutions/data/selector';
 import { managedCoursesForSelect } from 'features/licenses/data/selectors';
 
 import { changeTab } from 'features/shared/data/slices';
-import { updateEnrollment, resetStatus } from 'features/enrollments/data/slices';
+import { updateEnrollment } from 'features/enrollments/data/slices';
 
-import { getOrdering } from 'features/shared/data/utils';
-import { TabIndex, EnrollmentStatus, RequestStatus } from 'features/shared/data/constants';
+import { getOrdering, removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
+import { TabIndex, EnrollmentStatus } from 'features/shared/data/constants';
 
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
@@ -34,6 +35,13 @@ import ModalBody from 'features/enrollments/components/StudentEnrollmentsPage/co
 import { Filters } from '../Filters';
 
 import './index.scss';
+
+const emptyRequestResponse = {
+  results: [],
+  count: 0,
+  numPages: 0,
+  currentPage: 1,
+};
 
 const initialFiltersState = {
   institution: null,
@@ -44,45 +52,58 @@ const initialFiltersState = {
   enrollmentStatus: '',
 };
 
+const enrollmentActionByStatus = {
+  [EnrollmentStatus.PENDING]: { status: 'revoked', action: 'unenroll' },
+  [EnrollmentStatus.ACTIVE]: { status: 'unenrolled', action: 'unenroll' },
+  [EnrollmentStatus.INACTIVE]: { status: 'enrolled', action: 'enroll' },
+  [EnrollmentStatus.EXPIRED]: { status: 'expired', action: 'extend' },
+};
+
 const StudentEnrollmentsPage = () => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.enrollments.updateEnrollmentStatus.errorMessage);
-  const requestResponse = useSelector(state => state.enrollments.requestResponse);
-  const enrollmentsStatus = useSelector(state => state.enrollments.status);
   const sortBy = useSelector(state => state.page.dataTable.sortBy);
-  const institutions = useSelector(allInstitutionsForSelect);
   const eligibleCourses = useSelector(managedCoursesForSelect);
 
+  const { data: institutionsData = [] } = useGetInstitutionsQuery();
+  const institutions = useMemo(
+    () => institutionsData.map((institution) => ({ value: institution.id, label: institution.name })),
+    [institutionsData],
+  );
+
   const [filters, setFilters] = useState(initialFiltersState);
+  const [appliedFilters, setAppliedFilters] = useState(null);
+  const [page, setPage] = useState(1);
   const [isFilterApplied, setIsFilterApplied] = useState(true);
   const [isOpen, open, close] = useToggle(false);
   const [selectedRow, setRow] = useState({});
   const [extendDate, setExtendDate] = useState('');
 
-  const enrollmentData = new FormData();
-  enrollmentData.append('identifiers', selectedRow.learnerEmail);
+  const enrollmentsQueryArgs = useMemo(
+    () => (appliedFilters
+      ? { ...appliedFilters, ordering: getOrdering(sortBy), page }
+      : skipToken),
+    [appliedFilters, sortBy, page],
+  );
+
+  const {
+    data: enrollmentsResponse,
+    isFetching: isEnrollmentsFetching,
+    isError: isEnrollmentsError,
+  } = useGetStudentEnrollmentsQuery(enrollmentsQueryArgs);
+
+  // RTK Query keeps the last result cached even when the query is skipped, so the
+  // displayed data is gated on having applied filters. Without applied filters
+  // (initial state or after clearing) the table must stay empty.
+  const requestResponse = appliedFilters
+    ? (enrollmentsResponse ?? emptyRequestResponse)
+    : emptyRequestResponse;
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), [open]);
 
-  const statusMap = {
-    [EnrollmentStatus.PENDING]: { status: 'revoked', action: 'unenroll' },
-    [EnrollmentStatus.ACTIVE]: { status: 'unenrolled', action: 'unenroll' },
-    [EnrollmentStatus.INACTIVE]: { status: 'enrolled', action: 'enroll' },
-    [EnrollmentStatus.EXPIRED]: { status: 'expired', action: 'extend' },
-  };
-
-  const entry = statusMap[selectedRow.status] || { status: '' };
+  const entry = enrollmentActionByStatus[selectedRow.status] || { status: '' };
   const { status } = entry;
-
-  if (entry.action) {
-    enrollmentData.append('action', entry.action);
-  }
-
-  if (entry.action === 'unenroll') {
-    enrollmentData.append('allow_lab_unenroll', true);
-  }
-
-  const isExtendAction = enrollmentData.get('action') === 'extend';
+  const isExtendAction = entry.action === 'extend';
   const isRevoked = status === 'revoked';
 
   const modalTitle = isExtendAction
@@ -91,45 +112,56 @@ const StudentEnrollmentsPage = () => {
       isRevoked ? "learner's enrollment to be" : 'learner to be'
     } ${status}?`;
 
-  const handleCleanFilters = () => {
+  const applyFilters = useCallback((nextFilters) => {
+    const hasFilters = Object.keys(removeNullOrEmptyObjectAttributes(nextFilters)).length > 0;
+    setPage(1);
+    setAppliedFilters(hasFilters ? nextFilters : null);
+    setIsFilterApplied(true);
+  }, []);
+
+  const handleCleanFilters = useCallback(() => {
     setFilters(initialFiltersState);
-    dispatch(fetchStudentEnrollments({ ordering: getOrdering(sortBy) }));
+    setPage(1);
+    setAppliedFilters(null);
     setIsFilterApplied(true);
-  };
+  }, []);
 
-  const handleApplyFilters = () => {
-    dispatch(fetchStudentEnrollments({
-      ...filters,
-      ordering: getOrdering(sortBy),
-    }));
-    setIsFilterApplied(true);
-  };
+  const handleApplyFilters = useCallback(() => {
+    applyFilters(filters);
+  }, [applyFilters, filters]);
 
-  const handleExportEnrollments = () => {
+  const handleExportEnrollments = useCallback(() => {
     dispatch(fetchExportStudentEnrollments({
-      ...filters,
+      ...appliedFilters,
       ordering: getOrdering(sortBy),
     }));
-  };
+  }, [dispatch, appliedFilters, sortBy]);
 
-  const handlePagination = (targetPage) => {
-    dispatch(fetchStudentEnrollments({
-      ...filters,
-      ordering: getOrdering(sortBy),
-      page: targetPage,
-    }));
-  };
+  const handlePagination = useCallback((targetPage) => {
+    setPage(targetPage);
+  }, []);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     close();
     dispatch(updateEnrollment({ errorMessage: '' }));
 
     if (extendDate) {
       setExtendDate('');
     }
-  };
+  }, [close, dispatch, extendDate]);
 
   const handleAction = () => {
+    const enrollmentData = new FormData();
+    enrollmentData.append('identifiers', selectedRow.learnerEmail);
+
+    if (entry.action) {
+      enrollmentData.append('action', entry.action);
+    }
+
+    if (entry.action === 'unenroll') {
+      enrollmentData.append('allow_lab_unenroll', true);
+    }
+
     if (isExtendAction) {
       if (!extendDate || Number.isNaN(Date.parse(extendDate))) {
         return;
@@ -141,25 +173,11 @@ const StudentEnrollmentsPage = () => {
       enrollmentData.append('student_email', selectedRow.learnerEmail);
       enrollmentData.append('class_id', selectedRow.ccxId);
 
-      dispatch(updateEnrollmentDate(enrollmentData, selectedRow.ccxId, handleReset));
-      dispatch(fetchStudentEnrollments({
-        ...filters,
-        ordering: getOrdering(sortBy),
-      }));
+      dispatch(updateEnrollmentDate(enrollmentData, handleReset));
       return;
     }
 
-    dispatch(
-      updateEnrollmentAction(
-        enrollmentData,
-        {
-          ...filters,
-          ordering: getOrdering(sortBy),
-          page: requestResponse.currentPage,
-        },
-        selectedRow.ccxId,
-      ),
-    );
+    dispatch(updateEnrollmentAction(enrollmentData, selectedRow.ccxId));
     close();
   };
 
@@ -168,23 +186,11 @@ const StudentEnrollmentsPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchInstitutions());
     dispatch(fetchEligibleCourses());
     return () => {
       dispatch(cancelFetchEligibleCourses());
     };
   }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(fetchStudentEnrollments({
-      ...filters,
-      ordering: getOrdering(sortBy),
-    }));
-    return () => {
-      dispatch(cancelFetchStudentEnrollments());
-      dispatch(resetStatus());
-    };
-  }, [dispatch, sortBy, filters]);
 
   const modalFooter = (
     <ActionRow>
@@ -211,7 +217,9 @@ const StudentEnrollmentsPage = () => {
         count={requestResponse.count}
         columns={COLUMNS}
         hideColumns={hideColumns}
-        isLoading={enrollmentsStatus === RequestStatus.IN_PROGRESS}
+        isLoading={isEnrollmentsFetching}
+        hasActiveFilters={Boolean(appliedFilters)}
+        isError={isEnrollmentsError}
       />
       <Pagination
         paginationLabel="paginationNavigation"

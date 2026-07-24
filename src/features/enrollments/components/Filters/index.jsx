@@ -7,7 +7,7 @@ import Select from 'react-select';
 import { EnrollmentStatus } from 'features/shared/data/constants';
 import { Delete, Search, Download } from '@openedx/paragon/icons';
 
-export const Filters = props => {
+export const Filters = React.memo(props => {
   const {
     filters,
     setFilters,
@@ -207,7 +207,7 @@ export const Filters = props => {
       </Form>
     </Card>
   );
-};
+});
 
 Filters.propTypes = {
   filters: PropTypes.shape({

@@ -1,25 +1,6 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { snakeCaseObject, getConfig } from '@edx/frontend-platform';
 import { removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
-import { MAX_TABLE_RECORDS } from 'features/shared/data/constants';
-
-function getStudentEnrollments(filters = null, signal = null) {
-  let params = {
-    page_size: MAX_TABLE_RECORDS,
-  };
-
-  if (filters) {
-    params = {
-      ...params,
-      ...snakeCaseObject(removeNullOrEmptyObjectAttributes(filters)),
-    };
-  }
-
-  return getAuthenticatedHttpClient().get(
-    `${getConfig().COURSE_OPERATIONS_API_BASE_URL}/licensed-enrollments/`,
-    { params, signal },
-  );
-}
 
 function getExportStudentEnrollments(filters) {
   let params = {};
@@ -55,7 +36,6 @@ function extendEnrollment(data) {
 }
 
 export {
-  getStudentEnrollments,
   getExportStudentEnrollments,
   handleEnrollments,
   extendEnrollment,

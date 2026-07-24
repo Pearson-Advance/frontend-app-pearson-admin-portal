@@ -1,23 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { TabIndex } from 'features/shared/data/constants';
-import { fetchInstitutionsForGlobalFilter } from 'features/shared/data/thunks';
+import { useGetInstitutionsQuery } from 'features/institutions/data/apiSlice';
 import { changeGlobalFilters } from 'features/shared/data/slices';
 import { Col, Container, Row } from '@openedx/paragon';
 
 export const GlobalFilters = () => {
   const dispatch = useDispatch();
-  const { institutions, selectedInstitution } = useSelector(state => state.page.globalFilters);
+  const selectedInstitution = useSelector(state => state.page.globalFilters.selectedInstitution);
   const tab = useSelector(state => state.page.tab);
+
+  const { data: institutionsData = [] } = useGetInstitutionsQuery();
+  const institutions = useMemo(
+    () => institutionsData.reduce((filtered, institution) => {
+      if (institution.active) {
+        filtered.push({ value: institution.id, label: institution.name });
+      }
+
+      return filtered;
+    }, []),
+    [institutionsData],
+  );
 
   const handleSelectInstitutionChange = (selected) => {
     dispatch(changeGlobalFilters(selected ? selected.value : null));
   };
-
-  useEffect(() => {
-    dispatch(fetchInstitutionsForGlobalFilter());
-  }, [dispatch]);
 
   if (tab === TabIndex.ENROLLMENTS || tab === TabIndex.DATA_REPORT) {
     return null;
