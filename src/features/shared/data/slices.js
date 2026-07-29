@@ -15,7 +15,6 @@ const pageSlice = createSlice({
     tab: TabIndex.INSTITUTIONS,
     dataTable: initialDataTableState,
     globalFilters: {
-      institutions: [],
       selectedInstitution: null,
     },
   },
@@ -39,13 +38,6 @@ const pageSlice = createSlice({
     changeGlobalFilters: (state, { payload }) => {
       state.globalFilters.selectedInstitution = payload;
     },
-    fetchInstitutionsSelect: (state, { payload }) => {
-      state.globalFilters.institutions = payload.reduce((filtered, institution) => {
-        if (institution.active) { filtered.push({ value: institution.id, label: institution.name }); }
-
-        return filtered;
-      }, []);
-    },
   },
 });
 
@@ -56,7 +48,6 @@ export const {
   changePageSize,
   changeSortBy,
   changeGlobalFilters,
-  fetchInstitutionsSelect,
 } = pageSlice.actions;
 
 export const { reducer } = pageSlice;

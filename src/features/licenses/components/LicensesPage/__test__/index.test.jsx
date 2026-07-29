@@ -1,20 +1,16 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { LicensesPage } from 'features/licenses/components/LicensesPage';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
+import { renderWithProvidersAndIntl } from 'test-utils';
 
-let store;
 let component;
 
 describe('Test suite for LicensesPage component.', () => {
   beforeEach(() => {
-    store = initializeStore();
-
-    component = render(
-      <Provider store={store}>
+    component = renderWithProvidersAndIntl(
+      <MemoryRouter>
         <LicensesPage />
-      </Provider>,
+      </MemoryRouter>,
     );
   });
 

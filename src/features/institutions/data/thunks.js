@@ -1,6 +1,6 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform';
-import { fetchInstitutionsForGlobalFilter } from 'features/shared/data/thunks';
+import { apiSlice } from 'features/shared/data/apiSlice';
 import { getInstitutions, postInstitution, updateInstitution } from './api';
 import {
   fetchInstitutionsFailed,
@@ -52,7 +52,7 @@ export function createInstitution(name, shortName, externalId, active) {
         externalId,
         active,
       )).data)));
-      dispatch(fetchInstitutionsForGlobalFilter());
+      dispatch(apiSlice.util.invalidateTags(['Institutions']));
     } catch (error) {
       dispatch(postInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);
@@ -70,6 +70,7 @@ export function editInstitution(id, name, shortName, externalId, active) {
         externalId,
         active,
       )).data)));
+      dispatch(apiSlice.util.invalidateTags(['Institutions']));
     } catch (error) {
       dispatch(patchInstitutionFailed(camelCaseObject(error.response.data)));
       logError(error);

@@ -19,10 +19,40 @@ test('render StudentEnrollmentsTable with no data', () => {
       count={0}
       columns={[]}
       hideColumns={{}}
+      hasActiveFilters
     />,
   );
 
   expect(component.container).toHaveTextContent('No enrollments found');
+});
+
+test('render StudentEnrollmentsTable prompts to apply a filter when none is active', () => {
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={[]}
+      count={0}
+      columns={[]}
+      hideColumns={{}}
+    />,
+  );
+
+  expect(component.container).toHaveTextContent('Set your filters and click search to view the results.');
+  expect(component.container).not.toHaveTextContent('No enrollments found');
+});
+
+test('render StudentEnrollmentsTable shows an error message when the request fails', () => {
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={[]}
+      count={0}
+      columns={[]}
+      hideColumns={{}}
+      hasActiveFilters
+      isError
+    />,
+  );
+
+  expect(component.container).toHaveTextContent('An error occurred while loading enrollments. Please try again.');
 });
 
 test('render StudentEnrollmentsTable with data', () => {

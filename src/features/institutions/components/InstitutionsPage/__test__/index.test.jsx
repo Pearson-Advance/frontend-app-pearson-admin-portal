@@ -1,23 +1,15 @@
 import React from 'react';
-import {
-  render, screen, fireEvent,
-} from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { InstitutionsPage } from 'features/institutions/components/InstitutionsPage';
-import { Provider } from 'react-redux';
-import { initializeStore } from 'store';
+import { renderWithProvidersAndIntl } from 'test-utils';
 
 let store;
 let component;
 
 describe('Test suite for InstitutionsPage component.', () => {
   beforeEach(() => {
-    store = initializeStore();
-
-    component = render(
-      <Provider store={store}>
-        <InstitutionsPage data={[]} />
-      </Provider>,
-    );
+    component = renderWithProvidersAndIntl(<InstitutionsPage data={[]} />);
+    store = component.store;
   });
 
   test('render InstitutionsPage component', () => {

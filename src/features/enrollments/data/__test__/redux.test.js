@@ -1,9 +1,10 @@
 import MockAdapter from 'axios-mock-adapter';
 import { Factory } from 'rosie';
+import { waitFor } from '@testing-library/react';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { initializeMockApp } from '@edx/frontend-platform/testing';
-import { fetchStudentEnrollments } from 'features/enrollments/data/thunks';
-import { executeThunk } from 'test-utils';
+import { enrollmentsApiSlice } from 'features/enrollments/data/apiSlice';
+import { updateEnrollmentAction } from 'features/enrollments/data/thunks';
 import { initializeStore } from 'store';
 
 import 'features/enrollments/data/__factories__';
@@ -12,7 +13,11 @@ const enrollmentsApiUrl = `${process.env.COURSE_OPERATIONS_API_BASE_URL}/license
 let axiosMock;
 let store;
 
-describe('Enrollments data layer tests', () => {
+const initiate = (args) => store.dispatch(
+  enrollmentsApiSlice.endpoints.getStudentEnrollments.initiate(args),
+);
+
+describe('Enrollments RTK Query data layer tests', () => {
   beforeEach(() => {
     initializeMockApp({
       authenticatedUser: {
@@ -32,16 +37,14 @@ describe('Enrollments data layer tests', () => {
     axiosMock.reset();
   });
 
-  test('successful enrollments retrieval', async () => {
+  test('successful enrollments retrieval is camelCased', async () => {
     axiosMock.onGet(enrollmentsApiUrl)
       .reply(200, { results: Factory.build('enrollmentsList') });
 
-    expect(store.getState().enrollments.status)
-      .toEqual('in-progress');
+    const result = await initiate({ institution: 1 });
 
-    await executeThunk(fetchStudentEnrollments(), store.dispatch, store.getState);
-
-    expect(store.getState().enrollments.requestResponse.results)
+    expect(result.isSuccess).toBe(true);
+    expect(result.data.results)
       .toEqual([
         {
           id: 1,
@@ -83,24 +86,65 @@ describe('Enrollments data layer tests', () => {
           created: '2022-01-14T16:15:10.758039Z',
         },
       ]);
-
-    expect(store.getState().enrollments.status)
-      .toEqual('successful');
   });
 
-  test('failed enrollments retrieval', async () => {
+  test('the request is filtered by the selected institution', async () => {
+    axiosMock.onGet(enrollmentsApiUrl)
+      .reply(200, { results: Factory.build('enrollmentsList') });
+
+    await initiate({ institution: 5 });
+
+    expect(axiosMock.history.get[0].params)
+      .toEqual(expect.objectContaining({ institution: 5 }));
+  });
+
+  test('reuses the cached result for the same institution without a new request', async () => {
+    axiosMock.onGet(enrollmentsApiUrl)
+      .reply(200, { results: Factory.build('enrollmentsList') });
+
+    await initiate({ institution: 1 });
+    await initiate({ institution: 1 });
+
+    expect(axiosMock.history.get).toHaveLength(1);
+  });
+
+  test('requests independently and keeps separate cache entries per institution', async () => {
+    axiosMock.onGet(enrollmentsApiUrl)
+      .reply(200, { results: Factory.build('enrollmentsList') });
+
+    await initiate({ institution: 1 });
+    await initiate({ institution: 2 });
+
+    expect(axiosMock.history.get).toHaveLength(2);
+  });
+
+  test('failed enrollments retrieval sets the error state', async () => {
     axiosMock.onGet(enrollmentsApiUrl)
       .reply(500);
 
-    expect(store.getState().enrollments.status)
-      .toEqual('in-progress');
+    const result = await initiate({ institution: 1 });
 
-    await executeThunk(fetchStudentEnrollments(), store.dispatch, store.getState);
+    expect(result.isError).toBe(true);
+  });
 
-    expect(store.getState().enrollments.data)
-      .toEqual([]);
+  test('updating an enrollment invalidates the cache and refetches the subscribed query', async () => {
+    axiosMock.onGet(enrollmentsApiUrl)
+      .reply(200, { results: Factory.build('enrollmentsList') });
+    axiosMock.onPost(/students_update_enrollment/)
+      .reply(200, {});
 
-    expect(store.getState().enrollments.status)
-      .toEqual('failed');
+    const subscription = initiate({ institution: 1 });
+    await subscription;
+
+    expect(axiosMock.history.get).toHaveLength(1);
+
+    await store.dispatch(updateEnrollmentAction(new FormData(), 'ccx-course-1'));
+
+    await waitFor(() => expect(axiosMock.history.get.length).toBeGreaterThan(1));
+
+    const lastGet = axiosMock.history.get[axiosMock.history.get.length - 1];
+    expect(lastGet.params).toEqual(expect.objectContaining({ institution: 1 }));
+
+    subscription.unsubscribe();
   });
 });
