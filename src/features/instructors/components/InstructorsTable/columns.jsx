@@ -18,6 +18,7 @@ const getColumns = () => [
   {
     Header: 'Instructor Status',
     accessor: 'instructorStatus',
+    disableSortBy: true,
     Cell: ({ row }) => (
       <span>{row.original.active ? 'Active' : 'Inactive'}</span>
     ),
@@ -29,15 +30,18 @@ const getColumns = () => [
   {
     Header: 'CCX Name',
     accessor: 'className',
+    disableSortBy: true,
   },
   {
     Header: 'CCX Start Date',
     accessor: 'startDate',
+    disableSortBy: true,
     Cell: ({ row }) => (row.values.startDate ? formatUTCDate(row.values.startDate, 'MM/dd/yy') : '-'),
   },
   {
     Header: 'CCX End Date',
     accessor: 'endDate',
+    disableSortBy: true,
     Cell: ({ row }) => (row.values.endDate ? formatUTCDate(row.values.endDate, 'MM/dd/yy') : '-'),
   },
 ];

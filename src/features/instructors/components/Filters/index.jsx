@@ -176,8 +176,19 @@ Filters.propTypes = {
     courseName: PropTypes.string,
     active: PropTypes.bool,
   }).isRequired,
-  institutions: PropTypes.arrayOf(PropTypes.shape([])),
-  eligibleCourses: PropTypes.arrayOf(PropTypes.shape([])),
+  institutions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      label: PropTypes.string,
+    }),
+  ),
+  eligibleCourses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      displayName: PropTypes.string,
+      label: PropTypes.string,
+    }),
+  ),
   setFilters: PropTypes.func.isRequired,
   handleCleanFilters: PropTypes.func.isRequired,
   handleApplyFilters: PropTypes.func.isRequired,

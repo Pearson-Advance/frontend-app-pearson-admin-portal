@@ -4,11 +4,9 @@ import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProvidersAndIntl } from 'test-utils';
 import { InstructorsPage } from 'features/instructors/components/InstructorsPage';
 
-// Import RTK Query hooks for mock spying
 import { useGetInstructorsQuery } from 'features/instructors/data/apiSlice';
 import { useGetInstitutionsQuery } from 'features/institutions/data/apiSlice';
 
-// 1. Mock RTK Query API Slices
 jest.mock('features/instructors/data/apiSlice', () => ({
   useGetInstructorsQuery: jest.fn(),
 }));
@@ -17,7 +15,6 @@ jest.mock('features/institutions/data/apiSlice', () => ({
   useGetInstitutionsQuery: jest.fn(),
 }));
 
-// 2. Mock Redux Selectors & Thunks
 jest.mock('features/licenses/data/selectors', () => ({
   managedCoursesForSelect: jest.fn(() => [
     { id: 'course-v1:React', displayName: 'React 101', label: 'React 101 - course-v1:React' },
@@ -29,7 +26,6 @@ jest.mock('features/licenses/data', () => ({
   cancelFetchEligibleCourses: jest.fn(() => ({ type: 'mock/cancelFetchEligibleCourses' })),
 }));
 
-// Mock default RTK Query responses
 const defaultInstructorsResponse = {
   data: {
     results: [],
