@@ -27,7 +27,7 @@ export const GlobalFilters = () => {
     dispatch(changeGlobalFilters(selected ? selected.value : null));
   };
 
-  if (tab === TabIndex.ENROLLMENTS || tab === TabIndex.DATA_REPORT) {
+  if (tab === TabIndex.ENROLLMENTS || tab === TabIndex.DATA_REPORT || tab === TabIndex.INSTRUCTORS) {
     return null;
   }
 

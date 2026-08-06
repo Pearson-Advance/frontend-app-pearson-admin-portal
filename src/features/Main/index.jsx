@@ -8,6 +8,7 @@ import { InstitutionsPage } from 'features/institutions';
 import { InstitutionAdminsPage } from 'features/institutionAdmins';
 import { LicensesPage, LicenseDetail } from 'features/licenses';
 import { StudentEnrollmentsPage } from 'features/enrollments';
+import { InstructorsPage } from 'features/instructors';
 import { DataReportPage } from 'features/dataReport/components/DataReportPage';
 import { MenuBar } from 'features/shared/components/MenuBar';
 import { GlobalFilters } from 'features/shared/components/GlobalFilters';
@@ -21,6 +22,7 @@ const Main = () => {
     { path: '/licenses', element: <LicensesPage /> },
     { path: '/licenses/:id', element: <LicenseDetail /> },
     { path: '/enrollments', element: <StudentEnrollmentsPage /> },
+    { path: '/instructors', element: <InstructorsPage /> },
     { path: '/data-report', element: <DataReportPage /> },
   ];
 
