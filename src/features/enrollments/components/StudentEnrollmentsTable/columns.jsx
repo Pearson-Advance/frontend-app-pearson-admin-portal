@@ -7,8 +7,16 @@ import {
   IconButton,
 } from '@openedx/paragon';
 import { MoreHoriz } from '@openedx/paragon/icons';
+import ControlledSelect from 'features/enrollments/components/BulkSelection/ControlledSelect';
 
 import { EnrollmentStatus } from 'features/shared/data/constants';
+
+export const selectColumn = {
+  id: 'selection',
+  Header: <></>, // eslint-disable-line react/jsx-no-useless-fragment
+  Cell: ControlledSelect,
+  disableSortBy: true,
+};
 
 const getColumns = (props = {}) => [
   {

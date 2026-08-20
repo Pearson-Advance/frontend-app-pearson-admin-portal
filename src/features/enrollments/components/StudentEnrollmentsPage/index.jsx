@@ -16,6 +16,7 @@ import {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  updateBulkEnrollmentsAction,
 } from 'features/enrollments/data';
 import { useGetStudentEnrollmentsQuery } from 'features/enrollments/data/apiSlice';
 import { useGetInstitutionsQuery } from 'features/institutions/data/apiSlice';
@@ -27,11 +28,12 @@ import { changeTab } from 'features/shared/data/slices';
 import { updateEnrollment } from 'features/enrollments/data/slices';
 
 import { getOrdering, removeNullOrEmptyObjectAttributes } from 'features/shared/data/utils';
-import { TabIndex, EnrollmentStatus } from 'features/shared/data/constants';
+import { TabIndex, EnrollmentStatus, BULK_STATUS_TEXT_BY_ACTION } from 'features/shared/data/constants';
 
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
 import ModalBody from 'features/enrollments/components/StudentEnrollmentsPage/components/ModalBody';
+import BulkModalBody from 'features/enrollments/components/BulkSelection/BulkModalBody';
 import { Filters } from '../Filters';
 
 import './index.scss';
@@ -79,6 +81,11 @@ const StudentEnrollmentsPage = () => {
   const [selectedRow, setRow] = useState({});
   const [extendDate, setExtendDate] = useState('');
 
+  const [selectedFlatRows, setSelectedFlatRows] = useState([]);
+  const [selectedBulkAction, setSelectedBulkAction] = useState('');
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
+  const [isBulkUpdating, setIsBulkUpdating] = useState(false);
+
   const enrollmentsQueryArgs = useMemo(
     () => (appliedFilters
       ? { ...appliedFilters, ordering: getOrdering(sortBy), page }
@@ -101,6 +108,11 @@ const StudentEnrollmentsPage = () => {
 
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), [open]);
 
+  const selectedRowsData = useMemo(
+    () => selectedFlatRows.map((row) => row.original || row),
+    [selectedFlatRows],
+  );
+
   const entry = enrollmentActionByStatus[selectedRow.status] || { status: '' };
   const { status } = entry;
   const isExtendAction = entry.action === 'extend';
@@ -112,11 +124,19 @@ const StudentEnrollmentsPage = () => {
       isRevoked ? "learner's enrollment to be" : 'learner to be'
     } ${status}?`;
 
+  const isBulkExtendAction = selectedBulkAction === 'extend';
+  const bulkModalTitle = isBulkExtendAction
+    ? 'New expiration date'
+    : `Are you sure you want the selected learners to be ${
+      BULK_STATUS_TEXT_BY_ACTION[selectedBulkAction] || selectedBulkAction
+    }?`;
+
   const applyFilters = useCallback((nextFilters) => {
     const hasFilters = Object.keys(removeNullOrEmptyObjectAttributes(nextFilters)).length > 0;
     setPage(1);
     setAppliedFilters(hasFilters ? nextFilters : null);
     setIsFilterApplied(true);
+    setSelectedFlatRows([]);
   }, []);
 
   const handleCleanFilters = useCallback(() => {
@@ -124,6 +144,7 @@ const StudentEnrollmentsPage = () => {
     setPage(1);
     setAppliedFilters(null);
     setIsFilterApplied(true);
+    setSelectedFlatRows([]);
   }, []);
 
   const handleApplyFilters = useCallback(() => {
@@ -181,6 +202,47 @@ const StudentEnrollmentsPage = () => {
     close();
   };
 
+  const handleOpenBulkModal = useCallback((action, rowsData = []) => {
+    setSelectedBulkAction(action);
+    if (rowsData && rowsData.length > 0) {
+      setSelectedFlatRows(rowsData);
+    }
+    setIsBulkModalOpen(true);
+  }, []);
+
+  const handleCloseBulkModal = () => {
+    setIsBulkModalOpen(false);
+    setSelectedBulkAction('');
+    setExtendDate('');
+  };
+
+  const handleExecuteBulkAction = async () => {
+    const isExtend = selectedBulkAction === 'extend';
+
+    if (isExtend && (!extendDate || Number.isNaN(Date.parse(extendDate)))) {
+      return;
+    }
+
+    const payload = {
+      action: selectedBulkAction,
+      enrollments: selectedRowsData.map((row) => ({
+        learnerEmail: row.learnerEmail,
+        ccxId: row.ccxId,
+      })),
+      ...(isExtend && { date: new Date(extendDate).toISOString() }),
+    };
+
+    setIsBulkUpdating(true);
+
+    dispatch(
+      updateBulkEnrollmentsAction(payload, () => {
+        setIsBulkUpdating(false);
+        handleCloseBulkModal();
+        setSelectedFlatRows([]);
+      }),
+    );
+  };
+
   useEffect(() => {
     dispatch(changeTab(TabIndex.ENROLLMENTS));
   }, [dispatch]);
@@ -199,6 +261,17 @@ const StudentEnrollmentsPage = () => {
     </ActionRow>
   );
 
+  const bulkModalFooter = (
+    <ActionRow>
+      <Button variant="tertiary" onClick={handleCloseBulkModal} disabled={isBulkUpdating}>
+        Cancel
+      </Button>
+      <Button variant="primary" onClick={handleExecuteBulkAction} isLoading={isBulkUpdating}>
+        Submit
+      </Button>
+    </ActionRow>
+  );
+
   return (
     <Container>
       <Filters
@@ -212,6 +285,7 @@ const StudentEnrollmentsPage = () => {
         handleApplyFilters={handleApplyFilters}
         handleExportEnrollments={handleExportEnrollments}
       />
+
       <StudentEnrollmentsTable
         data={requestResponse.results}
         count={requestResponse.count}
@@ -220,6 +294,7 @@ const StudentEnrollmentsPage = () => {
         isLoading={isEnrollmentsFetching}
         hasActiveFilters={Boolean(appliedFilters)}
         isError={isEnrollmentsError}
+        onOpenBulkModal={handleOpenBulkModal}
       />
       <Pagination
         paginationLabel="paginationNavigation"
@@ -241,6 +316,23 @@ const StudentEnrollmentsPage = () => {
           error={error}
           selectedRow={selectedRow}
           status={status}
+        />
+      </AlertModal>
+
+      <AlertModal
+        title={bulkModalTitle}
+        isOpen={isBulkModalOpen}
+        onClose={handleCloseBulkModal}
+        footerNode={bulkModalFooter}
+        className={isBulkExtendAction ? 'hidden-overflow' : ''}
+      >
+        <BulkModalBody
+          isExtendAction={isBulkExtendAction}
+          extendDate={extendDate}
+          onDateChange={setExtendDate}
+          error={error}
+          selectedCount={selectedRowsData.length}
+          statusText={BULK_STATUS_TEXT_BY_ACTION[selectedBulkAction] || selectedBulkAction}
         />
       </AlertModal>
     </Container>

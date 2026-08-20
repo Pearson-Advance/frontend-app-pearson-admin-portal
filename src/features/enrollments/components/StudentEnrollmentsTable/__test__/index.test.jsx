@@ -1,5 +1,6 @@
 import React from 'react';
 import { Factory } from 'rosie';
+import { screen, fireEvent } from '@testing-library/react';
 
 import { StudentEnrollmentsTable } from 'features/enrollments/components/StudentEnrollmentsTable';
 import { getColumns, hideColumns } from 'features/enrollments/components/StudentEnrollmentsTable/columns';
@@ -70,6 +71,10 @@ test('render StudentEnrollmentsTable with data', () => {
   // 1 header row + 3 enrollment rows
   const tableRows = component.container.querySelectorAll('tr');
 
+  // Checkbox controls exist for each row
+  const checkboxes = screen.getAllByRole('checkbox');
+  expect(checkboxes.length).toBeGreaterThanOrEqual(data.length);
+
   expect(component.container).not.toHaveTextContent('No enrollments found');
   expect(tableRows).toHaveLength(4);
 
@@ -111,4 +116,38 @@ test('Check sorting columns of StudentEnrollmentsTable', () => {
 
   // Sortable columns: institution, master course name, admin email, learner email
   expect(component.getAllByTitle('Toggle SortBy')).toHaveLength(4);
+});
+
+test('calls onOpenBulkModal when a bulk action is selected in StudentEnrollmentsTable', () => {
+  const data = Factory.build('enrollmentsList');
+  const onOpenBulkModal = jest.fn();
+
+  const component = renderWithProvidersAndIntl(
+    <StudentEnrollmentsTable
+      data={data}
+      count={data.length}
+      columns={getColumns(columnProps)}
+      hideColumns={hideColumns}
+      hasActiveFilters
+      onOpenBulkModal={onOpenBulkModal}
+    />,
+  );
+
+  // Select the first row checkbox
+  const checkboxes = screen.getAllByRole('checkbox');
+  fireEvent.click(checkboxes[0]);
+
+  // Locate the Actions dropdown trigger in TableControlBar
+  const actionsDropdown = component.container.querySelector('#bulk-actions-dropdown-toggle');
+  expect(actionsDropdown).toBeInTheDocument();
+  expect(actionsDropdown).not.toBeDisabled();
+
+  // Open dropdown and click an action option
+  fireEvent.click(actionsDropdown);
+  const revokeOption = screen.getByText('Revoke');
+  fireEvent.click(revokeOption);
+
+  // Verify callback execution with selected action & row payload
+  expect(onOpenBulkModal).toHaveBeenCalledTimes(1);
+  expect(onOpenBulkModal).toHaveBeenCalledWith('revoke', expect.any(Array));
 });

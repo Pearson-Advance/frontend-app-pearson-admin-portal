@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DataTable from '@openedx/paragon/dist/DataTable';
-import {
-  Row, Col,
-} from '@openedx/paragon';
+import { Row, Col } from '@openedx/paragon';
 import { PersistController } from 'features/shared/components/PersistController';
+import { BulkActionBar } from 'features/enrollments/components/BulkSelection/BulkActionBar';
+import { selectColumn } from './columns';
 import './index.scss';
 
 const StudentEnrollmentsTable = React.memo(({
@@ -15,6 +15,7 @@ const StudentEnrollmentsTable = React.memo(({
   isLoading,
   hasActiveFilters,
   isError,
+  onOpenBulkModal,
 }) => {
   let emptyContent = 'No enrollments found.';
 
@@ -28,6 +29,7 @@ const StudentEnrollmentsTable = React.memo(({
     <Row className="enrollments-table-wrapper justify-content-center my-4 border-gray-300 bg-light-100 my-3">
       <Col xs={12}>
         <DataTable
+          isSelectable
           isSortable
           manualSortBy
           isLoading={isLoading}
@@ -35,7 +37,16 @@ const StudentEnrollmentsTable = React.memo(({
           data={data}
           columns={columns}
           initialState={hideColumns}
+          manualSelectColumn={selectColumn}
+          initialTableOptions={{
+            autoResetSelectedRows: true,
+            getRowId: (row) => `${row.id}`,
+          }}
+          bulkActions={[
+            <BulkActionBar key="bulk-action-bar" onApplyAction={onOpenBulkModal} />,
+          ]}
         >
+          <DataTable.TableControlBar />
           <DataTable.Table />
           <DataTable.EmptyTable content={emptyContent} />
           <DataTable.TableFooter />
@@ -50,10 +61,11 @@ StudentEnrollmentsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape([])),
   count: PropTypes.number,
   columns: PropTypes.arrayOf(PropTypes.shape([])),
-  hideColumns: PropTypes.oneOfType({}),
+  hideColumns: PropTypes.oneOfType([PropTypes.object]),
   isLoading: PropTypes.bool,
   hasActiveFilters: PropTypes.bool,
   isError: PropTypes.bool,
+  onOpenBulkModal: PropTypes.func.isRequired,
 };
 
 StudentEnrollmentsTable.defaultProps = {

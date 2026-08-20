@@ -1,4 +1,8 @@
-import { DELETE_ORDER_ERROR_MESSAGES, GENERIC_DELETE_ORDER_ERROR } from 'features/shared/data/constants';
+import {
+  DELETE_ORDER_ERROR_MESSAGES,
+  GENERIC_DELETE_ORDER_ERROR,
+  BULK_ACTIONS_BY_STATUS,
+} from 'features/shared/data/constants';
 
 /**
  * Return a user-facing error message for a failed license order deletion,
@@ -33,3 +37,24 @@ export function getOrdering(sortByObject) {
 
   return orderingParam;
 }
+
+/**
+ * Calculates the intersection of valid actions across all selected rows.
+ * @param {Array<Object>} selectedRows - List of selected enrollment row objects.
+ * @returns {Array<string>} Array of action keys available for ALL selected items.
+ */
+export const getAvailableBulkActions = (selectedRows = []) => {
+  if (!selectedRows || selectedRows.length === 0) {
+    return [];
+  }
+
+  // Extract allowed actions array for each selected row
+  const actionsPerItem = selectedRows.map(
+    (row) => BULK_ACTIONS_BY_STATUS[row.status] || [],
+  );
+
+  // Compute intersection: keep actions present across every selected item
+  return actionsPerItem.reduce((commonActions, itemActions) => (
+    commonActions.filter((action) => itemActions.includes(action))
+  ));
+};

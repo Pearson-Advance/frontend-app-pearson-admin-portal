@@ -4,6 +4,8 @@ import {
   getExportStudentEnrollments,
   handleEnrollments,
   extendEnrollment,
+  handleBulkEnrollments,
+  extendBulkEnrollments,
 } from './api';
 import {
   updateEnrollment,
@@ -80,8 +82,62 @@ function updateEnrollmentDate(data = null, callback = null) {
   };
 }
 
+/**
+ * Dispatches async action to execute bulk actions on selected enrollments.
+ *
+ * @param {Object} payload - { action, enrollments, date }
+ * @param {Function|null} callback - Optional callback executed on completion.
+ * @returns {Function} Redux thunk function.
+ */
+function updateBulkEnrollmentsAction(payload = {}, callback = null) {
+  return async (dispatch) => {
+    const { action, enrollments = [], date } = payload;
+
+    try {
+      if (action === 'extend') {
+        await extendBulkEnrollments(enrollments, date);
+      } else {
+        const apiAction = action === 'enable' ? 'enroll' : 'unenroll';
+        const responses = await handleBulkEnrollments(enrollments, apiAction);
+        const errors = [];
+        responses.forEach((res) => {
+          const results = res?.data?.results || [];
+          results.forEach((item) => {
+            if (item.error) {
+              errors.push(`${item.identifier}: ${item.message}`);
+            }
+          });
+        });
+
+        if (errors.length > 0) {
+          dispatch(updateEnrollment({ errorMessage: errors.join(' | ') }));
+        }
+      }
+
+      dispatch(apiSlice.util.invalidateTags(['Enrollments']));
+
+      if (typeof callback === 'function') {
+        callback();
+      }
+    } catch (error) {
+      let errorMessage = 'An error occurred while executing the bulk action.';
+
+      const parsed = JSON.parse(error?.customAttributes?.httpErrorResponseData || '{}');
+      const flattened = Object.values(parsed).flat();
+
+      if (flattened.length) {
+        errorMessage = flattened.join(', ');
+      }
+
+      logError(error);
+      dispatch(updateEnrollment({ errorMessage }));
+    }
+  };
+}
+
 export {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  updateBulkEnrollmentsAction,
 };
