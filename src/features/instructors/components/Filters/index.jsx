@@ -120,6 +120,15 @@ export const Filters = React.memo((props) => {
             />
           </Form.Group>
 
+          <Form.Group as={Col} controlId="classNameFilter" className="col col-xl-2 col-lg-4 col-sm-6">
+            <Form.Control
+              name="className"
+              floatingLabel="Class Name"
+              value={localFilters.className || ''}
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+
           <Form.Group as={Col} controlId="instructorEmailFilter" className="col col-xl-2 col-lg-4 col-sm-6">
             <Form.Control
               name="instructorEmail"
@@ -154,7 +163,7 @@ export const Filters = React.memo((props) => {
                 variant="secondary"
               />
             </OverlayTrigger>
-            <OverlayTrigger placement="top" overlay={<Tooltip variant="light">Clean filters</Tooltip>}>
+            <OverlayTrigger placement="top" overlay={<Tooltip variant="light">Clear filters</Tooltip>}>
               <IconButton
                 src={Delete}
                 alt="Clear filters"
@@ -174,6 +183,7 @@ Filters.propTypes = {
     institutionId: PropTypes.number,
     instructorEmail: PropTypes.string,
     courseName: PropTypes.string,
+    className: PropTypes.string,
     active: PropTypes.bool,
   }).isRequired,
   institutions: PropTypes.arrayOf(

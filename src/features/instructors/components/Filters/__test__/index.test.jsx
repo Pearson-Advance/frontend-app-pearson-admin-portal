@@ -11,6 +11,7 @@ import { Filters } from 'features/instructors/components/Filters';
 const defaultFilters = {
   institutionId: null,
   courseName: null,
+  className: '',
   instructorEmail: '',
   active: '',
 };
@@ -38,6 +39,7 @@ describe('Test suite for Instructors Filters component', () => {
 
     const selectInputs = screen.getAllByRole('combobox').filter(input => input.classList.contains('select__input'));
     expect(selectInputs).toHaveLength(2);
+    expect(screen.getByLabelText(/class name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/instructor email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/status/i)).toBeInTheDocument();
   });
@@ -48,9 +50,12 @@ describe('Test suite for Instructors Filters component', () => {
 
     renderFilters({ handleApplyFilters, setIsFilterApplied });
 
+    const classNameInput = screen.getByLabelText(/class name/i);
+    fireEvent.change(classNameInput, { target: { name: 'className', value: 'Math 101' } });
     const emailInput = screen.getByLabelText(/instructor email/i);
     fireEvent.change(emailInput, { target: { name: 'instructorEmail', value: 'instructor@test.com' } });
 
+    expect(classNameInput.value).toBe('Math 101');
     expect(emailInput.value).toBe('instructor@test.com');
     expect(setIsFilterApplied).toHaveBeenCalledWith(false);
     expect(handleApplyFilters).not.toHaveBeenCalled();
@@ -62,7 +67,10 @@ describe('Test suite for Instructors Filters component', () => {
 
     renderFilters({ setFilters, handleApplyFilters });
 
+    const classNameInput = screen.getByLabelText(/class name/i);
     const emailInput = screen.getByLabelText(/instructor email/i);
+
+    fireEvent.change(classNameInput, { target: { name: 'className', value: 'Math 101' } });
     fireEvent.change(emailInput, { target: { name: 'instructorEmail', value: 'instructor@test.com' } });
 
     const applyButton = screen.getByRole('button', { name: /apply filters/i });
@@ -70,6 +78,7 @@ describe('Test suite for Instructors Filters component', () => {
 
     const expectedFilters = {
       ...defaultFilters,
+      className: 'Math 101',
       instructorEmail: 'instructor@test.com',
     };
 
@@ -84,6 +93,7 @@ describe('Test suite for Instructors Filters component', () => {
       filters: {
         institutionId: '1',
         courseName: 'Demo Course',
+        className: 'Math 101',
         instructorEmail: 'instructor@test.com',
         active: 'true',
       },

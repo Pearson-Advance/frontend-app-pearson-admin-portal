@@ -103,6 +103,7 @@ export const MAX_TABLE_RECORDS = 50;
 export const INSTRUCTOR_INITIAL_FILTERS_STATE = {
   institutionId: null,
   courseName: null,
+  className: '',
   instructorEmail: '',
   active: '',
 };
