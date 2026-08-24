@@ -83,6 +83,26 @@ describe('Test suite for InstructorsPage', () => {
       instructorEmail: 'instructor@test.com',
       institutionId: null,
       courseName: null,
+      className: '',
+      active: '',
+      page: 1,
+    });
+  });
+
+  test('Should apply class name filter correctly when clicking search', () => {
+    renderComponent();
+
+    const classNameInput = screen.getByLabelText(/class name/i);
+    fireEvent.change(classNameInput, { target: { name: 'className', value: 'Class A' } });
+
+    const searchButton = screen.getByRole('button', { name: /apply filters/i });
+    fireEvent.click(searchButton);
+
+    expect(useGetInstructorsQuery).toHaveBeenLastCalledWith({
+      instructorEmail: '',
+      institutionId: null,
+      courseName: null,
+      className: 'Class A',
       active: '',
       page: 1,
     });
