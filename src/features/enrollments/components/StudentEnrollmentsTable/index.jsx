@@ -40,7 +40,7 @@ const StudentEnrollmentsTable = React.memo(({
           manualSelectColumn={selectColumn}
           initialTableOptions={{
             autoResetSelectedRows: true,
-            getRowId: (row) => `${row.id}`,
+            getRowId: (row) => `${row.id}-${row.status}`,
           }}
           bulkActions={[
             <BulkActionBar key="bulk-action-bar" onApplyAction={onOpenBulkModal} />,

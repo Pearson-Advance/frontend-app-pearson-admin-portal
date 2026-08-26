@@ -65,23 +65,23 @@ function handleBulkEnrollments(enrollments = [], action = '') {
     return handleEnrollments(formData, ccxId);
   });
 
-  return Promise.all(requests);
+  return Promise.allSettled(requests);
 }
 
 /**
  * Perform bulk extend action grouped by course (ccx_id) or handled per item depending on extend API support.
  */
 function extendBulkEnrollments(enrollments = [], isoDate = '') {
-  return Promise.all(
-    enrollments.map(({ learnerEmail, ccxId }) => {
-      const formData = new FormData();
-      formData.append('date', isoDate);
-      formData.append('student_email', learnerEmail);
-      formData.append('class_id', ccxId);
+  const requests = enrollments.map(({ learnerEmail, ccxId }) => {
+    const formData = new FormData();
+    formData.append('date', isoDate);
+    formData.append('student_email', learnerEmail);
+    formData.append('class_id', ccxId);
 
-      return extendEnrollment(formData);
-    }),
-  );
+    return extendEnrollment(formData);
+  });
+
+  return Promise.allSettled(requests);
 }
 
 export {

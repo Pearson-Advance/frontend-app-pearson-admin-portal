@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, OverlayTrigger, Tooltip } from '@openedx/paragon';
 import { getAvailableBulkActions } from 'features/shared/data/utils';
+import { BULK_ACTION_LABELS } from 'features/shared/data/constants';
 
 export const BulkActionBar = ({
   selectedFlatRows = [],
@@ -32,7 +33,7 @@ export const BulkActionBar = ({
         <Dropdown.Menu>
           {availableActions.map((actionKey) => (
             <Dropdown.Item key={actionKey} eventKey={actionKey}>
-              {actionKey.charAt(0).toUpperCase() + actionKey.slice(1)}
+              {BULK_ACTION_LABELS[actionKey] || actionKey}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>

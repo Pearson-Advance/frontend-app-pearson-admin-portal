@@ -37,6 +37,7 @@ describe('Enrollments API tests', () => {
 
     expect(response.data).toEqual(expectedResponse);
   });
+
   test('handleBulkEnrollments groups emails by course and constructs FormData correctly', async () => {
     const enrollments = [
       { learnerEmail: 'user1@acme.com', ccxId: 'course-1' },
@@ -67,8 +68,10 @@ describe('Enrollments API tests', () => {
     const responses = await handleBulkEnrollments(enrollments, 'unenroll');
 
     expect(responses).toHaveLength(2);
-    expect(responses[0].data).toEqual({ status: 'success' });
-    expect(responses[1].data).toEqual({ status: 'success' });
+    expect(responses[0].status).toEqual('fulfilled');
+    expect(responses[0].value.data).toEqual({ status: 'success' });
+    expect(responses[1].status).toEqual('fulfilled');
+    expect(responses[1].value.data).toEqual({ status: 'success' });
   });
 
   test('extendBulkEnrollments posts requests for each item to extend endpoint', async () => {
@@ -87,7 +90,9 @@ describe('Enrollments API tests', () => {
     const responses = await extendBulkEnrollments(enrollments, isoDate);
 
     expect(responses).toHaveLength(2);
-    expect(responses[0].data).toEqual({ status: 'extended' });
-    expect(responses[1].data).toEqual({ status: 'extended' });
+    expect(responses[0].status).toEqual('fulfilled');
+    expect(responses[0].value.data).toEqual({ status: 'extended' });
+    expect(responses[1].status).toEqual('fulfilled');
+    expect(responses[1].value.data).toEqual({ status: 'extended' });
   });
 });

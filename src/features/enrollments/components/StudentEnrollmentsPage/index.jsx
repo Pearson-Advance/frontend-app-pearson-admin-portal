@@ -11,6 +11,7 @@ import {
   ActionRow,
   Button,
 } from '@openedx/paragon';
+import { logError } from '@edx/frontend-platform/logging';
 
 import {
   fetchExportStudentEnrollments,
@@ -214,6 +215,7 @@ const StudentEnrollmentsPage = () => {
     setIsBulkModalOpen(false);
     setSelectedBulkAction('');
     setExtendDate('');
+    dispatch(updateEnrollment({ errorMessage: '' }));
   };
 
   const handleExecuteBulkAction = async () => {
@@ -234,13 +236,15 @@ const StudentEnrollmentsPage = () => {
 
     setIsBulkUpdating(true);
 
-    dispatch(
-      updateBulkEnrollmentsAction(payload, () => {
-        setIsBulkUpdating(false);
-        handleCloseBulkModal();
-        setSelectedFlatRows([]);
-      }),
-    );
+    try {
+      await dispatch(updateBulkEnrollmentsAction(payload));
+      handleCloseBulkModal();
+      setSelectedFlatRows([]);
+    } catch (err) {
+      logError(err);
+    } finally {
+      setIsBulkUpdating(false);
+    }
   };
 
   useEffect(() => {

@@ -133,6 +133,5 @@ test('Should trigger bulk action modal and execute action on submit', async () =
       action: 'revoke',
       enrollments: [{ learnerEmail: 'user1@example.com', ccxId: 101 }],
     },
-    expect.any(Function),
   );
 });

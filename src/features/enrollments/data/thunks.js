@@ -89,48 +89,54 @@ function updateEnrollmentDate(data = null, callback = null) {
  * @param {Function|null} callback - Optional callback executed on completion.
  * @returns {Function} Redux thunk function.
  */
-function updateBulkEnrollmentsAction(payload = {}, callback = null) {
+function updateBulkEnrollmentsAction(payload = {}) {
   return async (dispatch) => {
     const { action, enrollments = [], date } = payload;
+    const errors = [];
 
     try {
-      if (action === 'extend') {
-        await extendBulkEnrollments(enrollments, date);
-      } else {
-        const apiAction = action === 'enable' ? 'enroll' : 'unenroll';
-        const responses = await handleBulkEnrollments(enrollments, apiAction);
-        const errors = [];
-        responses.forEach((res) => {
-          const results = res?.data?.results || [];
-          results.forEach((item) => {
+      const apiAction = action === 'enable' ? 'enroll' : 'unenroll';
+      const settledResults = action === 'extend'
+        ? await extendBulkEnrollments(enrollments, date)
+        : await handleBulkEnrollments(enrollments, apiAction);
+
+      settledResults.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          const itemResults = result.value?.data?.results || [];
+          itemResults.forEach((item) => {
             if (item.error) {
               errors.push(`${item.identifier}: ${item.message}`);
             }
           });
-        });
+        } else if (result.status === 'rejected') {
+          const errorResponse = result.reason?.customAttributes?.httpErrorResponseData;
+          let errorMessage = 'An error occurred while executing the bulk action.';
 
-        if (errors.length > 0) {
-          dispatch(updateEnrollment({ errorMessage: errors.join(' | ') }));
+          if (errorResponse) {
+            try {
+              const parsed = JSON.parse(errorResponse);
+              const flattened = Object.values(parsed).flat();
+              if (flattened.length) {
+                errorMessage = flattened.join(', ');
+              }
+            } catch (error) {
+              logError(error);
+            }
+          }
+
+          errors.push(errorMessage);
         }
+      });
+
+      if (errors.length > 0) {
+        dispatch(updateEnrollment({ errorMessage: errors.join(' | ') }));
       }
 
       dispatch(apiSlice.util.invalidateTags(['Enrollments']));
-
-      if (typeof callback === 'function') {
-        callback();
-      }
     } catch (error) {
-      let errorMessage = 'An error occurred while executing the bulk action.';
-
-      const parsed = JSON.parse(error?.customAttributes?.httpErrorResponseData || '{}');
-      const flattened = Object.values(parsed).flat();
-
-      if (flattened.length) {
-        errorMessage = flattened.join(', ');
-      }
-
       logError(error);
-      dispatch(updateEnrollment({ errorMessage }));
+      dispatch(updateEnrollment({ errorMessage: 'An error occurred while executing the bulk action.' }));
+      throw error;
     }
   };
 }
