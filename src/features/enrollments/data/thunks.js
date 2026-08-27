@@ -86,7 +86,6 @@ function updateEnrollmentDate(data = null, callback = null) {
  * Dispatches async action to execute bulk actions on selected enrollments.
  *
  * @param {Object} payload - { action, enrollments, date }
- * @param {Function|null} callback - Optional callback executed on completion.
  * @returns {Function} Redux thunk function.
  */
 function updateBulkEnrollmentsAction(payload = {}) {
@@ -128,11 +127,13 @@ function updateBulkEnrollmentsAction(payload = {}) {
         }
       });
 
-      if (errors.length > 0) {
-        dispatch(updateEnrollment({ errorMessage: errors.join(' | ') }));
-      }
-
       dispatch(apiSlice.util.invalidateTags(['Enrollments']));
+
+      if (errors.length > 0) {
+        const fullErrorMessage = errors.join(' | ');
+        dispatch(updateEnrollment({ errorMessage: fullErrorMessage }));
+        throw new Error(fullErrorMessage);
+      }
     } catch (error) {
       logError(error);
       dispatch(updateEnrollment({ errorMessage: 'An error occurred while executing the bulk action.' }));

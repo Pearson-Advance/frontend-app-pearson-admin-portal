@@ -60,7 +60,15 @@ export const BulkActionBar = ({
 };
 
 BulkActionBar.propTypes = {
-  selectedFlatRows: PropTypes.arrayOf(PropTypes.shape([])),
+  selectedFlatRows: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    learnerEmail: PropTypes.string,
+    ccxId: PropTypes.string,
+    ccxName: PropTypes.string,
+    institution: PropTypes.string,
+    masterCourseId: PropTypes.string,
+    masterCourseName: PropTypes.string,
+  })),
   onApplyAction: PropTypes.func.isRequired,
 };
 

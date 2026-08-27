@@ -18,12 +18,10 @@ const ControlledSelect = ({ row }) => {
   const updatedProps = useConvertIndeterminateProp(row.getToggleRowSelectedProps());
 
   return (
-    <div className="test-checkbox">
-      <CheckboxControl
-        {...updatedProps}
-        onChange={toggleSelected}
-      />
-    </div>
+    <CheckboxControl
+      {...updatedProps}
+      onChange={toggleSelected}
+    />
   );
 };
 

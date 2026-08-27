@@ -36,6 +36,7 @@ const BulkModalBody = ({
     <BulkEnrollmentConfirmation
       selectedCount={selectedCount}
       statusText={statusText}
+      error={error}
     />
   );
 };
