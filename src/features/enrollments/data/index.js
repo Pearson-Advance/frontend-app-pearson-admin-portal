@@ -3,6 +3,7 @@ export {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  updateBulkEnrollmentsAction,
 } from './thunks';
 export {
   useGetStudentEnrollmentsQuery,

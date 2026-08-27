@@ -107,3 +107,51 @@ export const INSTRUCTOR_INITIAL_FILTERS_STATE = {
   instructorEmail: '',
   active: '',
 };
+
+/**
+ * Enum for bulk action keys.
+ * @readonly
+ * @enum {string}
+ */
+export const BulkAction = {
+  DISABLE: 'disable',
+  ENABLE: 'enable',
+  REVOKE: 'revoke',
+  EXTEND: 'extend',
+};
+
+/**
+ * Maps each EnrollmentStatus to its allowed bulk actions.
+ * @readonly
+ * @type {Object.<string, Array<string>>}
+ */
+export const BULK_ACTIONS_BY_STATUS = {
+  [EnrollmentStatus.ACTIVE]: [BulkAction.DISABLE, BulkAction.EXTEND],
+  [EnrollmentStatus.INACTIVE]: [BulkAction.ENABLE],
+  [EnrollmentStatus.PENDING]: [BulkAction.REVOKE],
+  [EnrollmentStatus.EXPIRED]: [BulkAction.EXTEND],
+};
+
+/**
+ * Human-readable action labels for UI dropdown display, keyed by bulk action name.
+ * @readonly
+ * @enum {string}
+ */
+export const BULK_ACTION_LABELS = {
+  [BulkAction.DISABLE]: 'Disable',
+  [BulkAction.ENABLE]: 'Enable',
+  [BulkAction.REVOKE]: 'Revoke',
+  [BulkAction.EXTEND]: 'Extend',
+};
+
+/**
+ * Past-tense action status labels used in confirmation messages, keyed by bulk action name.
+ * @readonly
+ * @enum {string}
+ */
+export const BULK_STATUS_TEXT_BY_ACTION = {
+  [BulkAction.DISABLE]: 'unenrolled',
+  [BulkAction.ENABLE]: 'enrolled',
+  [BulkAction.REVOKE]: 'revoked',
+  [BulkAction.EXTEND]: 'extended',
+};

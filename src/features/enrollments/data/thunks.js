@@ -4,6 +4,8 @@ import {
   getExportStudentEnrollments,
   handleEnrollments,
   extendEnrollment,
+  handleBulkEnrollments,
+  extendBulkEnrollments,
 } from './api';
 import {
   updateEnrollment,
@@ -80,8 +82,69 @@ function updateEnrollmentDate(data = null, callback = null) {
   };
 }
 
+/**
+ * Dispatches async action to execute bulk actions on selected enrollments.
+ *
+ * @param {Object} payload - { action, enrollments, date }
+ * @returns {Function} Redux thunk function.
+ */
+function updateBulkEnrollmentsAction(payload = {}) {
+  return async (dispatch) => {
+    const { action, enrollments = [], date } = payload;
+    const errors = [];
+
+    try {
+      const apiAction = action === 'enable' ? 'enroll' : 'unenroll';
+      const settledResults = action === 'extend'
+        ? await extendBulkEnrollments(enrollments, date)
+        : await handleBulkEnrollments(enrollments, apiAction);
+
+      settledResults.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          const itemResults = result.value?.data?.results || [];
+          itemResults.forEach((item) => {
+            if (item.error) {
+              errors.push(`${item.identifier}: ${item.message}`);
+            }
+          });
+        } else if (result.status === 'rejected') {
+          const errorResponse = result.reason?.customAttributes?.httpErrorResponseData;
+          let errorMessage = 'An error occurred while executing the bulk action.';
+
+          if (errorResponse) {
+            try {
+              const parsed = JSON.parse(errorResponse);
+              const flattened = Object.values(parsed).flat();
+              if (flattened.length) {
+                errorMessage = flattened.join(', ');
+              }
+            } catch (error) {
+              logError(error);
+            }
+          }
+
+          errors.push(errorMessage);
+        }
+      });
+
+      dispatch(apiSlice.util.invalidateTags(['Enrollments']));
+
+      if (errors.length > 0) {
+        const fullErrorMessage = errors.join(' | ');
+        dispatch(updateEnrollment({ errorMessage: fullErrorMessage }));
+        throw new Error(fullErrorMessage);
+      }
+    } catch (error) {
+      logError(error);
+      dispatch(updateEnrollment({ errorMessage: 'An error occurred while executing the bulk action.' }));
+      throw error;
+    }
+  };
+}
+
 export {
   fetchExportStudentEnrollments,
   updateEnrollmentAction,
   updateEnrollmentDate,
+  updateBulkEnrollmentsAction,
 };
