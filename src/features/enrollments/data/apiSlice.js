@@ -24,4 +24,5 @@ export const enrollmentsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetStudentEnrollmentsQuery,
+  useLazyGetStudentEnrollmentsQuery,
 } = enrollmentsApiSlice;

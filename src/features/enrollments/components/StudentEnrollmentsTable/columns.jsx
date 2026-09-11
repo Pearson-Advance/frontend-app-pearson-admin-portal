@@ -14,7 +14,7 @@ import { EnrollmentStatus } from 'features/shared/data/constants';
 export const selectColumn = {
   id: 'selection',
   Header: <></>, // eslint-disable-line react/jsx-no-useless-fragment
-  Cell: ControlledSelect,
+  Cell: ({ row }) => <ControlledSelect row={row} />,
   disableSortBy: true,
 };
 

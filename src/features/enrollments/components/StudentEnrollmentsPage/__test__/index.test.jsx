@@ -7,9 +7,11 @@ import { StudentEnrollmentsPage } from 'features/enrollments/components/StudentE
 import { updateBulkEnrollmentsAction } from 'features/enrollments/data';
 
 let mockEnrollmentsQuery = { data: undefined, isFetching: false, isError: false };
+const mockTriggerGetAllEnrollments = jest.fn();
 
 jest.mock('features/enrollments/data/apiSlice', () => ({
   useGetStudentEnrollmentsQuery: () => mockEnrollmentsQuery,
+  useLazyGetStudentEnrollmentsQuery: () => [mockTriggerGetAllEnrollments],
 }));
 
 jest.mock('features/institutions/data/apiSlice', () => ({
@@ -28,6 +30,7 @@ const renderWithStore = () => renderWithProvidersAndIntl(<StudentEnrollmentsPage
 
 beforeEach(() => {
   mockEnrollmentsQuery = { data: undefined, isFetching: false, isError: false };
+  jest.clearAllMocks();
 });
 
 test('Should render filters and pagination', () => {
@@ -102,28 +105,22 @@ test('Should trigger bulk action modal and execute action on submit', async () =
 
   const { container } = renderWithStore();
 
-  // 1. Apply filter to show items
   fireEvent.change(screen.getByTestId('learnerEmail'), {
     target: { name: 'learnerEmail', value: 'user' },
   });
   fireEvent.click(screen.getByRole('button', { name: /apply filters/i }));
 
-  // 2. Select row checkboxes
   const checkboxes = screen.getAllByRole('checkbox');
   fireEvent.click(checkboxes[0]);
 
-  // 3. Open Bulk Actions dropdown in control bar
   const actionsDropdown = container.querySelector('#bulk-actions-dropdown-toggle');
   expect(actionsDropdown).toBeInTheDocument();
   fireEvent.click(actionsDropdown);
 
-  // 4. Click 'Revoke' action
   const revokeOption = await screen.findByText('Revoke');
   fireEvent.click(revokeOption);
 
-  // 5. Verify bulk modal rendered with correct selected count message
   expect(screen.getByText(/Are you sure you want the selected learners to be revoked\?/i)).toBeInTheDocument();
-  // 6. Submit bulk action
   const submitBtn = screen.getByRole('button', { name: /submit/i });
   fireEvent.click(submitBtn);
 
