@@ -121,6 +121,12 @@ test('Check sorting columns of StudentEnrollmentsTable', () => {
 test('calls onOpenBulkModal when a bulk action is selected in StudentEnrollmentsTable', () => {
   const data = Factory.build('enrollmentsList');
   const onOpenBulkModal = jest.fn();
+  const onToggleRow = jest.fn();
+  const onSelectAll = jest.fn();
+  const onClearSelection = jest.fn();
+
+  const selectedFlatRows = [{ original: data[0] }];
+  const selectedRowsMap = { [`${data[0].id}-${data[0].status}`]: data[0] };
 
   const component = renderWithProvidersAndIntl(
     <StudentEnrollmentsTable
@@ -129,25 +135,27 @@ test('calls onOpenBulkModal when a bulk action is selected in StudentEnrollments
       columns={getColumns(columnProps)}
       hideColumns={hideColumns}
       hasActiveFilters
+      selectedFlatRows={selectedFlatRows}
+      selectedRowsMap={selectedRowsMap}
       onOpenBulkModal={onOpenBulkModal}
+      onToggleRow={onToggleRow}
+      onSelectAll={onSelectAll}
+      onClearSelection={onClearSelection}
     />,
   );
 
-  // Select the first row checkbox
   const checkboxes = screen.getAllByRole('checkbox');
   fireEvent.click(checkboxes[0]);
+  expect(onToggleRow).toHaveBeenCalledTimes(1);
 
-  // Locate the Actions dropdown trigger in TableControlBar
   const actionsDropdown = component.container.querySelector('#bulk-actions-dropdown-toggle');
   expect(actionsDropdown).toBeInTheDocument();
   expect(actionsDropdown).not.toBeDisabled();
 
-  // Open dropdown and click an action option
   fireEvent.click(actionsDropdown);
   const revokeOption = screen.getByText('Revoke');
   fireEvent.click(revokeOption);
 
-  // Verify callback execution with selected action & row payload
   expect(onOpenBulkModal).toHaveBeenCalledTimes(1);
   expect(onOpenBulkModal).toHaveBeenCalledWith('revoke', expect.any(Array));
 });

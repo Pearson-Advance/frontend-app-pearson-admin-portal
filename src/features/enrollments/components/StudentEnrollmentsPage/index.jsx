@@ -19,7 +19,7 @@ import {
   updateEnrollmentDate,
   updateBulkEnrollmentsAction,
 } from 'features/enrollments/data';
-import { useGetStudentEnrollmentsQuery } from 'features/enrollments/data/apiSlice';
+import { useGetStudentEnrollmentsQuery, useLazyGetStudentEnrollmentsQuery } from 'features/enrollments/data/apiSlice';
 import { useGetInstitutionsQuery } from 'features/institutions/data/apiSlice';
 import { fetchEligibleCourses, cancelFetchEligibleCourses } from 'features/licenses/data';
 
@@ -67,6 +67,7 @@ const StudentEnrollmentsPage = () => {
   const error = useSelector((state) => state.enrollments.updateEnrollmentStatus.errorMessage);
   const sortBy = useSelector(state => state.page.dataTable.sortBy);
   const eligibleCourses = useSelector(managedCoursesForSelect);
+  const [triggerGetAllEnrollments] = useLazyGetStudentEnrollmentsQuery();
 
   const { data: institutionsData = [] } = useGetInstitutionsQuery();
   const institutions = useMemo(
@@ -81,11 +82,12 @@ const StudentEnrollmentsPage = () => {
   const [isOpen, open, close] = useToggle(false);
   const [selectedRow, setRow] = useState({});
   const [extendDate, setExtendDate] = useState('');
+  const [isSelectingAll, setIsSelectingAll] = useState(false);
 
-  const [selectedFlatRows, setSelectedFlatRows] = useState([]);
   const [selectedBulkAction, setSelectedBulkAction] = useState('');
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [isBulkUpdating, setIsBulkUpdating] = useState(false);
+  const [selectedRowsMap, setSelectedRowsMap] = useState({});
 
   const enrollmentsQueryArgs = useMemo(
     () => (appliedFilters
@@ -110,8 +112,13 @@ const StudentEnrollmentsPage = () => {
   const COLUMNS = useMemo(() => getColumns({ open, setRow }), [open]);
 
   const selectedRowsData = useMemo(
-    () => selectedFlatRows.map((row) => row.original || row),
-    [selectedFlatRows],
+    () => Object.values(selectedRowsMap),
+    [selectedRowsMap],
+  );
+
+  const bulkSelectedRows = useMemo(
+    () => selectedRowsData.map((data) => ({ original: data })),
+    [selectedRowsData],
   );
 
   const entry = enrollmentActionByStatus[selectedRow.status] || { status: '' };
@@ -137,7 +144,7 @@ const StudentEnrollmentsPage = () => {
     setPage(1);
     setAppliedFilters(hasFilters ? nextFilters : null);
     setIsFilterApplied(true);
-    setSelectedFlatRows([]);
+    setSelectedRowsMap({});
   }, []);
 
   const handleCleanFilters = useCallback(() => {
@@ -145,7 +152,11 @@ const StudentEnrollmentsPage = () => {
     setPage(1);
     setAppliedFilters(null);
     setIsFilterApplied(true);
-    setSelectedFlatRows([]);
+    setSelectedRowsMap({});
+  }, []);
+
+  const handleClearSelection = useCallback(() => {
+    setSelectedRowsMap({});
   }, []);
 
   const handleApplyFilters = useCallback(() => {
@@ -203,11 +214,8 @@ const StudentEnrollmentsPage = () => {
     close();
   };
 
-  const handleOpenBulkModal = useCallback((action, rowsData = []) => {
+  const handleOpenBulkModal = useCallback((action) => {
     setSelectedBulkAction(action);
-    if (rowsData && rowsData.length > 0) {
-      setSelectedFlatRows(rowsData);
-    }
     setIsBulkModalOpen(true);
   }, []);
 
@@ -217,6 +225,19 @@ const StudentEnrollmentsPage = () => {
     setExtendDate('');
     dispatch(updateEnrollment({ errorMessage: '' }));
   };
+
+  const handleToggleRow = useCallback((rowData) => {
+    setSelectedRowsMap((prev) => {
+      const id = `${rowData.id}-${rowData.status}`;
+      const updated = { ...prev };
+      if (updated[id]) {
+        delete updated[id];
+      } else {
+        updated[id] = rowData;
+      }
+      return updated;
+    });
+  }, []);
 
   const handleExecuteBulkAction = async () => {
     const isExtend = selectedBulkAction === 'extend';
@@ -239,13 +260,44 @@ const StudentEnrollmentsPage = () => {
     try {
       await dispatch(updateBulkEnrollmentsAction(payload));
       handleCloseBulkModal();
-      setSelectedFlatRows([]);
+      setSelectedRowsMap({});
     } catch (err) {
       logError(err);
     } finally {
       setIsBulkUpdating(false);
     }
   };
+
+  const handleSelectAll = useCallback(async () => {
+    if (!appliedFilters || requestResponse.count === 0) {
+      return;
+    }
+
+    setIsSelectingAll(true);
+    try {
+      const allResultsArgs = {
+        ...appliedFilters,
+        ordering: getOrdering(sortBy),
+        page: 1,
+        pageSize: requestResponse.count,
+      };
+
+      const result = await triggerGetAllEnrollments(allResultsArgs).unwrap();
+
+      setSelectedRowsMap((prev) => {
+        const updated = { ...prev };
+        result.results.forEach((row) => {
+          const id = `${row.id}-${row.status}`;
+          updated[id] = row;
+        });
+        return updated;
+      });
+    } catch (err) {
+      logError(err);
+    } finally {
+      setIsSelectingAll(false);
+    }
+  }, [appliedFilters, sortBy, requestResponse.count, triggerGetAllEnrollments]);
 
   useEffect(() => {
     dispatch(changeTab(TabIndex.ENROLLMENTS));
@@ -299,6 +351,12 @@ const StudentEnrollmentsPage = () => {
         hasActiveFilters={Boolean(appliedFilters)}
         isError={isEnrollmentsError}
         onOpenBulkModal={handleOpenBulkModal}
+        selectedFlatRows={bulkSelectedRows}
+        selectedRowsMap={selectedRowsMap}
+        onToggleRow={handleToggleRow}
+        onSelectAll={handleSelectAll}
+        onClearSelection={handleClearSelection}
+        isSelectingAll={isSelectingAll}
       />
       <Pagination
         paginationLabel="paginationNavigation"
